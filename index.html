@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПП Рецепты | Авторский сборник высокобелковых блюд</title>
+    
+    <meta name="description" content="Коллекция проверенных авторских ПП-рецептов с высоким содержанием белка и точным КБЖУ для сушки, рельефа и похудения. Рецепты для аэрогриля и духовки.">
+    <meta property="og:title" content="Сборник авторских ПП-рецептов с высоким белком">
+    <meta property="og:description" content="Вкусные десерты и выпечка без сахара и муки. Точные граммовки и подсчет КБЖУ.">
+    <meta property="og:image" content="cheesecake.jpg">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0b0f17;
+            --bg-card: rgba(22, 29, 43, 0.75);
+            --bg-card-hover: rgba(28, 38, 56, 0.85);
+            --accent-primary: #f59e0b;
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+            --protein-color: #38bdf8;
+            --protein-gradient: linear-gradient(135deg, #38bdf8, #0284c7);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow-glow: 0 10px 30px -10px rgba(245, 158, 11, 0.25);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 65%, rgba(56, 189, 248, 0.06) 0%, transparent 40%);
+            padding: 20px 20px 80px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            backdrop-filter: blur(16px);
+            margin-bottom: 45px;
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo span {
+            color: var(--accent-primary);
+        }
+
+        .nav-btn {
+            background: var(--accent-gradient);
+            color: #0b0f17;
+            font-weight: 700;
+            padding: 9px 20px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 0.88rem;
+            box-shadow: var(--shadow-glow);
+            transition: transform 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .badge-hero {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 999px;
+            color: #fbbf24;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 30%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 660px;
+            margin: 0 auto;
+        }
+
+        /* Filter Tags */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .filter-tag {
+            padding: 8px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tag:hover, .filter-tag.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-tag.active {
+            border-color: var(--accent-primary);
+            color: #fbbf24;
+        }
+
+        /* Recipe Grid */
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+
+        .recipe-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(245, 158, 11, 0.35);
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .recipe-card-img {
+            width: 100%;
+            height: 220px;
+            background: #151d2c;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recipe-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .recipe-card:hover .recipe-card-img img {
+            transform: scale(1.04);
+        }
+
+        .badge-pos {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: rgba(11, 15, 23, 0.8);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .recipe-card-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .recipe-card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .recipe-card-desc {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .recipe-macros {
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+
+        .macro-item {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-sm);
+            padding: 8px 10px;
+            text-align: center;
+        }
+
+        .macro-item-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .macro-item-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .macro-item-val.protein {
+            color: #38bdf8;
+        }
+
+        .card-upcoming {
+            opacity: 0.75;
+            pointer-events: none;
+        }
+
+        .badge-upcoming {
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        /* CTA Book Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(56, 189, 248, 0.12) 50%, rgba(22, 29, 43, 0.9) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: var(--radius-lg);
+            padding: 45px 35px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .cta-section h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .cta-section p {
+            font-size: 1.08rem;
+            color: #cbd5e1;
+            max-width: 640px;
+            margin: 0 auto 26px;
+        }
+
+        .cta-btn-main {
+            background: var(--accent-gradient);
+            color: #0b0f17;
+            font-weight: 800;
+            padding: 15px 36px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 1.05rem;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-btn-main:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px -8px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .recipe-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.2rem; }
+            .navbar { padding: 12px 18px; margin-bottom: 30px; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 12px 12px 60px; }
+            h1 { font-size: 1.7rem; }
+            .hero p { font-size: 0.98rem; }
+            .filter-bar { gap: 6px; }
+            .filter-tag { padding: 6px 14px; font-size: 0.82rem; }
+            .recipe-card-body { padding: 18px 16px; }
+            .recipe-card-title { font-size: 1.2rem; }
+            .recipe-macros { gap: 6px; }
+            .macro-item { padding: 6px 4px; }
+            .macro-item-label { font-size: 0.65rem; }
+            .macro-item-val { font-size: 0.95rem; }
+            .cta-section { padding: 28px 18px; }
+            .cta-section h2 { font-size: 1.5rem; }
+            .cta-btn-main { width: 100%; justify-content: center; font-size: 0.95rem; padding: 14px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <a href="index.html" class="nav-logo">
+                🍰 <span>ПП</span> Рецепты
+            </a>
+            <a href="#book" class="nav-btn">📖 Книга рецептов</a>
+        </nav>
+
+        <!-- Hero -->
+        <header class="hero">
+            <div class="badge-hero">⚡ Высокий белок • Без муки и сахара</div>
+            <h1>Сборник проверенных ПП-рецептов</h1>
+            <p>
+                Точный расчет КБЖУ для каждого блюда. Вкусно худеем, удерживаем мышечную массу и готовим ресторанные десерты в аэрогриле за 20 минут.
+            </p>
+        </header>
+
+        <!-- Category Filter -->
+        <div class="filter-bar">
+            <span class="filter-tag active">Все рецепты</span>
+            <span class="filter-tag">🔥 Аэрогриль</span>
+            <span class="filter-tag">💪 Высокий белок</span>
+            <span class="filter-tag">🍰 Десерты</span>
+            <span class="filter-tag">🥞 Завтраки</span>
+        </div>
+
+        <!-- Recipe Cards Grid -->
+        <div class="recipe-grid">
+            <!-- Active Featured Recipe: Cheesecake -->
+            <a href="cheesecake.html" class="recipe-card">
+                <div class="recipe-card-img">
+                    <img src="cheesecake.jpg" alt="ПП Чизкейк" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display: none; height: 100%; width: 100%; align-items: center; justify-content: center; font-size: 3.5rem;">
+                        🍰
+                    </div>
+                    <span class="badge-pos">💨 Аэрогриль • 170°C</span>
+                </div>
+                <div class="recipe-card-body">
+                    <h3 class="recipe-card-title">Карамельно-сливочный ПП-чизкейк</h3>
+                    <p class="recipe-card-desc">
+                        Нежнейшая текстура пломбира со сгущенкой и лимонной ноткой. 122 г белка на весь пирог без капли муки.
+                    </p>
+                    <div class="recipe-macros">
+                        <div class="macro-item">
+                            <div class="macro-item-label">Ккал / 100г</div>
+                            <div class="macro-item-val">134</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Белок / 100г</div>
+                            <div class="macro-item-val protein">18.0 г</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Жиры / 100г</div>
+                            <div class="macro-item-val">2.8 г</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Время</div>
+                            <div class="macro-item-val">22 мин</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Upcoming Recipe 1: Syrniki -->
+            <div class="recipe-card card-upcoming">
+                <div class="recipe-card-img">
+                    <div style="height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem;">
+                        🥞
+                    </div>
+                    <span class="badge-pos badge-upcoming">Скоро</span>
+                </div>
+                <div class="recipe-card-body">
+                    <h3 class="recipe-card-title">Хрустящие ПП-сырники с псиллиумом</h3>
+                    <p class="recipe-card-desc">
+                        Плотные, не плывут и готовятся без капли масла в аэрогриле за 12 минут. Рекордное содержание казеина.
+                    </p>
+                    <div class="recipe-macros">
+                        <div class="macro-item">
+                            <div class="macro-item-label">Ккал / 100г</div>
+                            <div class="macro-item-val">~125</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Белок / 100г</div>
+                            <div class="macro-item-val protein">19.5 г</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Жиры / 100г</div>
+                            <div class="macro-item-val">2.5 г</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Время</div>
+                            <div class="macro-item-val">12 мин</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Recipe 2: Bagels -->
+            <div class="recipe-card card-upcoming">
+                <div class="recipe-card-img">
+                    <div style="height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem;">
+                        🥯
+                    </div>
+                    <span class="badge-pos badge-upcoming">Скоро</span>
+                </div>
+                <div class="recipe-card-body">
+                    <h3 class="recipe-card-title">Творожные белковые бейглы с кунжутом</h3>
+                    <p class="recipe-card-desc">
+                        Пышная сытная выпечка для бутербродов со слабосоленой рыбой или яйцом пашот. Идеальный фитнес-завтрак.
+                    </p>
+                    <div class="recipe-macros">
+                        <div class="macro-item">
+                            <div class="macro-item-label">Ккал / 100г</div>
+                            <div class="macro-item-val">~155</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Белок / 100г</div>
+                            <div class="macro-item-val protein">17.0 г</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Жиры / 100г</div>
+                            <div class="macro-item-val">3.5 г</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Время</div>
+                            <div class="macro-item-val">14 мин</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Recipe 3: Souffle -->
+            <div class="recipe-card card-upcoming">
+                <div class="recipe-card-img">
+                    <div style="height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem;">
+                        🍫
+                    </div>
+                    <span class="badge-pos badge-upcoming">Скоро</span>
+                </div>
+                <div class="recipe-card-body">
+                    <h3 class="recipe-card-title">Шоколадное протеиновое суфле</h3>
+                    <p class="recipe-card-desc">
+                        Быстрый тающий десерт с насыщенным вкусом темного шоколада без добавленного сахара.
+                    </p>
+                    <div class="recipe-macros">
+                        <div class="macro-item">
+                            <div class="macro-item-label">Ккал / 100г</div>
+                            <div class="macro-item-val">~110</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Белок / 100г</div>
+                            <div class="macro-item-val protein">16.5 г</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Жиры / 100г</div>
+                            <div class="macro-item-val">2.0 г</div>
+                        </div>
+                        <div class="macro-item">
+                            <div class="macro-item-label">Время</div>
+                            <div class="macro-item-val">10 мин</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Selling Section -->
+        <section id="book" class="cta-section">
+            <h2>📖 Хотите полный сборник из 50+ рецептов?</h2>
+            <p>
+                Пошаговые фото, видео-инструкции, готовая продуктовая корзина и меню на неделю для легкого сброса веса без срывов и голода.
+            </p>
+            <a href="https://t.me/" target="_blank" class="cta-btn-main">
+                🎁 Забрать книгу рецептов со скидкой
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2026 Сборник авторских ПП-рецептов • Разработано для здорового и спортивного образа жизни</p>
+        </footer>
+    </div>
+</body>
+</html>
