@@ -647,6 +647,124 @@
             .ingredient-item { font-size: 0.88rem; padding: 10px 12px; }
             .recipe-photo-wrapper { max-height: 280px; }
         }
+
+        /* Variation Switcher Styles */
+        .variation-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+        }
+
+        .variation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .variation-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .variation-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .var-tab-btn {
+            background: rgba(255, 255, 255, 0.025);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            user-select: none;
+            outline: none;
+            position: relative;
+        }
+
+        .var-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .var-tab-btn.active {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px -6px rgba(245, 158, 11, 0.35);
+        }
+
+        .var-tab-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .var-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+        }
+
+        .var-tab-btn.active .var-tag.active-tag {
+            background: rgba(245, 158, 11, 0.25);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .var-tag.today-tag {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .var-tab-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        .var-tab-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 650px) {
+            .variation-tabs {
+                grid-template-columns: 1fr;
+            }
+            .variation-box {
+                padding: 16px 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -670,7 +788,7 @@
         <header class="hero">
             <div class="badge-bar">
                 <span class="badge gold">✨ Авторский ПП-рецепт</span>
-                <span class="badge blue">🔥 126 г чистого белка</span>
+                <span class="badge blue">🔥 126–133 г чистого белка</span>
                 <span class="badge">💨 Аэрогриль</span>
                 <span class="badge">🚫 Без муки и масла</span>
             </div>
@@ -685,8 +803,40 @@
             <img src="cheesecake.png" alt="Карамельно-сливочный ПП-чизкейк в аэрогриле">
         </div>
 
-        <!-- Meta Bar -->
-        <div class="meta-bar">
+        <!-- Variation Switcher -->
+        <div class="variation-box">
+            <div class="variation-header">
+                <div class="variation-label">
+                    <span>⚡</span> Выберите вариацию чизкейка:
+                </div>
+            </div>
+            <div class="variation-tabs">
+                <!-- Tab Var 1 -->
+                <button type="button" class="var-tab-btn" id="tab-var-1" onclick="switchVariation(1)">
+                    <div class="var-tab-top">
+                        <span class="var-tag">Вариация 1</span>
+                        <span class="var-tag">Классика</span>
+                    </div>
+                    <div class="var-tab-title">С лимонной ноткой</div>
+                    <div class="var-tab-desc">400г брикет + 120г йогурт • 120г сгущенки • 150 ккал/100г</div>
+                </button>
+
+                <!-- Tab Var 2 -->
+                <button type="button" class="var-tab-btn active" id="tab-var-2" onclick="switchVariation(2)">
+                    <div class="var-tab-top">
+                        <span class="var-tag today-tag">🔥 Сегодня готовим!</span>
+                        <span class="var-tag active-tag">Вариация 2</span>
+                    </div>
+                    <div class="var-tab-title">Савушкин + Красная цена</div>
+                    <div class="var-tab-desc">360г творог + 250г мягкий • 140г сгущенки • без лимона • 138 ккал/100г</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== VARIATION 1 VIEWS ==================== -->
+
+        <!-- Meta Bar Var 1 -->
+        <div class="meta-bar var-view var-1-view" style="display: none;">
             <div class="meta-item">
                 <div class="meta-label">Время готовки</div>
                 <div class="meta-val">20 минут</div>
@@ -705,9 +855,9 @@
             </div>
         </div>
 
-        <!-- KBJU Showcase -->
-        <section class="kbju-section">
-            <h2 class="section-title">📊 Точный расчет КБЖУ</h2>
+        <!-- KBJU Showcase Var 1 -->
+        <section class="kbju-section var-view var-1-view" style="display: none;">
+            <h2 class="section-title">📊 Точный расчет КБЖУ (Вариация 1)</h2>
             <div class="kbju-cards">
                 <!-- 100g Card -->
                 <div class="kbju-card featured">
@@ -792,11 +942,11 @@
             </div>
         </section>
 
-        <!-- Ingredients & Steps -->
-        <div class="content-grid">
+        <!-- Content Grid Var 1 -->
+        <div class="content-grid var-view var-1-view" style="display: none;">
             <!-- Ingredients -->
             <div class="ingredients-card">
-                <h2 class="section-title">🛒 Ингредиенты</h2>
+                <h2 class="section-title">🛒 Ингредиенты (кликайте по списку)</h2>
                 <ul class="ingredient-list">
                     <li class="ingredient-item" onclick="this.classList.toggle('checked')">
                         <span class="ing-name">Творог в брикете (0.1–2%)</span>
@@ -827,7 +977,7 @@
                         <span class="ing-amount">5 стиков</span>
                     </li>
                     <li class="ingredient-item" onclick="this.classList.toggle('checked')">
-                        <span class="ing-name">Псиллиум (шелуха)</span>
+                        <span class="ing-name">Псиллиум (шелуха подорожника)</span>
                         <span class="ing-amount">3 ч. л. с горкой (~15 г)</span>
                     </li>
                     <li class="ingredient-item" onclick="this.classList.toggle('checked')">
@@ -884,9 +1034,9 @@
             </div>
         </div>
 
-        <!-- Pro Tips -->
-        <div class="tips-card">
-            <h3>💡 Секреты идеального результата</h3>
+        <!-- Pro Tips Var 1 -->
+        <div class="tips-card var-view var-1-view" style="display: none;">
+            <h3>💡 Секреты идеального результата (Вариация 1)</h3>
             <div class="tips-grid">
                 <div class="tip-box">
                     <strong>🍋 Лимонный сок</strong>
@@ -899,6 +1049,227 @@
                 <div class="tip-box">
                     <strong>❄️ Холод раскрывает вкус</strong>
                     <p>В теплом виде чизкейк нежный, как суфле, а после холодильника приобретает классическую плотную текстуру «Нью-Йорк».</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==================== VARIATION 2 VIEWS (СЕГОДНЯ ГОТОВИМ!) ==================== -->
+
+        <!-- Meta Bar Var 2 -->
+        <div class="meta-bar var-view var-2-view">
+            <div class="meta-item">
+                <div class="meta-label">Время готовки</div>
+                <div class="meta-val">22–24 минуты</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Температура</div>
+                <div class="meta-val">165–170°C</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Порций</div>
+                <div class="meta-val">4 порции</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Готовый вес</div>
+                <div class="meta-val">~800 грамм</div>
+            </div>
+        </div>
+
+        <!-- KBJU Showcase Var 2 -->
+        <section class="kbju-section var-view var-2-view">
+            <h2 class="section-title">📊 Точный расчет КБЖУ (Вариация 2 • Савушкин + Красная цена)</h2>
+            <div class="kbju-cards">
+                <!-- 100g Card -->
+                <div class="kbju-card featured">
+                    <div class="kbju-card-title">
+                        <span>На 100 г готового</span>
+                        <span class="badge blue" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">Супер-лайт</span>
+                    </div>
+                    <div class="calories-badge">138 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">16.6 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">2.1 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">11.6 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fiber"></span>Клетчатка</span>
+                            <span class="macro-val">1.8 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1 Portion Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На 1 порцию (~200 г)</span>
+                        <span>1/4 пирога</span>
+                    </div>
+                    <div class="calories-badge">276 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">33.1 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">4.1 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">23.2 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fiber"></span>Клетчатка</span>
+                            <span class="macro-val">3.5 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Cake Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На весь чизкейк</span>
+                        <span>Вес ~800 г</span>
+                    </div>
+                    <div class="calories-badge">1105 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">132.5 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">16.4 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">92.7 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fiber"></span>Клетчатка</span>
+                            <span class="macro-val">14.0 г</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Grid Var 2 -->
+        <div class="content-grid var-view var-2-view">
+            <!-- Ingredients -->
+            <div class="ingredients-card">
+                <h2 class="section-title">🛒 Ингредиенты (кликайте по списку)</h2>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Творог обезжиренный («Красная цена» 0%)</span>
+                        <span class="ing-amount">360 г (2 пачки по 180 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Творог мягкий «Савушкин Нежный» 0.1%</span>
+                        <span class="ing-amount">250 г (2 пачки по 125 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Яйца куриные С0</span>
+                        <span class="ing-amount">2 шт (~125 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Сывороточный протеин (ваниль/без вкуса)</span>
+                        <span class="ing-amount">30 г (1 скуп)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Сгущенное молоко 1%</span>
+                        <span class="ing-amount">140 г (чуть больше)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Псиллиум (шелуха подорожника)</span>
+                        <span class="ing-amount">3.5–4 ч. л. (~18 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Заменитель сахара (ФитПарад)</span>
+                        <span class="ing-amount">5–6 стиков</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Соль мелкая</span>
+                        <span class="ing-amount">щепотка</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name" style="color: var(--text-muted); text-decoration: line-through;">Лимонный сок</span>
+                        <span class="ing-amount" style="color: var(--text-muted);">🚫 не добавляем</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-card">
+                <h2 class="section-title">👨‍🍳 Пошаговый процесс</h2>
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Творожная основа и сгущенка</h4>
+                            <p>В чашу блендера поместите 2 пачки творога «Красная цена» (360 г), 2 пачки мягкого творожка «Савушкин 0.1%» (250 г), разбейте 2 яйца С0 и влейте 140 г сгущенки 1%. <strong>Лимонный сок не добавляем!</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Взбивание до шелковистого мусса</h4>
+                            <p>Добавьте 30 г протеина, 5–6 стиков ФитПарада и щепотку соли (она выделит сливочный пломбирный вкус). Тщательно пробейте погружным блендером 2 минуты до глянцевого однородного крема без комочков.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Введение псиллиума и отдых (Важно!)</h4>
+                            <p>Всыпьте 3.5–4 ч. л. псиллиума (~18 г), перемешайте силиконовой лопаткой и <strong>дайте постоять 7–10 минут</strong>. Так как мягкий «Савушкин» дает больше влаги, псиллиум должен успеть раскрыться и загустить массу перед выпеканием.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Выпекание в аэрогриле</h4>
+                            <p>Форму (диаметр 16–18 см) застелите пергаментом, вылейте тесто и разровняйте. Выпекайте при <strong>165–170°C в течение 22–24 минут</strong> до аппетитной карамельной корочки.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Холодная стабилизация</h4>
+                            <p>Остудите чизкейк до комнатной температуры прямо в форме, а затем <strong>уберите в холодильник минимум на 3–4 часа (или на ночь)</strong>. Тандем плотного творога и стабилизированного мягкого Савушкина подарит невероятно нежную кремовую структуру!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips Var 2 -->
+        <div class="tips-card var-view var-2-view">
+            <h3>💡 Секреты идеального результата (Вариация 2)</h3>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <strong>🥛 Тандем двух творогов</strong>
+                    <p>Плотный брикет «Красная цена» дает устойчивый каркас, а мягкий нежный «Савушкин 0.1%» делает текстуру шелковистой, как сливочный крем.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>🌾 Роль псиллиума (3.5–4 ч. л.)</strong>
+                    <p>Без кислоты лимона и с более нежным мягким творогом псиллиум связывает лишнюю жидкость, гарантируя идеальный разрез чизкейка.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>💪 Рекордные 132.5 г белка</strong>
+                    <p>В этой вариации 610 г чистого творога: 33.1 г белка на порцию и всего 138 ккал на 100 г — идеальный макронутриентный профиль!</p>
                 </div>
             </div>
         </div>
@@ -924,5 +1295,33 @@
             <p>© 2026 Сборник авторских ПП-рецептов • Идеально для сушки, рельефа и здоровья</p>
         </footer>
     </div>
+
+    <script>
+        function switchVariation(varId) {
+            // Update active buttons
+            document.querySelectorAll('.var-tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById('tab-var-' + varId);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Toggle view visibility
+            document.querySelectorAll('.var-view').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.var-' + varId + '-view').forEach(el => el.style.display = '');
+
+            // Update URL hash without scroll
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, null, '#var' + varId);
+            }
+        }
+
+        // Initialize: default to Variation 2 ("Сегодня готовим!") or check hash
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash;
+            if (hash === '#var1') {
+                switchVariation(1);
+            } else {
+                switchVariation(2);
+            }
+        });
+    </script>
 </body>
 </html>
