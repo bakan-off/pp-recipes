@@ -824,11 +824,11 @@
                 <!-- Tab Var 2 -->
                 <button type="button" class="var-tab-btn active" id="tab-var-2" onclick="switchVariation(2)">
                     <div class="var-tab-top">
-                        <span class="var-tag today-tag">🔥 Сегодня готовим!</span>
                         <span class="var-tag active-tag">Вариация 2</span>
+                        <span class="var-tag">Сливочный пломбир</span>
                     </div>
                     <div class="var-tab-title">Савушкин + Красная цена</div>
-                    <div class="var-tab-desc">360г творог + 250г мягкий • 140г сгущенки • без лимона • 138 ккал/100г</div>
+                    <div class="var-tab-desc">360г творог + 250г мягкий • 140г сгущенки • 138 ккал/100г</div>
                 </button>
             </div>
         </div>
@@ -1054,7 +1054,7 @@
         </div>
 
 
-        <!-- ==================== VARIATION 2 VIEWS (СЕГОДНЯ ГОТОВИМ!) ==================== -->
+        <!-- ==================== VARIATION 2 VIEWS ==================== -->
 
         <!-- Meta Bar Var 2 -->
         <div class="meta-bar var-view var-2-view">
@@ -1201,10 +1201,6 @@
                         <span class="ing-name">Соль мелкая</span>
                         <span class="ing-amount">щепотка</span>
                     </li>
-                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
-                        <span class="ing-name" style="color: var(--text-muted); text-decoration: line-through;">Лимонный сок</span>
-                        <span class="ing-amount" style="color: var(--text-muted);">🚫 не добавляем</span>
-                    </li>
                 </ul>
             </div>
 
@@ -1216,7 +1212,7 @@
                         <div class="step-num">1</div>
                         <div class="step-content">
                             <h4>Творожная основа и сгущенка</h4>
-                            <p>В чашу блендера поместите 2 пачки творога «Красная цена» (360 г), 2 пачки мягкого творожка «Савушкин 0.1%» (250 г), разбейте 2 яйца С0 и влейте 140 г сгущенки 1%. <strong>Лимонный сок не добавляем!</strong></p>
+                            <p>В чашу блендера поместите 2 пачки творога «Красная цена» (360 г), 2 пачки мягкого творожка «Савушкин 0.1%» (250 г), разбейте 2 яйца С0 и влейте 140 г сгущенки 1%.</p>
                         </div>
                     </div>
 
@@ -1265,7 +1261,7 @@
                 </div>
                 <div class="tip-box">
                     <strong>🌾 Роль псиллиума (3.5–4 ч. л.)</strong>
-                    <p>Без кислоты лимона и с более нежным мягким творогом псиллиум связывает лишнюю жидкость, гарантируя идеальный разрез чизкейка.</p>
+                    <p>В сочетании с мягким творогом псиллиум связывает лишнюю влагу, гарантируя идеальный плотный разрез чизкейка.</p>
                 </div>
                 <div class="tip-box">
                     <strong>💪 Рекордные 132.5 г белка</strong>
@@ -1313,7 +1309,7 @@
             }
         }
 
-        // Initialize: default to Variation 2 ("Сегодня готовим!") or check hash
+        // Initialize: default to Variation 2 or check hash
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash;
             if (hash === '#var1') {
