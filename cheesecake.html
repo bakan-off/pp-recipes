@@ -680,8 +680,8 @@
 
         .variation-tabs {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
         }
 
         .var-tab-btn {
@@ -757,7 +757,7 @@
             line-height: 1.4;
         }
 
-        @media (max-width: 650px) {
+        @media (max-width: 768px) {
             .variation-tabs {
                 grid-template-columns: 1fr;
             }
@@ -788,7 +788,7 @@
         <header class="hero">
             <div class="badge-bar">
                 <span class="badge gold">✨ Авторский ПП-рецепт</span>
-                <span class="badge blue">🔥 126–131 г чистого белка</span>
+                <span class="badge blue">🔥 125–131 г чистого белка</span>
                 <span class="badge">💨 Аэрогриль</span>
                 <span class="badge">🚫 Без муки и масла</span>
             </div>
@@ -822,13 +822,23 @@
                 </button>
 
                 <!-- Tab Var 2 -->
-                <button type="button" class="var-tab-btn active" id="tab-var-2" onclick="switchVariation(2)">
+                <button type="button" class="var-tab-btn" id="tab-var-2" onclick="switchVariation(2)">
                     <div class="var-tab-top">
-                        <span class="var-tag active-tag">Вариация 2 • Пышный ⭐</span>
-                        <span class="var-tag">Сливочный пломбир</span>
+                        <span class="var-tag">Вариация 2 • Пышный ⭐</span>
+                        <span class="var-tag">Сливочный</span>
                     </div>
                     <div class="var-tab-title">Греческий Teos + Красная цена</div>
-                    <div class="var-tab-desc">360г творог + 250г Teos 2% • 140г сгущенки • пышная текстура • 146 ккал/100г</div>
+                    <div class="var-tab-desc">360г творог 0% + 250г Teos 2% • 140г сгущенки • 146 ккал/100г</div>
+                </button>
+
+                <!-- Tab Var 3 -->
+                <button type="button" class="var-tab-btn active" id="tab-var-3" onclick="switchVariation(3)">
+                    <div class="var-tab-top">
+                        <span class="var-tag today-tag">🔥 Сегодня готовим!</span>
+                        <span class="var-tag active-tag">Вариация 3</span>
+                    </div>
+                    <div class="var-tab-title">Магнит 5% + Teos + Домик 5%</div>
+                    <div class="var-tab-desc">300г Магнит + 250г Teos + 150г Домик • ванилин 1.5г • 158 ккал/100г</div>
                 </button>
             </div>
         </div>
@@ -1057,7 +1067,7 @@
         <!-- ==================== VARIATION 2 VIEWS ==================== -->
 
         <!-- Meta Bar Var 2 -->
-        <div class="meta-bar var-view var-2-view">
+        <div class="meta-bar var-view var-2-view" style="display: none;">
             <div class="meta-item">
                 <div class="meta-label">Время готовки</div>
                 <div class="meta-val">22–24 минуты</div>
@@ -1077,7 +1087,7 @@
         </div>
 
         <!-- KBJU Showcase Var 2 -->
-        <section class="kbju-section var-view var-2-view">
+        <section class="kbju-section var-view var-2-view" style="display: none;">
             <h2 class="section-title">📊 Точный расчет КБЖУ (Вариация 2 • Греческий Teos + Красная цена)</h2>
             <div class="kbju-cards">
                 <!-- 100g Card -->
@@ -1164,7 +1174,7 @@
         </section>
 
         <!-- Content Grid Var 2 -->
-        <div class="content-grid var-view var-2-view">
+        <div class="content-grid var-view var-2-view" style="display: none;">
             <!-- Ingredients -->
             <div class="ingredients-card">
                 <h2 class="section-title">🛒 Ингредиенты (кликайте по списку)</h2>
@@ -1252,7 +1262,7 @@
         </div>
 
         <!-- Pro Tips Var 2 -->
-        <div class="tips-card var-view var-2-view">
+        <div class="tips-card var-view var-2-view" style="display: none;">
             <h3>💡 Секреты идеального результата (Вариация 2)</h3>
             <div class="tips-grid">
                 <div class="tip-box">
@@ -1266,6 +1276,230 @@
                 <div class="tip-box">
                     <strong>💪 131 г чистого белка</strong>
                     <p>В этой вариации 610 г чистейшей молочно-белковой основы: почти 33 г белка на порцию и всего 146 ккал на 100 г — идеальный макронутриентный профиль!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VARIATION 3 VIEWS (СЕГОДНЯ ГОТОВИМ!) ==================== -->
+
+        <!-- Meta Bar Var 3 -->
+        <div class="meta-bar var-view var-3-view">
+            <div class="meta-item">
+                <div class="meta-label">Время готовки</div>
+                <div class="meta-val">23–25 минут</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Температура</div>
+                <div class="meta-val">165–170°C</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Порций</div>
+                <div class="meta-val">4 порции</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Готовый вес</div>
+                <div class="meta-val">~850 грамм</div>
+            </div>
+        </div>
+
+        <!-- KBJU Showcase Var 3 -->
+        <section class="kbju-section var-view var-3-view">
+            <h2 class="section-title">📊 Точный расчет КБЖУ (Вариация 3 • Магнит 5% + Teos 2% + Домик 5%)</h2>
+            <div class="kbju-cards">
+                <!-- 100g Card -->
+                <div class="kbju-card featured">
+                    <div class="kbju-card-title">
+                        <span>На 100 г готового</span>
+                        <span class="badge blue" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">Крем-пломбир 🔥</span>
+                    </div>
+                    <div class="calories-badge">158 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">14.7 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">5.1 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">12.5 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fiber"></span>Клетчатка</span>
+                            <span class="macro-val">1.6 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1 Portion Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На 1 порцию (~212 г)</span>
+                        <span>1/4 пирога</span>
+                    </div>
+                    <div class="calories-badge">335 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">31.2 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">10.9 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">26.6 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fiber"></span>Клетчатка</span>
+                            <span class="macro-val">3.5 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Cake Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На весь чизкейк</span>
+                        <span>Вес ~850 г</span>
+                    </div>
+                    <div class="calories-badge">1340 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">124.9 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">43.4 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">106.3 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fiber"></span>Клетчатка</span>
+                            <span class="macro-val">14.0 г</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Grid Var 3 -->
+        <div class="content-grid var-view var-3-view">
+            <!-- Ingredients -->
+            <div class="ingredients-card">
+                <h2 class="section-title">🛒 Ингредиенты (кликайте по списку)</h2>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Творог «Магнит» 5%</span>
+                        <span class="ing-amount">300 г (Б 16, Ж 5, У 3)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Греческий йогурт «Савушкин Teos» 2%</span>
+                        <span class="ing-amount">250 г (1 банка • Б 8, Ж 2, У 4.2)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Творог мягкий «Домик в деревне» 5%</span>
+                        <span class="ing-amount">150 г (1 стаканчик • Б 7.9, Ж 5, У 3.6)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Ванилин</span>
+                        <span class="ing-amount">1 пакетик (1.5 г) — аромат пломбира!</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Яйца куриные С0</span>
+                        <span class="ing-amount">2 шт (~125 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Сывороточный протеин (ваниль/пломбир)</span>
+                        <span class="ing-amount">30 г (1 скуп)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Сгущенное молоко 1%</span>
+                        <span class="ing-amount">140 г (1/3 банки)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Псиллиум (шелуха подорожника)</span>
+                        <span class="ing-amount">3.5–4 ч. л. (~18 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Заменитель сахара (ФитПарад)</span>
+                        <span class="ing-amount">5–6 стиков</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Соль мелкая</span>
+                        <span class="ing-amount">щепотка</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-card">
+                <h2 class="section-title">👨‍🍳 Пошаговый процесс</h2>
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Трио творога, йогурт и сгущенка</h4>
+                            <p>В чашу блендера выложите 300 г творога «Магнит 5%», 1 банку греческого йогурта «Савушкин Teos 2%» (250 г) и 150 г мягкого творога «Домик в деревне 5%». Разбейте 2 яйца С0 и влейте 140 г сгущенки 1%.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Ванильный акцент и взбивание крема</h4>
+                            <p>Добавьте <strong>пакетик ванилина (1.5 г)</strong>, 30 г протеина, 5–6 стиков сахарозаменителя и щепотку соли. Тщательно пробейте погружным блендером 2–3 минуты до состояния шелковистого, глянцевого крема без крупинок.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Введение псиллиума и отдых (7–10 минут)</h4>
+                            <p>Всыпьте 3.5–4 ч. л. псиллиума (~18 г), аккуратно перемешайте лопаткой и <strong>дайте постоять 7–10 минут</strong>. Сквашенный греческий Teos в сочетании с псиллиумом удерживает пузырьки воздуха, а умеренная жирность 5% делает эмульсию густой и бархатной.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Выпекание в аэрогриле</h4>
+                            <p>Форму (диаметр 16–18 см) застелите пергаментом, перелейте крем и разровняйте. Выпекайте при <strong>165–170°C в течение 23–25 минут</strong> до румяной карамельной корочки.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Холодная стабилизация (Сливочный пломбир)</h4>
+                            <p>Остудите до комнатной температуры в форме, затем <strong>уберите в холодильник минимум на 4–5 часов (или на ночь)</strong>. Трио 5%-го творога, мягкого «Домика в деревне» и Теоса с ванилином превращается в настоящий тающий крем-чиз с богатым пломбирным послевкусием!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips Var 3 -->
+        <div class="tips-card var-view var-3-view">
+            <h3>💡 Секреты идеального результата (Вариация 3)</h3>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <strong>👑 Трио текстур: 5% + 2% + 5%</strong>
+                    <p>Творог 5% «Магнит» создает насыщенную сливочную плотность, Teos 2% отвечает за пышность и подъем, а мягкий «Домик 5%» дает кремовую нежность ресторанного уровня.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>🍦 Пакетик ванилина (1.5 г)</strong>
+                    <p>Кондитерский ванилин идеально связывает ноты карамельной сгущенки и сливочного творога, создавая яркий аромат настоящего пломбира.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>💪 125 г белка и баланс жиров</strong>
+                    <p>Всего 5.1 г жиров на 100 г готового десерта — идеальный баланс вкуса и пользы. Более 31 г качественного белка на сытную порцию!</p>
                 </div>
             </div>
         </div>
@@ -1309,13 +1543,15 @@
             }
         }
 
-        // Initialize: default to Variation 2 or check hash
+        // Initialize: default to Variation 3 ("Сегодня готовим!") or check hash
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash;
             if (hash === '#var1') {
                 switchVariation(1);
-            } else {
+            } else if (hash === '#var2') {
                 switchVariation(2);
+            } else {
+                switchVariation(3);
             }
         });
     </script>
