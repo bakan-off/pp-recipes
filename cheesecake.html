@@ -834,8 +834,8 @@
                 <!-- Tab Var 3 -->
                 <button type="button" class="var-tab-btn active" id="tab-var-3" onclick="switchVariation(3)">
                     <div class="var-tab-top">
-                        <span class="var-tag today-tag">🔥 Сегодня готовим!</span>
                         <span class="var-tag active-tag">Вариация 3</span>
+                        <span class="var-tag">Крем-чиз 5% с ванилью</span>
                     </div>
                     <div class="var-tab-title">Магнит 5% + Teos + Домик 5%</div>
                     <div class="var-tab-desc">300г Магнит + 250г Teos + 150г Домик • ванилин 1.5г • 158 ккал/100г</div>
@@ -1280,7 +1280,7 @@
             </div>
         </div>
 
-        <!-- ==================== VARIATION 3 VIEWS (СЕГОДНЯ ГОТОВИМ!) ==================== -->
+        <!-- ==================== VARIATION 3 VIEWS ==================== -->
 
         <!-- Meta Bar Var 3 -->
         <div class="meta-bar var-view var-3-view">
@@ -1543,7 +1543,7 @@
             }
         }
 
-        // Initialize: default to Variation 3 ("Сегодня готовим!") or check hash
+        // Initialize: default to Variation 3 or check hash
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash;
             if (hash === '#var1') {
