@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кремовый белковый скрэмбл с греческим йогуртом «Теос» (21.7 г белка) | Рецепт ПП</title>
+    <title>Кремовый белковый скрэмбл с греческим йогуртом «Теос» (2 вариации) | Рецепт ПП</title>
     
     <!-- Open Graph & Meta for Pinterest, Telegram, Social Media -->
-    <meta name="description" content="Рецепт нежного шелковистого скрэмбла из 4 яичных белков с греческим йогуртом Теос (70 г). 139 ккал и 21.7 г белка за 3 минуты на сковороде!">
-    <meta property="og:title" content="Кремовый белковый скрэмбл с йогуртом Теос (21.7г белка)">
-    <meta property="og:description" content="139 ккал и 21.7 г чистого белка на порцию! Ресторанная текстура скрэмбла без капли лишнего жира.">
+    <meta name="description" content="Рецепт нежного шелковистого скрэмбла с йогуртом Теос (70 г). Внутри 2 вариации: на 4 белках (144 ккал, 22.8г белка) и с желтками (389 ккал, 34.6г белка) с огурцом и халапеньо!">
+    <meta property="og:title" content="Кремовый скрэмбл с йогуртом Теос (2 вариации)">
+    <meta property="og:description" content="Ресторанный шелковистый омлет-скрэмбл за 3 минуты. Вариация на чистых белках и вариация с желтками.">
     <meta property="og:image" content="egg-white-scramble.png">
     <meta property="og:type" content="article">
     
@@ -134,7 +134,7 @@
         /* Hero */
         .hero {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         .badge-bar {
@@ -203,7 +203,7 @@
             border-radius: var(--radius-lg);
             overflow: hidden;
             border: 1px solid var(--border-color);
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             position: relative;
             background: #151d2c;
             box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6);
@@ -218,6 +218,109 @@
             max-height: 480px;
             object-fit: cover;
             display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Variation Switcher Styles */
+        .variation-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+        }
+
+        .variation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .variation-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .variation-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .var-tab-btn {
+            background: rgba(255, 255, 255, 0.025);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            user-select: none;
+            outline: none;
+            position: relative;
+        }
+
+        .var-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .var-tab-btn.active {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px -6px rgba(245, 158, 11, 0.35);
+        }
+
+        .var-tab-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .var-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+        }
+
+        .var-tab-btn.active .var-tag.active-tag {
+            background: rgba(245, 158, 11, 0.25);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .var-tab-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .var-tab-desc {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            line-height: 1.4;
         }
 
         /* Meta Bar */
@@ -570,7 +673,7 @@
         }
 
         .cta-btn-main:hover {
-            transform: translateY(-3px) scale(1.02);
+            transform: translateY(-3px scale(1.02));
             box-shadow: 0 15px 35px -8px rgba(245, 158, 11, 0.4);
         }
 
@@ -610,6 +713,7 @@
             .kbju-cards { grid-template-columns: 1fr; }
             .content-grid { grid-template-columns: 1fr; }
             .tips-grid { grid-template-columns: 1fr; }
+            .variation-tabs { grid-template-columns: 1fr; }
             h1 { font-size: 2.1rem; }
             .navbar { padding: 12px 18px; margin-bottom: 25px; }
         }
@@ -660,44 +764,76 @@
         <header class="hero">
             <div class="badge-bar">
                 <span class="badge gold">🍳 Шелковистый скрэмбл</span>
-                <span class="badge blue">💪 22.8 г чистого белка</span>
+                <span class="badge blue">💪 До 34.6 г белка</span>
                 <span class="badge green">⚡ Готовка за 3 минуты</span>
                 <span class="badge">🥒 С огурцом и халапеньо</span>
             </div>
             <h1>Кремовый белковый скрэмбл с йогуртом «Теос»</h1>
             <p class="hero-desc">
-                Нежный ресторанный скрэмбл из 4 яичных белков (145 г) с греческим йогуртом «Теос» и молоком на антипригарной сковороде. Без сухой «резиновой» текстуры — тающие сливочные волны с гранулированным чесноком, свежим хрустящим огурцом и пикантным халапеньо.
+                Нежнейший ресторанный омлет-скрэмбл с греческим йогуртом «Теос» (70 г) и молоком. Без сухой «резиновой» текстуры — тающие сливочные волны с гранулированным чесноком, свежим огурцом и колечками халапеньо.
             </p>
         </header>
 
-        <!-- Recipe Photo -->
+        <!-- Recipe Photo Showcase with Dynamic Switch -->
         <div class="recipe-photo-wrapper">
-            <img src="egg-white-scramble.png" alt="Кремовый белковый скрэмбл с греческим йогуртом Теос">
+            <img id="scramble-photo" src="egg-white-scramble.png" alt="Кремовый белковый скрэмбл с греческим йогуртом Теос">
         </div>
 
-        <!-- Meta Bar -->
-        <div class="meta-bar">
+        <!-- Variation Switcher -->
+        <div class="variation-box">
+            <div class="variation-header">
+                <div class="variation-label">
+                    <span>⚡</span> Выберите вариацию скрэмбла:
+                </div>
+            </div>
+            <div class="variation-tabs">
+                <!-- Tab Var 1 -->
+                <button type="button" class="var-tab-btn active" id="tab-var-1" onclick="switchVariation(1)">
+                    <div class="var-tab-top">
+                        <span class="var-tag active-tag">Вариация 1 • Сушка</span>
+                        <span class="var-tag">Ультра-белок</span>
+                    </div>
+                    <div class="var-tab-title">Только белки (4 шт. • 145 г)</div>
+                    <div class="var-tab-desc">144 ккал • 22.8 г белка • 3.6 г жиров • минимум калорий и жиров</div>
+                </button>
+
+                <!-- Tab Var 2 -->
+                <button type="button" class="var-tab-btn" id="tab-var-2" onclick="switchVariation(2)">
+                    <div class="var-tab-top">
+                        <span class="var-tag">Вариация 2 • Сытный</span>
+                        <span class="var-tag">С желтками 🍳</span>
+                    </div>
+                    <div class="var-tab-title">Целые яйца (4 шт. • 220 г)</div>
+                    <div class="var-tab-desc">389 ккал • 34.6 г белка • 24.2 г полезных жиров • лецитин и омега</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== VARIATION 1 (ТОЛЬКО БЕЛКИ) ==================== -->
+
+        <!-- Meta Bar Var 1 -->
+        <div class="meta-bar var-view var-1-view">
             <div class="meta-item">
                 <div class="meta-label">Время готовки</div>
                 <div class="meta-val">3 минуты</div>
             </div>
             <div class="meta-item">
-                <div class="meta-label">Способ приготовления</div>
-                <div class="meta-val">Сковорода (спрей)</div>
+                <div class="meta-label">Основа яиц</div>
+                <div class="meta-val">4 белка (145 г)</div>
             </div>
             <div class="meta-item">
-                <div class="meta-label">Количество порций</div>
-                <div class="meta-val">1 порция</div>
+                <div class="meta-label">Калорийность</div>
+                <div class="meta-val">144 ккал</div>
             </div>
             <div class="meta-item">
-                <div class="meta-label">Вес готового блюда</div>
-                <div class="meta-val">~250 г (+ гарнир)</div>
+                <div class="meta-label">Чистый белок</div>
+                <div class="meta-val" style="color: #38bdf8;">22.8 г</div>
             </div>
         </div>
 
-        <!-- KBJU Showcase -->
-        <section class="kbju-section">
-            <h2 class="section-title">📊 Точный расчет КБЖУ</h2>
+        <!-- KBJU Showcase Var 1 -->
+        <section class="kbju-section var-view var-1-view">
+            <h2 class="section-title">📊 Точный расчет КБЖУ (Вариация 1 — Только белки)</h2>
             <div class="kbju-cards">
                 <!-- Whole Dish Card -->
                 <div class="kbju-card featured">
@@ -770,11 +906,11 @@
             </div>
         </section>
 
-        <!-- Ingredients & Steps -->
-        <div class="content-grid">
+        <!-- Ingredients & Steps Var 1 -->
+        <div class="content-grid var-view var-1-view">
             <!-- Ingredients -->
             <div class="ingredients-card">
-                <h2 class="section-title">🛒 Ингредиенты (кликайте по списку)</h2>
+                <h2 class="section-title">🛒 Ингредиенты (Вариация 1)</h2>
                 <ul class="ingredient-list">
                     <li class="ingredient-item" onclick="this.classList.toggle('checked')">
                         <span class="ing-name">Яичные белки (С0 / С1)</span>
@@ -858,9 +994,9 @@
             </div>
         </div>
 
-        <!-- Pro Tips -->
-        <div class="tips-card">
-            <h3>💡 Секреты идеального белкового скрэмбла</h3>
+        <!-- Pro Tips Var 1 -->
+        <div class="tips-card var-view var-1-view">
+            <h3>💡 Секреты белкового скрэмбла на сушке (Вариация 1)</h3>
             <div class="tips-grid">
                 <div class="tip-box">
                     <strong>🥛 Почему именно йогурт «Теос»?</strong>
@@ -873,6 +1009,210 @@
                 <div class="tip-box">
                     <strong>🌶 Контраст огурца и халапеньо</strong>
                     <p>Свежий сочный огурец дает идеальный хруст, а легкая остринка перца халапеньо великолепно оттеняет мягкую сливочную текстуру омлета.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VARIATION 2 (С ЖЕЛТКАМИ) ==================== -->
+
+        <!-- Meta Bar Var 2 -->
+        <div class="meta-bar var-view var-2-view" style="display: none;">
+            <div class="meta-item">
+                <div class="meta-label">Время готовки</div>
+                <div class="meta-val">3 минуты</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Основа яиц</div>
+                <div class="meta-val">4 яйца с желтками</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Калорийность</div>
+                <div class="meta-val">389 ккал</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Чистый белок</div>
+                <div class="meta-val" style="color: #38bdf8;">34.6 г</div>
+            </div>
+        </div>
+
+        <!-- KBJU Showcase Var 2 -->
+        <section class="kbju-section var-view var-2-view" style="display: none;">
+            <h2 class="section-title">📊 Точный расчет КБЖУ (Вариация 2 — С желтками)</h2>
+            <div class="kbju-cards">
+                <!-- Whole Dish Card -->
+                <div class="kbju-card featured">
+                    <div class="kbju-card-title">
+                        <span>На всю порцию скрэмбла</span>
+                        <span class="badge gold">Сковорода целиком</span>
+                    </div>
+                    <div class="calories-badge">389 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">34.6 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры (лецитин, омега)</span>
+                            <span class="macro-val">24.2 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">6.1 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 100g Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На 100 г готового</span>
+                        <span class="badge blue">Плотная сытность</span>
+                    </div>
+                    <div class="calories-badge">120 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">10.6 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">7.4 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">1.9 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>Энергетический баланс</span>
+                        <span>Польза желтков</span>
+                    </div>
+                    <div class="calories-badge">34.6 г <span>белка на порцию</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>4 целых яйца С0</span>
+                            <span class="macro-val">27.9 г белка</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белок йогурта «Теос»</span>
+                            <span class="macro-val">5.6 г белка</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Холин, витамины A, D, E</span>
+                            <span class="macro-val">100% сут. нормы</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ingredients & Steps Var 2 -->
+        <div class="content-grid var-view var-2-view" style="display: none;">
+            <!-- Ingredients -->
+            <div class="ingredients-card">
+                <h2 class="section-title">🛒 Ингредиенты (Вариация 2)</h2>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Яйца куриные С0 (целиком с желтками)</span>
+                        <span class="ing-amount">4 шт (~220 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Греческий йогурт «Теос» 2%</span>
+                        <span class="ing-amount">70 г (1/2 банки)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Молоко 1.5–2.5%</span>
+                        <span class="ing-amount">35 г (2–3 ст. л.)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Масло растительное (распылитель)</span>
+                        <span class="ing-amount">1–2 пшика (~1 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Соль мелкая</span>
+                        <span class="ing-amount">1/3 ч. л. (по вкусу)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Сушеный чеснок гранулированный</span>
+                        <span class="ing-amount">1/3 ч. л.</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Черный свежемолотый перец</span>
+                        <span class="ing-amount">щепотка</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Свежий огурец (для хрустящей подачи)</span>
+                        <span class="ing-amount">50–70 г</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Перец халапеньо (маринованный или свежий)</span>
+                        <span class="ing-amount">10–15 г (по вкусу)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Свежая зелень (укроп или лук-шнитт)</span>
+                        <span class="ing-amount">3–5 г</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-card">
+                <h2 class="section-title">👨‍🍳 Пошаговый процесс</h2>
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Взбивание целых яиц с «Теосом»</h4>
+                            <p>Разбейте <strong>4 целых яйца</strong> в миску, добавьте <strong>70 г йогурта «Теос»</strong>, <strong>35 г молока</strong>, соль, перец и сушеный чеснок. Взбейте вилкой. Природный лецитин из желтков моментально соединяется с молочным белком йогурта в шелковистую золотистую эмульсию.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Разогрев сковороды</h4>
+                            <p>Сбрызните антипригарную сковороду 1–2 пшиками масла из распылителя. Прогрейте на среднем огне (желтки более пластичны к нагреву, но не терпят перегрева).</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Сборка золотистых сливочных складок</h4>
+                            <p>Вылейте массу на сковороду. Подождите 15–20 секунд. Широкой силиконовой лопаткой сдвигайте нежные золотые волны от бортиков к центру. Текстура получается плотной, тающей и маслянистой без добавления сливочного масла.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Подача с хрустящим огурцом и халапеньо</h4>
+                            <p>Снимите скрэмбл на тарелку слегка недожаренным и блестящим через 1.5–2 минуты. Дополните хрустящим свежим огурцом и колечками острого халапеньо — это невероятный ресторанный дуэт вкусов!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips Var 2 -->
+        <div class="tips-card var-view var-2-view" style="display: none;">
+            <h3>💡 Секреты сытного скрэмбла с желтками (Вариация 2)</h3>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <strong>🍳 Польза цельных желтков</strong>
+                    <p>Желток содержит важнейший нутриент — холин (витамин B4 для печени и мозга), лютеин для зрения, биодоступное железо и витамины A, D, E. Это полноценное питание для гормональной системы.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>✨ Природная шелковистость</strong>
+                    <p>Лецитин желтков работает как натуральный эмульгатор. В сочетании с греческим йогуртом скрэмбл обретает густую сливочную консистенцию ресторанного уровня.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>⚖️ Компромиссный баланс «2 + 2»</strong>
+                    <p>Если хочется снизить жиры, но сохранить солнечный цвет: используйте <strong>2 целых яйца + 2 белка</strong>. Это даст <strong>266 ккал, 28.7 г белка и всего 13.9 г жиров</strong>!</p>
                 </div>
             </div>
         </div>
@@ -898,5 +1238,45 @@
             <p>© 2026 Сборник авторских ПП-рецептов • Идеально для сушки, рельефа и здоровья</p>
         </footer>
     </div>
+
+    <!-- JavaScript Variation Switcher -->
+    <script>
+        function switchVariation(varId) {
+            // Update active buttons
+            document.querySelectorAll('.var-tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById('tab-var-' + varId);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Dynamic Photo Switch
+            const photoEl = document.getElementById('scramble-photo');
+            if (photoEl) {
+                photoEl.style.opacity = '0.4';
+                setTimeout(() => {
+                    photoEl.src = (varId === 2) ? 'egg-scramble-yolks.png' : 'egg-white-scramble.png';
+                    photoEl.alt = (varId === 2) ? 'Золотистый скрэмбл с желтками и йогуртом Теос' : 'Кремовый белковый скрэмбл с йогуртом Теос';
+                    photoEl.style.opacity = '1';
+                }, 150);
+            }
+
+            // Toggle view visibility
+            document.querySelectorAll('.var-view').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.var-' + varId + '-view').forEach(el => el.style.display = '');
+
+            // Update URL hash without jumping
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, null, '#var' + varId);
+            }
+        }
+
+        // Initialize: check hash on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash;
+            if (hash === '#var2') {
+                switchVariation(2);
+            } else {
+                switchVariation(1);
+            }
+        });
+    </script>
 </body>
 </html>
