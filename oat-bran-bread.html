@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Творожно-овсяный ПП-хлеб в аэрогриле | 51г белка без пшеничной муки</title>
+    
+    <!-- Open Graph & Meta for Pinterest, Telegram, Social Media -->
+    <meta name="description" content="Рецепт ароматного творожно-овсяного ПП-хлеба в аэрогриле на овсяных отрубях и мягком твороге 0.1%. Всего 169 ккал и 13.5 г белка на 100 г! Без муки и дрожжей.">
+    <meta property="og:title" content="Творожно-овсяный ПП-хлеб в аэрогриле (51г белка)">
+    <meta property="og:description" content="169 ккал и 13.5 г белка на 100 г! 80 ккал на ломтик. Пористый хлеб на овсяных отрубях без белой муки.">
+    <meta property="og:image" content="oat-bran-bread.png">
+    <meta property="og:type" content="article">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0b0f17;
+            --bg-card: rgba(22, 29, 43, 0.75);
+            --bg-card-hover: rgba(28, 38, 56, 0.85);
+            --accent-primary: #f59e0b;
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+            --protein-color: #38bdf8;
+            --protein-gradient: linear-gradient(135deg, #38bdf8, #0284c7);
+            --fat-color: #fb7185;
+            --carb-color: #34d399;
+            --fiber-color: #a78bfa;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow-glow: 0 10px 30px -10px rgba(245, 158, 11, 0.25);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 65%, rgba(56, 189, 248, 0.06) 0%, transparent 40%);
+            padding: 20px 20px 80px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Top Nav */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 22px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            backdrop-filter: blur(16px);
+            margin-bottom: 35px;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .nav-logo span {
+            color: var(--accent-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+            padding: 6px 10px;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .nav-btn {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: #fbbf24;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: rgba(245, 158, 11, 0.25);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn-text-full { display: inline; }
+        .btn-text-mobile { display: none; }
+
+        /* Recipe Header */
+        .recipe-header {
+            margin-bottom: 30px;
+        }
+
+        .badge-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 999px;
+            color: #fbbf24;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge.protein {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+            color: #38bdf8;
+        }
+
+        .badge.oat {
+            background: rgba(52, 211, 153, 0.12);
+            border-color: rgba(52, 211, 153, 0.3);
+            color: #34d399;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 14px;
+            background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 780px;
+            line-height: 1.6;
+        }
+
+        /* Recipe Image */
+        .recipe-photo-wrapper {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 35px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            background: #141b26;
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 240px;
+        }
+
+        .recipe-photo-wrapper img {
+            width: 100%;
+            max-height: 480px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Meta Bar */
+        .meta-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .meta-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            backdrop-filter: blur(12px);
+        }
+
+        .meta-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .meta-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* KBJU Grid */
+        .kbju-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        .kbju-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .kbju-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 22px 20px;
+            backdrop-filter: blur(12px);
+            transition: all 0.25s ease;
+        }
+
+        .kbju-card.featured {
+            border-color: rgba(245, 158, 11, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.25);
+            background: rgba(35, 29, 18, 0.85);
+        }
+
+        .kbju-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .kbju-card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kbju-card.featured .kbju-card-title {
+            color: #fbbf24;
+        }
+
+        .calories-badge {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .calories-badge span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .macro-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .macro-pill {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .macro-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .dot.protein { background: var(--protein-color); box-shadow: 0 0 8px var(--protein-color); }
+        .dot.fat { background: var(--fat-color); }
+        .dot.carb { background: var(--carb-color); }
+
+        .macro-val {
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Ingredients */
+        .ingredients-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .ingredient-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-md);
+            font-size: 0.93rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .ingredient-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .ingredient-item.checked {
+            opacity: 0.4;
+            text-decoration: line-through;
+        }
+
+        .ing-name {
+            font-weight: 500;
+        }
+
+        .ing-amount {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: #fbbf24;
+            white-space: nowrap;
+            padding-left: 10px;
+        }
+
+        /* Steps */
+        .steps-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            user-select: none;
+        }
+
+        .step-item.checked {
+            opacity: 0.4;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #0b0f17;
+            flex-shrink: 0;
+            margin-top: 2px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .step-content h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .step-content p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        /* Pro Tips */
+        .tips-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(22, 29, 43, 0.8) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: var(--radius-lg);
+            padding: 26px;
+            margin-bottom: 40px;
+        }
+
+        .tips-card h3 {
+            font-family: 'Outfit', sans-serif;
+            color: #fbbf24;
+            font-size: 1.25rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .tip-box {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .tip-box strong {
+            display: block;
+            color: #fff;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .tip-box p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* CTA Book Offer Banner */
+        .cta-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(56, 189, 248, 0.12) 50%, rgba(22, 29, 43, 0.9) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+        }
+
+        .cta-banner h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .cta-banner p {
+            font-size: 1.05rem;
+            color: #cbd5e1;
+            max-width: 600px;
+            margin: 0 auto 24px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn-main {
+            background: var(--accent-gradient);
+            color: #0b0f17;
+            font-weight: 800;
+            padding: 14px 32px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-btn-main:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px -8px rgba(245, 158, 11, 0.4);
+        }
+
+        .cta-btn-tg {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #38bdf8;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.25s ease;
+        }
+
+        .cta-btn-tg:hover {
+            background: rgba(56, 189, 248, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 25px;
+        }
+
+        @media (max-width: 820px) {
+            .meta-bar { grid-template-columns: repeat(2, 1fr); }
+            .kbju-cards { grid-template-columns: 1fr; }
+            .content-grid { grid-template-columns: 1fr; }
+            .tips-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.1rem; }
+            .navbar { padding: 12px 18px; margin-bottom: 25px; }
+        }
+
+        @media (max-width: 540px) {
+            .navbar { padding: 10px 14px; margin-bottom: 20px; gap: 6px; }
+            .nav-logo { font-size: 1.05rem; gap: 6px; }
+            .nav-links { gap: 6px; }
+            .nav-link { font-size: 0.82rem; padding: 4px 6px; }
+            .nav-btn { font-size: 0.8rem; padding: 6px 12px; }
+            .btn-text-full { display: none; }
+            .btn-text-mobile { display: inline; }
+        }
+
+        @media (max-width: 390px) {
+            .nav-logo { font-size: 0.95rem; }
+            .nav-link { font-size: 0.78rem; }
+            .nav-btn { font-size: 0.75rem; padding: 5px 10px; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 12px 12px 60px; }
+            h1 { font-size: 1.65rem; }
+            .hero-desc { font-size: 0.95rem; }
+            .cta-banner { padding: 28px 18px; }
+            .cta-banner h3 { font-size: 1.4rem; }
+            .cta-btn-main { width: 100%; justify-content: center; font-size: 0.95rem; padding: 14px 20px; }
+            .cta-btn-tg { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <a href="index.html" class="nav-logo">
+                🍞 <span>ПП</span> Рецепты
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Все рецепты</a>
+                <a href="https://t.me/andrey_pp_helper_bot" target="_blank" class="nav-btn">
+                    <span class="btn-text-full">🤖 Telegram Бот</span>
+                    <span class="btn-text-mobile">🤖 Бот</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Recipe Header -->
+        <header class="recipe-header">
+            <div class="badge-bar">
+                <span class="badge">🔥 Аэрогриль • 170°C</span>
+                <span class="badge protein">💪 51.3 г белка</span>
+                <span class="badge oat">🌾 Без пшеничной муки</span>
+            </div>
+            <h1>Творожно-овсяный ПП-хлеб в аэрогриле</h1>
+            <p class="hero-desc">
+                Ароматный цельнозерновой хлеб с золотистой хрустящей корочкой и мягким пористым мякишем. В основе — овсяные отруби и мягкий творог «Савушкин» 0.1%. Кукурузный крахмал обеспечивает упругость ломтика без дрожжей и глютена пшеницы.
+            </p>
+        </header>
+
+        <!-- Recipe Image -->
+        <div class="recipe-photo-wrapper">
+            <img src="oat-bran-bread.png" alt="Творожно-овсяный ПП-хлеб в аэрогриле">
+        </div>
+
+        <!-- Meta Bar -->
+        <div class="meta-bar">
+            <div class="meta-item">
+                <div class="meta-label">Время выпечки</div>
+                <div class="meta-val">23–25 минут</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Температура</div>
+                <div class="meta-val">170°C</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Порций</div>
+                <div class="meta-val">8 ломтиков</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Готовый вес</div>
+                <div class="meta-val">~380 грамм</div>
+            </div>
+        </div>
+
+        <!-- KBJU Showcase -->
+        <section class="kbju-section">
+            <h2 class="section-title">📊 Точный расчет КБЖУ</h2>
+            <div class="kbju-cards">
+                <!-- 100g Card -->
+                <div class="kbju-card featured">
+                    <div class="kbju-card-title">
+                        <span>На 100 г готового</span>
+                        <span class="badge oat">Клетчатка & Белок</span>
+                    </div>
+                    <div class="calories-badge">169 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">13.5 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">3.7 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">21.0 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1 Slice Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На 1 ломтик (~47 г)</span>
+                        <span>1/8 буханки</span>
+                    </div>
+                    <div class="calories-badge">80 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">6.4 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">1.8 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">10.0 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Loaf Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На всю буханку</span>
+                        <span>Вес ~380 г</span>
+                    </div>
+                    <div class="calories-badge">642 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">51.3 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">14.2 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">79.7 г</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ingredients & Steps -->
+        <div class="content-grid">
+            <!-- Ingredients -->
+            <div class="ingredients-card">
+                <h2 class="section-title">🛒 Ингредиенты (кликайте по списку)</h2>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Мягкий творог «Савушкин» 0.1%</span>
+                        <span class="ing-amount">250 г (2 пачки по 125 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Овсяные отруби</span>
+                        <span class="ing-amount">100 г</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Яйцо куриное С0</span>
+                        <span class="ing-amount">1 шт (~60 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Кукурузный крахмал</span>
+                        <span class="ing-amount">30 г (1.5 ст. л.)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Соль мелкая</span>
+                        <span class="ing-amount">1 ч. л. без горки (~5 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Разрыхлитель теста (по желанию)</span>
+                        <span class="ing-amount">1/2 ч. л. (~3 г) — для пышности</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-card">
+                <h2 class="section-title">👨‍🍳 Пошаговый процесс</h2>
+                <div class="step-list">
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Смешивание влажной основы</h4>
+                            <p>В глубокую миску выложите <strong>250 г мягкого творога «Савушкин» 0.1%</strong>, разбейте <strong>1 яйцо С0</strong> и всыпьте <strong>1 ч. л. соли</strong>. Тщательно перемешайте венчиком или вилкой до гладкой кремовой текстуры.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Введение сухих компонентов</h4>
+                            <p>Добавьте <strong>100 г овсяных отрубей</strong> и <strong>30 г кукурузного крахмала</strong> (по желанию добавьте 1/2 ч. л. разрыхлителя для дополнительной пористости). Тщательно вымешайте тесто лопаткой до равномерного распределения.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Отдых теста (5–7 минут)</h4>
+                            <p>Оставьте тесто постоять при комнатной температуре. Овсяные отруби впитают влагу творога, а крахмал начнет набухать — масса станет плотной, вязкой и будет идеально держать форму выпечки.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Выпекание в аэрогриле (170°C, 23–25 мин)</h4>
+                            <p>Переложите тесто в силиконовую или застеленную пергаментом форму (прямоугольную для кекса либо круглую 14–16 см), разровняйте лопаткой. Выпекайте при <strong>170°C в течение 23–25 минут</strong> до уверенной золотисто-коричневой корочки.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Остывание на решетке</h4>
+                            <p>Извлеките буханку из формы и <strong>дайте полностью остыть на решетке 20–30 минут перед нарезкой</strong>. Горячий мякиш может казаться слегка влажным, но по мере остывания крахмал и отруби стабилизируются, делая мякиш упругим и пористым.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips -->
+        <div class="tips-card">
+            <h3>💡 Секреты идеального результата</h3>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <strong>🌾 Польза бета-глюкана</strong>
+                    <p>Овсяные отруби содержат растворимую клетчатку (бета-глюкан), которая снижает гликемический индекс, обеспечивает сытость на 4–5 часов и нормализует пищеварение.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>🌽 Роль кукурузного крахмала</strong>
+                    <p>Крахмал связывает творожную сыворотку и предотвращает раскрашивание мякиша, формируя эластичный и упругий ломтик без использования глютена белой муки.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>🥪 Идеальная основа для сэндвичей</strong>
+                    <p>Хлеб отлично нарезается тонкими ломтиками, превосходно подрумянивается в тостере и гармонирует со слабосоленой рыбой, авокадо, индейкой или яйцом пашот.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Book Offer Banner -->
+        <div class="cta-banner">
+            <h3>Хотите больше авторских фитнес-рецептов?</h3>
+            <p>
+                В каталоге собраны протеиновые десерты, сытные горячие блюда и полезная выпечка с проверенным балансом белков, жиров и углеводов.
+            </p>
+            <div class="cta-buttons">
+                <a href="index.html" class="cta-btn-main">📖 Открыть каталог рецептов</a>
+                <a href="https://t.me/andrey_pp_helper_bot" target="_blank" class="cta-btn-tg">🤖 Задать вопрос боту</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2026 Каталог авторских ПП-рецептов • Идеально для сушки, рельефа и здоровья</p>
+        </footer>
+    </div>
+</body>
+</html>
