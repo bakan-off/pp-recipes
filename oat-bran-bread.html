@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Творожно-овсяный ПП-хлеб в аэрогриле | 51г белка без пшеничной муки</title>
+    <title>Творожно-овсяный ПП-хлеб в аэрогриле | 2 вариации (до 59г белка) без белой муки</title>
     
     <!-- Open Graph & Meta for Pinterest, Telegram, Social Media -->
-    <meta name="description" content="Рецепт ароматного творожно-овсяного ПП-хлеба в аэрогриле на овсяных отрубях и мягком твороге 0.1%. Всего 169 ккал и 13.5 г белка на 100 г! Без муки и дрожжей.">
-    <meta property="og:title" content="Творожно-овсяный ПП-хлеб в аэрогриле (51г белка)">
-    <meta property="og:description" content="169 ккал и 13.5 г белка на 100 г! 80 ккал на ломтик. Пористый хлеб на овсяных отрубях без белой муки.">
+    <meta name="description" content="Рецепт домашнего творожно-овсяного ПП-хлеба в аэрогриле. 2 вариации: классический плотный и пышный пористый на псиллиуме. До 59 г белка и всего 170 ккал на 100 г! Без муки и дрожжей.">
+    <meta property="og:title" content="Творожно-овсяный ПП-хлеб в аэрогриле (2 вариации, до 59г белка)">
+    <meta property="og:description" content="170 ккал и 13.5 г белка на 100 г! 80 ккал на ломтик. Пористый хлеб на овсяных отрубях и псиллиуме без пшеничной муки.">
     <meta property="og:image" content="oat-bran-bread.png">
     <meta property="og:type" content="article">
     
@@ -188,6 +188,115 @@
             color: var(--text-muted);
             max-width: 780px;
             line-height: 1.6;
+        }
+
+        /* Variation Switcher Styles */
+        .variation-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+        }
+
+        .variation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .variation-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .variation-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .var-tab-btn {
+            background: rgba(255, 255, 255, 0.025);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            user-select: none;
+            outline: none;
+            position: relative;
+        }
+
+        .var-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .var-tab-btn.active {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px -6px rgba(245, 158, 11, 0.35);
+        }
+
+        .var-tab-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .var-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+        }
+
+        .var-tab-btn.active .var-tag.active-tag {
+            background: rgba(245, 158, 11, 0.25);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .var-tag.fluffy-tag {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .var-tab-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        .var-tab-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.4;
         }
 
         /* Recipe Image */
@@ -628,10 +737,14 @@
             body { padding: 12px 12px 60px; }
             h1 { font-size: 1.65rem; }
             .hero-desc { font-size: 0.95rem; }
-            .cta-banner { padding: 28px 18px; }
-            .cta-banner h3 { font-size: 1.4rem; }
-            .cta-btn-main { width: 100%; justify-content: center; font-size: 0.95rem; padding: 14px 20px; }
-            .cta-btn-tg { width: 100%; text-align: center; }
+            .meta-item { padding: 12px 8px; }
+            .meta-val { font-size: 1.1rem; }
+            .calories-badge { font-size: 1.6rem; }
+            .ingredients-card, .steps-card, .tips-card, .cta-banner { padding: 20px 16px; }
+            .cta-buttons { flex-direction: column; }
+            .cta-btn-main, .cta-btn-tg { width: 100%; justify-content: center; text-align: center; }
+            .ingredient-item { font-size: 0.88rem; padding: 10px 12px; }
+            .recipe-photo-wrapper { max-height: 280px; }
         }
     </style>
 </head>
@@ -655,25 +768,269 @@
         <header class="recipe-header">
             <div class="badge-bar">
                 <span class="badge">🔥 Аэрогриль • 165°C</span>
-                <span class="badge protein">💪 51.3 г белка</span>
+                <span class="badge protein">💪 До 59 г белка</span>
                 <span class="badge oat">🌾 Без пшеничной муки</span>
             </div>
             <h1>Творожно-овсяный ПП-хлеб в аэрогриле</h1>
             <p class="hero-desc">
-                Ароматный цельнозерновой хлеб с золотистой хрустящей корочкой и мягким пористым мякишем. В основе — овсяные отруби и мягкий творог «Савушкин» 0.1%. Кукурузный крахмал обеспечивает упругость ломтика без дрожжей и глютена пшеницы.
+                Ароматный цельнозерновой хлеб с хрустящей корочкой на овсяных отрубях и мягком твороге 0.1%. Доступно 2 выверенные вариации: классический плотный ржаной стиль и пышный пористый мякиш на псиллиуме.
             </p>
         </header>
+
+        <!-- Variation Switcher Box -->
+        <div class="variation-box">
+            <div class="variation-header">
+                <div class="variation-label">
+                    <span>⚡ Выберите текстуру хлеба:</span>
+                </div>
+            </div>
+            <div class="variation-tabs">
+                <!-- Var 2 Tab (Recommended / Fluffy) -->
+                <button type="button" class="var-tab-btn active" id="tab-var-2" onclick="switchVariation(2)">
+                    <div class="var-tab-top">
+                        <span class="var-tag fluffy-tag">✨ Пышный & Пористый</span>
+                        <span class="var-tag active-tag">Выбрано</span>
+                    </div>
+                    <div class="var-tab-title">Вариация 2: Пышный пористый</div>
+                    <div class="var-tab-desc">2 яйца С0, псиллиум и яблочный уксус. Мягкий пружинящий мякиш, пропекается за 30–35 мин (59 г белка)!</div>
+                </button>
+
+                <!-- Var 1 Tab (Dense / Classic) -->
+                <button type="button" class="var-tab-btn" id="tab-var-1" onclick="switchVariation(1)">
+                    <div class="var-tab-top">
+                        <span class="var-tag">🧱 Базовый плотный</span>
+                    </div>
+                    <div class="var-tab-title">Вариация 1: Классический плотный</div>
+                    <div class="var-tab-desc">1 яйцо С0, 250 г творога и отруби. Тяжелый сытный мякиш в стиле бородинского кирпичика (40–44 мин).</div>
+                </button>
+            </div>
+        </div>
 
         <!-- Recipe Image -->
         <div class="recipe-photo-wrapper">
             <img src="oat-bran-bread.png" alt="Творожно-овсяный ПП-хлеб в аэрогриле">
         </div>
 
-        <!-- Meta Bar -->
-        <div class="meta-bar">
+        <!-- ==================== VARIATION 2 VIEWS (ACTIVE DEFAULT) ==================== -->
+
+        <!-- Meta Bar Var 2 -->
+        <div class="meta-bar var-view var-2-view">
             <div class="meta-item">
                 <div class="meta-label">Время выпечки</div>
-                <div class="meta-val">44 минуты</div>
+                <div class="meta-val">30–35 минут</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Температура</div>
+                <div class="meta-val">165°C</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Порций</div>
+                <div class="meta-val">9 ломтиков</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Готовый вес</div>
+                <div class="meta-val">~440 грамм</div>
+            </div>
+        </div>
+
+        <!-- KBJU Showcase Var 2 -->
+        <section class="kbju-section var-view var-2-view">
+            <h2 class="section-title">📊 Точный расчет КБЖУ (Вариация 2: Пышный пористый)</h2>
+            <div class="kbju-cards">
+                <!-- 100g Card -->
+                <div class="kbju-card featured">
+                    <div class="kbju-card-title">
+                        <span>На 100 г готового</span>
+                        <span class="badge oat">Пышный & Белковый</span>
+                    </div>
+                    <div class="calories-badge">170 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">13.4 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">4.8 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">18.3 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1 Slice Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На 1 ломтик (~49 г)</span>
+                        <span>1/9 буханки</span>
+                    </div>
+                    <div class="calories-badge">83 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">6.6 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">2.4 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">9.0 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Loaf Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На всю буханку</span>
+                        <span>Вес ~440 г</span>
+                    </div>
+                    <div class="calories-badge">746 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">59.0 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">21.2 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">80.6 г</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Grid Var 2 -->
+        <div class="content-grid var-view var-2-view">
+            <!-- Ingredients -->
+            <div class="ingredients-card">
+                <h2 class="section-title">🛒 Ингредиенты Вариации 2</h2>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Мягкий творог «Савушкин» 0.1%</span>
+                        <span class="ing-amount">250 г (2 пачки по 125 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Яйца куриные С0</span>
+                        <span class="ing-amount">2 шт (~120 г) — подъем и объем</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Овсяные отруби</span>
+                        <span class="ing-amount">100 г</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Кукурузный крахмал</span>
+                        <span class="ing-amount">30 г (1.5 ст. л.)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Псиллиум (шелуха подорожника)</span>
+                        <span class="ing-amount">5 г (1 ч. л. с горкой) — поры мякиша</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Разрыхлитель теста</span>
+                        <span class="ing-amount">1 ч. л. с горкой (5–6 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Яблочный уксус (или лимонный сок)</span>
+                        <span class="ing-amount">1 ч. л. (5 мл) — активатор газа</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Соль мелкая</span>
+                        <span class="ing-amount">1 ч. л. без горки (5 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Специи: кориандр / тмин / чеснок</span>
+                        <span class="ing-amount">по 1/3 ч. л. (по вкусу)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Семена кунжута или льна (для верха)</span>
+                        <span class="ing-amount">1/2 ч. л. (для посыпки)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-card">
+                <h2 class="section-title">👨‍🍳 Пошаговый процесс</h2>
+                <div class="step-list">
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Взбивание жидкой базы</h4>
+                            <p>В глубокой миске взбейте вилкой или венчиком <strong>2 яйца С0</strong> с 1 ч. л. соли до появления легкой пенки. Добавьте <strong>250 г творога «Савушкин» 0.1%</strong> и <strong>1 ч. л. яблочного уксуса</strong>. Тщательно перемешайте до гладкой кремовой массы.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Введение отрубей, псиллиума и крахмала</h4>
+                            <p>Всыпьте <strong>100 г овсяных отрубей</strong>, <strong>30 г кукурузного крахмала</strong>, <strong>5 г псиллиума</strong>, <strong>1 ч. л. с горкой разрыхлителя</strong> и хлебные специи (кориандр или тмин). Замесите лопаткой мягкое тесто.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Отдых и активация газов (5–7 минут)</h4>
+                            <p>Оставьте тесто при комнатной температуре на 5–7 минут. Псиллиум свяжет свободную сыворотку, а уксус активирует разрыхлитель — в тесте образуется губчатая микропористая структура.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Формовка и выпечка (165°C, 30–35 мин)</h4>
+                            <p>Выложите тесто в форму или сформируйте батончик на пергаменте, присыпьте семенами кунжута. За счет воздушных пор хлеб пропекается быстрее: выпекайте при <strong>165°C в течение 30–35 минут</strong>. Шпажка из центра должна выходить сухой.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Остывание на решетке</h4>
+                            <p>Переложите буханку на решетку и <strong>дайте полностью остыть 25–30 минут</strong> перед нарезкой. Мякиш стабилизируется и станет пружинящим, мягким и не прессованным!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips Var 2 -->
+        <div class="tips-card var-view var-2-view">
+            <h3>💡 Секреты идеального результата (Вариация 2)</h3>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <strong>🍎 Тандем уксуса и разрыхлителя</strong>
+                    <p>Яблочный уксус создает активную кислую среду, стимулируя выделение $CO_2$. Запах уксуса полностью исчезает при выпечке, оставляя пористый мякиш.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>🌱 Псиллиум как растительный каркас</strong>
+                    <p>Псиллиум удерживает пузырьки газа и влагу, заменяя клейковину белой муки. Хлеб пружинит при нажатии и не спрессовывается.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>💪 Рекордные 59 г чистого белка</strong>
+                    <p>Благодаря двум яйцам и творогу буханка дает 59 г белка при 18 г сложных углеводов. Идеально для завтраков и спортивного рациона.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==================== VARIATION 1 VIEWS (CLASSIC DENSE) ==================== -->
+
+        <!-- Meta Bar Var 1 -->
+        <div class="meta-bar var-view var-1-view" style="display: none;">
+            <div class="meta-item">
+                <div class="meta-label">Время выпечки</div>
+                <div class="meta-val">40–44 минуты</div>
             </div>
             <div class="meta-item">
                 <div class="meta-label">Температура</div>
@@ -689,9 +1046,9 @@
             </div>
         </div>
 
-        <!-- KBJU Showcase -->
-        <section class="kbju-section">
-            <h2 class="section-title">📊 Точный расчет КБЖУ</h2>
+        <!-- KBJU Showcase Var 1 -->
+        <section class="kbju-section var-view var-1-view" style="display: none;">
+            <h2 class="section-title">📊 Точный расчет КБЖУ (Вариация 1: Классический плотный)</h2>
             <div class="kbju-cards">
                 <!-- 100g Card -->
                 <div class="kbju-card featured">
@@ -764,11 +1121,11 @@
             </div>
         </section>
 
-        <!-- Ingredients & Steps -->
-        <div class="content-grid">
+        <!-- Content Grid Var 1 -->
+        <div class="content-grid var-view var-1-view" style="display: none;">
             <!-- Ingredients -->
             <div class="ingredients-card">
-                <h2 class="section-title">🛒 Ингредиенты (кликайте по списку)</h2>
+                <h2 class="section-title">🛒 Ингредиенты Вариации 1</h2>
                 <ul class="ingredient-list">
                     <li class="ingredient-item" onclick="this.classList.toggle('checked')">
                         <span class="ing-name">Мягкий творог «Савушкин» 0.1%</span>
@@ -791,8 +1148,8 @@
                         <span class="ing-amount">1 ч. л. без горки (~5 г)</span>
                     </li>
                     <li class="ingredient-item" onclick="this.classList.toggle('checked')">
-                        <span class="ing-name">Разрыхлитель теста (по желанию)</span>
-                        <span class="ing-amount">1/2 ч. л. (~3 г) — для пышности</span>
+                        <span class="ing-name">Разрыхлитель теста</span>
+                        <span class="ing-amount">1/2 ч. л. (~3 г)</span>
                     </li>
                 </ul>
             </div>
@@ -805,7 +1162,7 @@
                         <div class="step-num">1</div>
                         <div class="step-content">
                             <h4>Смешивание влажной основы</h4>
-                            <p>В глубокую миску выложите <strong>250 г мягкого творога «Савушкин» 0.1%</strong>, разбейте <strong>1 яйцо С0</strong> и всыпьте <strong>1 ч. л. соли</strong>. Тщательно перемешайте венчиком или вилкой до гладкой кремовой текстуры.</p>
+                            <p>В глубокую миску выложите <strong>250 г мягкого творога «Савушкин» 0.1%</strong>, разбейте <strong>1 яйцо С0</strong> и всыпьте <strong>1 ч. л. соли</strong>. Тщательно перемешайте венчиком до гладкой кремовой текстуры.</p>
                         </div>
                     </div>
 
@@ -813,7 +1170,7 @@
                         <div class="step-num">2</div>
                         <div class="step-content">
                             <h4>Введение сухих компонентов</h4>
-                            <p>Добавьте <strong>100 г овсяных отрубей</strong> и <strong>30 г кукурузного крахмала</strong> (по желанию добавьте 1/2 ч. л. разрыхлителя для дополнительной пористости). Тщательно вымешайте тесто лопаткой до равномерного распределения.</p>
+                            <p>Добавьте <strong>100 г овсяных отрубей</strong>, <strong>30 г кукурузного крахмала</strong> и 1/2 ч. л. разрыхлителя. Тщательно вымешайте тесто лопаткой до равномерного распределения.</p>
                         </div>
                     </div>
 
@@ -821,7 +1178,7 @@
                         <div class="step-num">3</div>
                         <div class="step-content">
                             <h4>Отдых теста (5–7 минут)</h4>
-                            <p>Оставьте тесто постоять при комнатной температуре. Овсяные отруби впитают влагу творога, а крахмал начнет набухать — масса станет плотной, вязкой и будет идеально держать форму выпечки.</p>
+                            <p>Оставьте тесто постоять при комнатной температуре. Овсяные отруби впитают влагу творога, а крахмал начнет набухать — масса станет плотной и вязкой.</p>
                         </div>
                     </div>
 
@@ -829,7 +1186,7 @@
                         <div class="step-num">4</div>
                         <div class="step-content">
                             <h4>Выпекание в аэрогриле (165°C, 40–44 мин)</h4>
-                            <p>Переложите тесто в силиконовую или застеленную пергаментом форму (прямоугольную для кекса либо круглую 14–16 см), разровняйте лопаткой. Выпекайте при <strong>165°C в течение 40–44 минут</strong> (проверьте шпажкой по центру — она должна выходить сухой) до уверенной золотисто-коричневой корочки.</p>
+                            <p>Переложите тесто в силиконовую или застеленную пергаментом форму, разровняйте лопаткой. Выпекайте при <strong>165°C в течение 40–44 минут</strong> (проверьте шпажкой по центру — она должна выходить сухой).</p>
                         </div>
                     </div>
 
@@ -837,28 +1194,28 @@
                         <div class="step-num">5</div>
                         <div class="step-content">
                             <h4>Остывание на решетке</h4>
-                            <p>Извлеките буханку из формы и <strong>дайте полностью остыть на решетке 20–30 минут перед нарезкой</strong>. Горячий мякиш может казаться слегка влажным, но по мере остывания крахмал и отруби стабилизируются, делая мякиш упругим и пористым.</p>
+                            <p>Извлеките буханку из формы и <strong>дайте полностью остыть на решетке 20–30 минут перед нарезкой</strong>. Плотная структура окончательно схватится.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Pro Tips -->
-        <div class="tips-card">
-            <h3>💡 Секреты идеального результата</h3>
+        <!-- Pro Tips Var 1 -->
+        <div class="tips-card var-view var-1-view" style="display: none;">
+            <h3>💡 Секреты идеального результата (Вариация 1)</h3>
             <div class="tips-grid">
                 <div class="tip-box">
-                    <strong>🌾 Польза бета-глюкана</strong>
-                    <p>Овсяные отруби содержат растворимую клетчатку (бета-глюкан), которая снижает гликемический индекс, обеспечивает сытость на 4–5 часов и нормализует пищеварение.</p>
+                    <strong>🌾 Высокая сытость</strong>
+                    <p>Плотный мякиш долго переваривается, давая насыщение на 4–5 часов за счет максимальной концентрации овсяной клетчатки.</p>
                 </div>
                 <div class="tip-box">
-                    <strong>🌽 Роль кукурузного крахмала</strong>
-                    <p>Крахмал связывает творожную сыворотку и предотвращает раскрашивание мякиша, формируя эластичный и упругий ломтик без использования глютена белой муки.</p>
+                    <strong>🌽 Кукурузный крахмал</strong>
+                    <p>Связывает влагу мягкого творога, предотвращая крошение плотного ломтика.</p>
                 </div>
                 <div class="tip-box">
-                    <strong>🥪 Идеальная основа для сэндвичей</strong>
-                    <p>Хлеб отлично нарезается тонкими ломтиками, превосходно подрумянивается в тостере и гармонирует со слабосоленой рыбой, авокадо, индейкой или яйцом пашот.</p>
+                    <strong>🥪 Поджарка в тостере</strong>
+                    <p>Ломтики этого хлеба идеально подрумяниваются в тостере или на сухой сковороде, приобретая хрустящую корочку.</p>
                 </div>
             </div>
         </div>
@@ -880,5 +1237,47 @@
             <p>© 2026 Каталог авторских ПП-рецептов • Идеально для сушки, рельефа и здоровья</p>
         </footer>
     </div>
+
+    <script>
+        function switchVariation(varId) {
+            // Update active buttons
+            document.querySelectorAll('.var-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                const tag = btn.querySelector('.active-tag');
+                if (tag) tag.remove();
+            });
+
+            const activeBtn = document.getElementById('tab-var-' + varId);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                const topRow = activeBtn.querySelector('.var-tab-top');
+                if (topRow && !topRow.querySelector('.active-tag')) {
+                    const activeSpan = document.createElement('span');
+                    activeSpan.className = 'var-tag active-tag';
+                    activeSpan.textContent = 'Выбрано';
+                    topRow.appendChild(activeSpan);
+                }
+            }
+
+            // Toggle view visibility
+            document.querySelectorAll('.var-view').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.var-' + varId + '-view').forEach(el => el.style.display = '');
+
+            // Update URL hash without scroll
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, null, '#var' + varId);
+            }
+        }
+
+        // Initialize: default to Variation 2 or check hash
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash;
+            if (hash === '#var1') {
+                switchVariation(1);
+            } else {
+                switchVariation(2);
+            }
+        });
+    </script>
 </body>
 </html>
