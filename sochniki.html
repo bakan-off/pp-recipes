@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Творожные ПП-сочники в аэрогриле и духовке (104г белка) | Рецепт ПП</title>
+    
+    <!-- Open Graph & Meta for Social Media -->
+    <meta name="description" content="Рецепт нежных белковых сочников с творогом для аэрогриля и духовки. 104 г чистого белка на замес, 13 г белка и 165 ккал в одном сочнике! Без пшеничной муки, на рисовой муке.">
+    <meta property="og:title" content="Творожные ПП-сочники в аэрогриле и духовке (104г белка)">
+    <meta property="og:description" content="Рассыпчатое творожно-песочное тесто и сочная начинка. 104 г белка, рецепт для аэрогриля и духовки.">
+    <meta property="og:image" content="sochniki.png">
+    <meta property="og:type" content="article">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0b0f17;
+            --bg-card: rgba(22, 29, 43, 0.75);
+            --bg-card-hover: rgba(28, 38, 56, 0.85);
+            --accent-primary: #f59e0b;
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+            --protein-color: #38bdf8;
+            --protein-gradient: linear-gradient(135deg, #38bdf8, #0284c7);
+            --fat-color: #fb7185;
+            --carb-color: #34d399;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow-glow: 0 10px 30px -10px rgba(245, 158, 11, 0.3);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 65%, rgba(56, 189, 248, 0.06) 0%, transparent 40%);
+            padding: 20px 20px 80px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Top Nav */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 22px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            backdrop-filter: blur(16px);
+            margin-bottom: 35px;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .nav-logo span {
+            color: var(--accent-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .badge-bar {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .badge.gold {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.35);
+            color: #fbbf24;
+        }
+
+        .badge.blue {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.35);
+            color: #38bdf8;
+        }
+
+        .badge.green {
+            background: rgba(52, 211, 153, 0.12);
+            border-color: rgba(52, 211, 153, 0.35);
+            color: #34d399;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Recipe Photo */
+        .recipe-photo-wrapper {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 35px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            max-height: 420px;
+            background: #151d2c;
+        }
+
+        .recipe-photo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Meta Bar */
+        .meta-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .meta-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px 12px;
+            text-align: center;
+            backdrop-filter: blur(16px);
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .meta-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* KBJU Showcase */
+        .kbju-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kbju-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .kbju-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kbju-card.featured {
+            border-color: rgba(245, 158, 11, 0.4);
+            box-shadow: var(--shadow-glow);
+            background: rgba(30, 41, 59, 0.85);
+        }
+
+        .kbju-card.featured::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
+        }
+
+        .kbju-card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .calories-badge {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .calories-badge span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .macro-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .macro-pill {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.9rem;
+        }
+
+        .macro-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .macro-val {
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot.protein { background-color: var(--protein-color); }
+        .dot.fat { background-color: var(--fat-color); }
+        .dot.carb { background-color: var(--carb-color); }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 1.35fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .ingredients-card, .steps-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            backdrop-filter: blur(16px);
+        }
+
+        /* Subheadings for Ingredients */
+        .ing-group-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fbbf24;
+            margin: 18px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ing-group-title:first-of-type {
+            margin-top: 5px;
+        }
+
+        /* Ingredients Checklist */
+        .ingredient-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin-bottom: 12px;
+        }
+
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 11px 14px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .ingredient-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .ingredient-item.checked {
+            opacity: 0.45;
+            background: rgba(52, 211, 153, 0.05);
+            border-color: rgba(52, 211, 153, 0.2);
+            text-decoration: line-through;
+        }
+
+        .ingredient-item.checked .ing-amount {
+            color: var(--carb-color);
+            text-decoration: none;
+        }
+
+        .ing-name {
+            font-size: 0.92rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ing-amount {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: #fbbf24;
+            white-space: nowrap;
+        }
+
+        /* Steps */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .step-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .step-item.checked {
+            opacity: 0.5;
+            background: rgba(52, 211, 153, 0.04);
+            border-color: rgba(52, 211, 153, 0.2);
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .step-content p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Dual Baking Mode Boxes */
+        .baking-modes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .bake-box {
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .bake-box.highlight {
+            border-color: rgba(245, 158, 11, 0.35);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .bake-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bake-box.highlight .bake-title {
+            color: #fbbf24;
+        }
+
+        .bake-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        /* Tips */
+        .tips-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(16px);
+        }
+
+        .tips-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .tip-box {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-md);
+        }
+
+        .tip-box strong {
+            display: block;
+            font-family: 'Outfit', sans-serif;
+            color: #fbbf24;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .tip-box p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(56, 189, 248, 0.05) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 35px 25px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .cta-banner h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .cta-banner p {
+            color: var(--text-muted);
+            max-width: 550px;
+            margin: 0 auto 22px;
+            font-size: 0.95rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn-main {
+            background: var(--accent-gradient);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .cta-btn-tg {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--protein-color);
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .cta-btn-tg:hover {
+            background: rgba(56, 189, 248, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .meta-bar { grid-template-columns: repeat(2, 1fr); }
+            .kbju-cards { grid-template-columns: 1fr; }
+            .content-grid { grid-template-columns: 1fr; }
+            .tips-grid { grid-template-columns: 1fr; }
+            .baking-modes { grid-template-columns: 1fr; }
+            h1 { font-size: 2.1rem; }
+            .navbar { padding: 12px 18px; margin-bottom: 25px; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 12px 12px 60px; }
+            h1 { font-size: 1.7rem; }
+            .hero-desc { font-size: 0.95rem; }
+            .meta-item { padding: 12px 8px; }
+            .meta-val { font-size: 1.1rem; }
+            .calories-badge { font-size: 1.8rem; }
+            .ingredients-card, .steps-card, .tips-card, .cta-banner { padding: 20px 16px; }
+            .cta-buttons { flex-direction: column; }
+            .cta-btn-main, .cta-btn-tg { width: 100%; justify-content: center; text-align: center; }
+            .ingredient-item { font-size: 0.88rem; padding: 10px 12px; }
+            .recipe-photo-wrapper { max-height: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="index.html" class="nav-logo">
+                🥟 <span>ПП</span> Рецепты
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">← Все рецепты</a>
+                <a href="https://t.me/andrey_pp_helper_bot" target="_blank" class="nav-btn">
+                    <span>🤖 Telegram Бот</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Header Hero -->
+        <header class="hero">
+            <div class="badge-bar">
+                <span class="badge gold">🥟 Творожные сочники</span>
+                <span class="badge blue">💪 104 г чистого белка</span>
+                <span class="badge">💨 Аэрогриль & Духовка</span>
+                <span class="badge green">🌾 Без пшеничной муки</span>
+            </div>
+            <h1>Творожные ПП-сочники с нежной начинкой</h1>
+            <p class="hero-desc">
+                Рассыпчатое песочное тесто на твороге и рисовой муке с тающей творожно-ванильной начинкой. Безотходное разделение яйца: желток в тесто, белок в начинку. 13 г чистого белка и всего 165 ккал на один сочник!
+            </p>
+        </header>
+
+        <!-- Recipe Photo -->
+        <div class="recipe-photo-wrapper">
+            <img src="sochniki.png" alt="Творожные ПП сочники в аэрогриле и духовке">
+        </div>
+
+        <!-- Meta Bar -->
+        <div class="meta-bar">
+            <div class="meta-item">
+                <div class="meta-label">Время готовки</div>
+                <div class="meta-val">14–22 минут</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Температура</div>
+                <div class="meta-val">165°C / 180°C</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Количество</div>
+                <div class="meta-val">8–10 штук</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Вес готового</div>
+                <div class="meta-val">~690 г</div>
+            </div>
+        </div>
+
+        <!-- KBJU Showcase -->
+        <section class="kbju-section">
+            <h2 class="section-title">📊 Точный расчет КБЖУ</h2>
+            <div class="kbju-cards">
+                <!-- 1 Piece Card (Featured) -->
+                <div class="kbju-card featured">
+                    <div class="kbju-card-title">
+                        <span>На 1 сочник (из 8 шт. ~86 г)</span>
+                        <span class="badge gold">Идеальный перекус</span>
+                    </div>
+                    <div class="calories-badge">165 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">13.0 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">4.2 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">18.5 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 100g Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На 100 г готового</span>
+                        <span class="badge blue">Плотность нутриентов</span>
+                    </div>
+                    <div class="calories-badge">191 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">15.1 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">4.9 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">21.5 г</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Whole Batch Card -->
+                <div class="kbju-card">
+                    <div class="kbju-card-title">
+                        <span>На весь замес (~690 г)</span>
+                        <span>3 пачки творога</span>
+                    </div>
+                    <div class="calories-badge">1316 <span>ккал</span></div>
+                    <div class="macro-row">
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot protein"></span>Белки</span>
+                            <span class="macro-val">104.1 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot fat"></span>Жиры</span>
+                            <span class="macro-val">34.0 г</span>
+                        </div>
+                        <div class="macro-pill">
+                            <span class="macro-name"><span class="dot carb"></span>Углеводы</span>
+                            <span class="macro-val">148.1 г</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ingredients & Steps -->
+        <div class="content-grid">
+            <!-- Ingredients -->
+            <div class="ingredients-card">
+                <h2 class="section-title">🛒 Ингредиенты (кликайте)</h2>
+                
+                <div class="ing-group-title">🥟 Творожно-песочное тесто:</div>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Творог 5% в брикетах</span>
+                        <span class="ing-amount">360 г (2 пачки)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Яичный желток С0</span>
+                        <span class="ing-amount">1 шт.</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Рисовая мука (тонкий помол)</span>
+                        <span class="ing-amount">150 г</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Разрыхлитель теста</span>
+                        <span class="ing-amount">1 ч. л. (5 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Заменитель сахара (ФитПарад)</span>
+                        <span class="ing-amount">2–3 саше</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Соль мелкая</span>
+                        <span class="ing-amount">щепотка</span>
+                    </li>
+                </ul>
+
+                <div class="ing-group-title">🍨 Нежная начинка:</div>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Творог 5% в брикетах</span>
+                        <span class="ing-amount">180 г (1 пачка)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Яичный белок С0 (от теста)</span>
+                        <span class="ing-amount">1 шт.</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Кукурузный крахмал</span>
+                        <span class="ing-amount">1 ст. л. (15 г)</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Заменитель сахара (ФитПарад)</span>
+                        <span class="ing-amount">2 саше</span>
+                    </li>
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Ванилин</span>
+                        <span class="ing-amount">1 г</span>
+                    </li>
+                </ul>
+
+                <div class="ing-group-title">✨ Для смазывания:</div>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item" onclick="this.classList.toggle('checked')">
+                        <span class="ing-name">Молоко 2.5%</span>
+                        <span class="ing-amount">1 ст. л. (~15 мл)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-card">
+                <h2 class="section-title">👨‍🍳 Пошаговый процесс</h2>
+                <div class="step-list">
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Замес творожно-песочного теста</h4>
+                            <p>В миске соедините <strong>360 г творога 5%</strong> (2 пачки), <strong>1 желток</strong>, щепотку соли и 2–3 саше сахзама. Разомните вилкой до однородности. Всыпьте <strong>150 г рисовой муки</strong> с 1 ч. л. разрыхлителя и замесите эластичный шар. Заверните в пленку и уберите в холод на <strong>15 минут</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Приготовление творожной начинки</h4>
+                            <p>Для начинки соедините <strong>180 г творога</strong> (1 пачка), оставшийся <strong>яичный белок</strong>, <strong>1 ст. л. кукурузного крахмала (15 г)</strong>, 2 саше сахзама и 1 г ванилина. Перетрите вилкой или взбейте блендером 20 секунд до густого крема.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Раскатка и формовка сочников</h4>
+                            <p>Раскатайте охлажденное тесто на силиконовом коврике или между листами пергамента до толщины <strong>4–5 мм</strong>. Кружкой или формой вырежьте круги диаметром <strong>9–10 см</strong> (получится 8–10 заготовок). На одну половину круга выложите <strong>1 ст. л. с горкой начинки</strong>, накройте второй половиной. <em>Края не защипывайте</em> — начинка должна аппетитно выглядывать сбоку. Смажьте верх молоком.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Выпекание: Аэрогриль vs Духовка</h4>
+                            <p>Выберите удобный способ выпекания:</p>
+                            <div class="baking-modes">
+                                <div class="bake-box highlight">
+                                    <div class="bake-title">💨 В аэрогриле (основной)</div>
+                                    <div class="bake-desc">
+                                        Дно корзины застелите пергаментом. Выпекайте партиями по 4–5 шт. при <strong>165–170°C ровно 14–16 минут</strong> до красивого золотистого цвета.
+                                    </div>
+                                </div>
+                                <div class="bake-box">
+                                    <div class="bake-title">♨️ В духовке (на весь противень)</div>
+                                    <div class="bake-desc">
+                                        Разогрейте духовку до <strong>180°C</strong> (режим «Верх+Низ»). Выложите все сочники на противень с пергаментом и выпекайте <strong>20–25 минут</strong>.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item" onclick="this.classList.toggle('checked')">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Остывание и подача</h4>
+                            <p>Переложите сочники на решетку и дайте им постоять <strong>10–15 минут</strong>. Горячая творожная начинка стабилизируется, а песочная корочка станет хрустящей и рассыпчатой.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips -->
+        <div class="tips-card">
+            <h3>💡 Секреты идеальных ПП-сочников</h3>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <strong>🌾 Рисовая мука вместо пшеничной</strong>
+                    <p>Рисовая мука тонкого помола не развивает глютен, благодаря чему тесто получается именно песочным, нежным и тающим во рту, а не резиновым.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>🥚 Безотходное разделение яйца</strong>
+                    <p>Желток обогащает песочное тесто жирами и дает пластичность при раскатке, а белок удерживает влагу в начинке, не давая творогу поплыть.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>🥟 Фирменная открытая форма</strong>
+                    <p>Не прижимайте края сочника вилкой или пальцами. Классический советский сочник славится приоткрытой творожной серединкой с золотистой каймой.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Banner -->
+        <div class="cta-banner">
+            <h3>Понравился рецепт?</h3>
+            <p>Сохраняйте в закладки и готовьте для чистых фитнес-перекусов с высоким содержанием казеина.</p>
+            <div class="cta-buttons">
+                <a href="index.html" class="cta-btn-main">← Все рецепты в каталоге</a>
+                <a href="https://t.me/andrey_pp_helper_bot" target="_blank" class="cta-btn-tg">🤖 Открыть в Telegram</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2026 Каталог авторских ПП-рецептов • Идеально для сушки, рельефа и здорового питания</p>
+        </footer>
+    </div>
+</body>
+</html>
