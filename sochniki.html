@@ -156,6 +156,7 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
+            white-space: nowrap;
         }
 
         .badge.gold {
@@ -301,10 +302,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
             margin-bottom: 14px;
             font-size: 0.92rem;
             font-weight: 600;
             color: var(--text-muted);
+            flex-wrap: wrap;
         }
 
         .calories-badge {
@@ -756,8 +759,8 @@
                 <!-- 1 Piece Card (Featured) -->
                 <div class="kbju-card featured">
                     <div class="kbju-card-title">
-                        <span>На 1 сочник (из 8 шт. ~86 г)</span>
-                        <span class="badge gold">Идеальный перекус</span>
+                        <span>1 сочник (~86 г)</span>
+                        <span class="badge gold">1 из 8 шт.</span>
                     </div>
                     <div class="calories-badge">165 <span>ккал</span></div>
                     <div class="macro-row">
@@ -802,8 +805,8 @@
                 <!-- Whole Batch Card -->
                 <div class="kbju-card">
                     <div class="kbju-card-title">
-                        <span>На весь замес (~690 г)</span>
-                        <span>3 пачки творога</span>
+                        <span>Все сочники (~690 г)</span>
+                        <span class="badge green">3 пачки творога</span>
                     </div>
                     <div class="calories-badge">1316 <span>ккал</span></div>
                     <div class="macro-row">
