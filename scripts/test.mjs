@@ -1,0 +1,36 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import vm from 'node:vm';
+import {execFileSync} from 'node:child_process';
+let browserPath=process.env.CHROMIUM_PATH;
+if(!browserPath)try{browserPath=execFileSync(process.platform==='win32'?'where':'which',['chromium'],{encoding:'utf8'}).trim().split('\n')[0];}catch{}
+const context={window:{}};vm.runInNewContext(await fs.readFile('assets/recipes-data.js','utf8'),context);const recipes=context.window.RECIPES;
+const browser=await chromium.launch({...(browserPath?{executablePath:browserPath}:{}),headless:true,args:['--no-sandbox']});
+const base=process.env.BASE_URL||'http://127.0.0.1:4173';
+await fs.mkdir('test-results',{recursive:true});
+const failures=[],results=[];
+async function test(name,fn){try{await fn();results.push({name,status:'pass'});console.log('PASS',name);}catch(error){failures.push(name+': '+error.message);results.push({name,status:'fail',error:error.message});console.error('FAIL',name,error.message);}}
+const contextBrowser=await browser.newContext({viewport:{width:1440,height:1000}});const page=await contextBrowser.newPage();
+let pageErrors=[];page.on('pageerror',e=>pageErrors.push(e.message));
+function numeric(s){return Number(s.replace(/\s/g,'').replace(',','.').match(/\d+(?:\.\d+)?/)[0]);}
+async function noOverflow(){assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth), 'Horizontal overflow');}
+await test('Catalog: 14 cards, working search and filter reset',async()=>{await page.goto(base+'/index.html');assert.equal(await page.locator('.recipe-card').count(),14);await page.locator('#recipe-search').fill('гречневая');assert.equal(await page.locator('.recipe-card').count(),1);await page.locator('#recipe-search').fill('несуществующий рецепт');assert(await page.locator('#empty').isVisible());await page.locator('#reset-filters').click();assert.equal(await page.locator('.recipe-card').count(),14);await noOverflow();});
+await test('Catalog: filters and categories',async()=>{await page.locator('[data-filter="До 20 мин"]').click();assert.equal(await page.locator('.recipe-card').count(),recipes.filter(r=>r.tags.includes('До 20 мин')).length);await page.locator('[data-filter="Все рецепты"]').click();await page.locator('#category').selectOption('Напитки');assert.equal(await page.locator('.recipe-card').count(),2);await page.locator('#category').selectOption('');});
+await page.screenshot({path:'test-results/catalog-grid-desktop.png',fullPage:true});
+for(const r of recipes){
+ await test(r.slug+': desktop route, local images and layout',async()=>{await page.goto(base+'/'+r.slug);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.locator('h1').innerText(),r.title);await noOverflow();assert.equal(await page.locator('img').evaluateAll(imgs=>imgs.filter(i=>!i.complete||i.naturalWidth===0).length),0);assert.equal(pageErrors.length,0);});
+ for(const v of r.variants){
+  await test(r.slug+' variant '+v.id+': portions and totals',async()=>{if(r.variants.length>1)await page.locator(`[data-variant="${v.id}"]`).click();const expectedBase=v.baseServings;const firstIngredient=v.ingredients.findIndex(i=>i.amount&&/^\d/.test(i.amount));const initialAmount=await page.locator(`[data-amount="${firstIngredient}"]`).innerText();const energyBefore=numeric(await page.locator('.nutrient strong').first().innerText());assert(Math.abs(energyBefore-v.total.kcal)<.1);const constantBefore=await page.locator('#nutrition-foot').innerText();await page.locator('#increase').click();const energyAfter=numeric(await page.locator('.nutrient strong').first().innerText());assert(Math.abs(energyAfter-v.total.kcal*(expectedBase+1)/expectedBase)<.02);assert.equal(await page.locator('#nutrition-foot').innerText(),constantBefore);assert.notEqual(await page.locator(`[data-amount="${firstIngredient}"]`).innerText(),initialAmount);await page.locator('#decrease').click();assert.equal(await page.locator(`[data-amount="${firstIngredient}"]`).innerText(),initialAmount);await page.locator('[data-check]').first().check();assert(await page.locator('[data-check]').first().isChecked());const opacity=await page.locator('.ingredient-item').first().locator('.ingredient-copy').evaluate(e=>getComputedStyle(e).opacity);assert.equal(opacity,'0.45');await page.reload();if(r.variants.length>1)assert(await page.locator(`[data-variant="${v.id}"]`).getAttribute('aria-pressed')==='true');assert(await page.locator('[data-check]').first().isChecked());await page.locator('#clear-checks').click();assert(!(await page.locator('[data-check]').first().isChecked()));});
+ }
+ await test(r.slug+': smartphone and cooking mode',async()=>{await page.setViewportSize({width:390,height:844});await page.goto(base+'/'+r.slug);await noOverflow();await page.locator('#cooking-mode').click();assert(await page.locator('#cooking-dialog').isVisible());await page.locator('#next-step').click();assert((await page.locator('#focus-count').innerText()).includes('2'));await page.keyboard.press('Escape');assert(!(await page.locator('#cooking-dialog').isVisible()));assert.equal(await page.evaluate(()=>document.activeElement.id),'cooking-mode');await page.setViewportSize({width:1440,height:1000});});
+}
+await test('Quantity parser: fractions, ranges and product text',async()=>{await page.goto(base+'/creamy-buckwheat.html');const samples=await page.evaluate(()=>['1/4 ч. л.','15–20 г (1–2 ч. л.)','0.5 ч. л.','1 кг (1000 г)','щепотка'].map(x=>window.RecipeUtils.scaleAmount(x,2)));assert.deepEqual(samples,['0,5 ч. л.','30–40 г (2–4 ч. л.)','1 ч. л.','2 кг (2 000 г)','щепотка']);});
+await test('Package mass stays fixed during scaling',async()=>{const result=await page.evaluate(()=>window.RecipeUtils.scaleAmount('360 г (2 пачки по 180 г)',2));assert.equal(result,'720 г (4 пачки по 180 г)');const person=await page.evaluate(()=>window.RecipeUtils.scaleAmount('15 г (по 5 г на чел)',2));assert.equal(person,'30 г (по 5 г на чел)');});
+await test('Portion boundaries 1 and 20',async()=>{await page.goto(base+'/creamy-buckwheat.html');for(let i=0;i<2;i++)await page.locator('#decrease').click();assert(await page.locator('#decrease').isDisabled());for(let i=0;i<19;i++)await page.locator('#increase').click();assert(await page.locator('#increase').isDisabled());assert((await page.locator('#servings').innerText()).startsWith('20'));});
+await test('File mode: works by opening index.html directly',async()=>{await page.goto('file://'+process.cwd()+'/index.html');assert.equal(await page.locator('.recipe-card').count(),14);await page.locator('.recipe-card').first().click();assert(await page.locator('#ingredients').isVisible());});
+await test('Reduced motion preference',async()=>{await page.emulateMedia({reducedMotion:'reduce'});await page.goto(base+'/index.html');assert.equal(await page.locator('.reveal').first().evaluate(e=>getComputedStyle(e).animationName),'none');await page.emulateMedia({reducedMotion:'no-preference'});});
+await fs.writeFile('test-results/results.json',JSON.stringify({total:results.length,passed:results.filter(r=>r.status==='pass').length,failed:failures.length,results},null,2));
+await browser.close();
+if(failures.length)throw new Error(failures.join('\n'));
+console.log(`All ${results.length} tests passed.`);

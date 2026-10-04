@@ -3,3 +3,10 @@ tools/
 GEMINI.md
 .env
 *.token
+
+# Build & Dev artifacts
+node_modules/
+dist/
+.antigravity/
+test-results/
+
