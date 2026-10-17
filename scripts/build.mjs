@@ -7,7 +7,7 @@ const enhanced = process.argv.includes('--enhanced');
 const syncRootHtml = process.argv.includes('--sync-html');
 const SITE_BASE = 'https://bakan-off.github.io/pp-recipes/';
 
-/* Load recipes data to enrich static HTML pages with Schema.org/Recipe JSON-LD & Open Graph */
+/* Load recipes data to enrich static HTML pages with Schema.org/Recipe JSON-LD & PWA Manifest */
 const context = { window: {} };
 if (fsSync.existsSync('assets/recipes-data.js')) {
   vm.runInNewContext(await fs.readFile('assets/recipes-data.js', 'utf8'), context);
@@ -47,9 +47,51 @@ function buildRecipeSchemaTag(r) {
   return `<script type="application/ld+json" id="recipe-schema-ld">${JSON.stringify(schema)}</script>`;
 }
 
+const MANIFEST_JSON = JSON.stringify({
+  name: 'ПП · рецепты — Коллекция высокобелковых блюд',
+  short_name: 'ПП · рецепты',
+  description: 'Авторские высокобелковые рецепты с точным пересчётом КБЖУ, штрихкодами для FatSecret и умным списком покупок.',
+  start_url: './index.html',
+  display: 'standalone',
+  background_color: '#FAF8F5',
+  theme_color: '#59674F',
+  lang: 'ru',
+  icons: [
+    { src: 'cheesecake.png', sizes: '512x512', type: 'image/png' }
+  ]
+}, null, 2);
+
+const SW_JS = `const CACHE_NAME = 'pp-recipes-cache-v2';
+const CORE_ASSETS = ['./index.html', './assets/styles.css', './assets/app.js', './assets/recipes-data.js'];
+self.addEventListener('install', event => {
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(CORE_ASSETS)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', event => {
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    caches.match(event.request).then(cached => {
+      const net = fetch(event.request).then(resp => {
+        if (resp && resp.status === 200 && resp.type === 'basic') {
+          const clone = resp.clone();
+          caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+        }
+        return resp;
+      }).catch(() => cached);
+      return cached || net;
+    })
+  );
+});
+`;
+
 function enrichHtml(html, fileName) {
   const recipe = recipes.find(r => r.slug === fileName);
   let out = html;
+  if (!out.includes('manifest.webmanifest')) {
+    out = out.replace('</head>', '<link rel="manifest" href="manifest.webmanifest"/></head>');
+  }
   if (recipe && !out.includes('application/ld+json')) {
     const schemaTag = buildRecipeSchemaTag(recipe);
     out = out.replace('</head>', `${schemaTag}</head>`);
@@ -59,6 +101,13 @@ function enrichHtml(html, fileName) {
 
 await fs.rm('dist', { recursive: true, force: true });
 await fs.mkdir('dist');
+
+await fs.writeFile(path.join('dist', 'manifest.webmanifest'), MANIFEST_JSON);
+await fs.writeFile(path.join('dist', 'sw.js'), SW_JS);
+if (syncRootHtml) {
+  await fs.writeFile('manifest.webmanifest', MANIFEST_JSON);
+  await fs.writeFile('sw.js', SW_JS);
+}
 
 for (const name of await fs.readdir('.')) {
   if (/\.(jpg|png)$/.test(name)) {
@@ -94,4 +143,4 @@ if (enhanced) {
   }
 }
 
-console.log(enhanced ? 'Enhanced build complete: dist/' : 'Offline static build complete: dist/ (CSS motion + Schema.org JSON-LD, no external libraries)');
+console.log(enhanced ? 'Enhanced build complete: dist/' : 'Offline static build complete: dist/ (CSS motion + Schema.org JSON-LD + PWA, no external libraries)');

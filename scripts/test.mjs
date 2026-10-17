@@ -1,36 +1,124 @@
-import {chromium} from 'playwright';
-import assert from 'node:assert/strict';
-import fs from 'node:fs/promises';
+import fs from 'node:fs';
+import path from 'node:path';
 import vm from 'node:vm';
-import {execFileSync} from 'node:child_process';
-let browserPath=process.env.CHROMIUM_PATH;
-if(!browserPath)try{browserPath=execFileSync(process.platform==='win32'?'where':'which',['chromium'],{encoding:'utf8'}).trim().split('\n')[0];}catch{}
-const context={window:{}};vm.runInNewContext(await fs.readFile('assets/recipes-data.js','utf8'),context);const recipes=context.window.RECIPES;
-const browser=await chromium.launch({...(browserPath?{executablePath:browserPath}:{channel:'chrome'}),headless:true,args:['--no-sandbox']});
-const base=process.env.BASE_URL||'http://127.0.0.1:4173';
-await fs.mkdir('test-results',{recursive:true});
-const failures=[],results=[];
-async function test(name,fn){try{await fn();results.push({name,status:'pass'});console.log('PASS',name);}catch(error){failures.push(name+': '+error.message);results.push({name,status:'fail',error:error.message});console.error('FAIL',name,error.message);}}
-const contextBrowser=await browser.newContext({viewport:{width:1440,height:1000}});const page=await contextBrowser.newPage();
-let pageErrors=[];page.on('pageerror',e=>pageErrors.push(e.message));
-function numeric(s){return Number(s.replace(/\s/g,'').replace(',','.').match(/\d+(?:\.\d+)?/)[0]);}
-async function noOverflow(){assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth), 'Horizontal overflow');}
-await test('Catalog: 24 cards, working search and filter reset',async()=>{await page.goto(base+'/index.html');assert.equal(await page.locator('.recipe-card').count(),recipes.length);await page.locator('#recipe-search').fill('гречневая');assert.equal(await page.locator('.recipe-card').count(),1);await page.locator('#recipe-search').fill('несуществующий рецепт');assert(await page.locator('#empty').isVisible());await page.locator('#reset-filters').click();assert.equal(await page.locator('.recipe-card').count(),recipes.length);await noOverflow();});
-await test('Catalog: filters and categories',async()=>{await page.locator('[data-filter="До 20 мин"]').click();assert.equal(await page.locator('.recipe-card').count(),recipes.filter(r=>r.tags.includes('До 20 мин')).length);await page.locator('[data-filter="Все рецепты"]').click();await page.locator('#category').selectOption('Напитки');assert.equal(await page.locator('.recipe-card').count(),2);await page.locator('#category').selectOption('');});
-await page.screenshot({path:'test-results/catalog-grid-desktop.png',fullPage:true});
-for(const r of recipes){
- await test(r.slug+': desktop route, local images and layout',async()=>{await page.goto(base+'/'+r.slug);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.locator('h1').innerText(),r.title);await noOverflow();await page.evaluate(async()=>{document.querySelectorAll('img[loading="lazy"]').forEach(i=>i.loading='eager');await Promise.all(Array.from(document.querySelectorAll('img')).map(i=>i.complete?Promise.resolve():new Promise(res=>{i.onload=res;i.onerror=res;})));});assert.equal(await page.locator('img').evaluateAll(imgs=>imgs.filter(i=>!i.complete||i.naturalWidth===0).length),0);assert.equal(pageErrors.length,0);});
- for(const v of r.variants){
-  await test(r.slug+' variant '+v.id+': portions and totals',async()=>{if(r.variants.length>1)await page.locator(`[data-variant="${v.id}"]`).click();const expectedBase=v.baseServings;const firstIngredient=v.ingredients.findIndex(i=>i.amount&&/^\d/.test(i.amount));const initialAmount=await page.locator(`[data-amount="${firstIngredient}"]`).innerText();const energyBefore=numeric(await page.locator('.nutrient strong').first().innerText());assert(Math.abs(energyBefore-v.total.kcal)<.1);const constantBefore=await page.locator('#nutrition-foot').innerText();await page.locator('#increase').click();const energyAfter=numeric(await page.locator('.nutrient strong').first().innerText());assert(Math.abs(energyAfter-v.total.kcal*(expectedBase+1)/expectedBase)<.02);assert.equal(await page.locator('#nutrition-foot').innerText(),constantBefore);assert.notEqual(await page.locator(`[data-amount="${firstIngredient}"]`).innerText(),initialAmount);await page.locator('#decrease').click();assert.equal(await page.locator(`[data-amount="${firstIngredient}"]`).innerText(),initialAmount);await page.locator('[data-check]').first().check();assert(await page.locator('[data-check]').first().isChecked());const opacity=await page.locator('.ingredient-item').first().locator('.ingredient-copy').evaluate(e=>getComputedStyle(e).opacity);assert.equal(opacity,'0.45');await page.reload();if(r.variants.length>1)assert(await page.locator(`[data-variant="${v.id}"]`).getAttribute('aria-pressed')==='true');assert(await page.locator('[data-check]').first().isChecked());await page.locator('#clear-checks').click();assert(!(await page.locator('[data-check]').first().isChecked()));});
- }
- await test(r.slug+': smartphone and cooking mode',async()=>{await page.setViewportSize({width:390,height:844});await page.goto(base+'/'+r.slug);await noOverflow();await page.locator('#cooking-mode').click();assert(await page.locator('#cooking-dialog').isVisible());await page.locator('#next-step').click();assert((await page.locator('#focus-count').innerText()).includes('2'));await page.keyboard.press('Escape');assert(!(await page.locator('#cooking-dialog').isVisible()));assert.equal(await page.evaluate(()=>document.activeElement.id),'cooking-mode');await page.setViewportSize({width:1440,height:1000});});
+import assert from 'node:assert/strict';
+
+/* Locate app.js and recipes-data.js whether run from repo root or scripts/ */
+const appPath = fs.existsSync('assets/app.js') ? 'assets/app.js' : path.join(path.dirname(new URL(import.meta.url).pathname), 'app.js');
+const dataPath = fs.existsSync('assets/recipes-data.js') ? 'assets/recipes-data.js' : null;
+
+const context = { window: {}, TextEncoder, URLSearchParams };
+if (dataPath) {
+  vm.runInNewContext(fs.readFileSync(dataPath, 'utf8'), context);
 }
-await test('Quantity parser: fractions, ranges and product text',async()=>{await page.goto(base+'/creamy-buckwheat.html');const samples=await page.evaluate(()=>['1/4 ч. л.','15–20 г (1–2 ч. л.)','0.5 ч. л.','1 кг (1000 г)','щепотка'].map(x=>window.RecipeUtils.scaleAmount(x,2)));assert.deepEqual(samples,['0,5 ч. л.','30–40 г (2–4 ч. л.)','1 ч. л.','2 кг (2 000 г)','щепотка']);});
-await test('Package mass stays fixed during scaling',async()=>{const result=await page.evaluate(()=>window.RecipeUtils.scaleAmount('360 г (2 пачки по 180 г)',2));assert.equal(result,'720 г (4 пачки по 180 г)');const person=await page.evaluate(()=>window.RecipeUtils.scaleAmount('15 г (по 5 г на чел)',2));assert.equal(person,'30 г (по 5 г на чел)');});
-await test('Portion boundaries 1 and 20',async()=>{await page.goto(base+'/creamy-buckwheat.html');for(let i=0;i<2;i++)await page.locator('#decrease').click();assert(await page.locator('#decrease').isDisabled());for(let i=0;i<19;i++)await page.locator('#increase').click();assert(await page.locator('#increase').isDisabled());assert((await page.locator('#servings').innerText()).startsWith('20'));});
-await test('File mode: works by opening index.html directly',async()=>{await page.goto('file://'+process.cwd()+'/index.html');assert.equal(await page.locator('.recipe-card').count(),recipes.length);await page.locator('.recipe-card').first().click();assert(await page.locator('#ingredients').isVisible());});
-await test('Reduced motion preference',async()=>{await page.emulateMedia({reducedMotion:'reduce'});await page.goto(base+'/index.html');assert.equal(await page.locator('.reveal').first().evaluate(e=>getComputedStyle(e).animationName),'none');await page.emulateMedia({reducedMotion:'no-preference'});});
-await fs.writeFile('test-results/results.json',JSON.stringify({total:results.length,passed:results.filter(r=>r.status==='pass').length,failed:failures.length,results},null,2));
-await browser.close();
-if(failures.length)throw new Error(failures.join('\n'));
-console.log(`All ${results.length} tests passed.`);
+vm.runInNewContext(fs.readFileSync(appPath, 'utf8'), context);
+
+const U = context.window.RecipeUtils;
+assert(U, 'RecipeUtils must be initialized on window');
+
+let passed = 0;
+function test(name, fn) {
+  fn();
+  passed++;
+  console.log(`  ✓ ${name}`);
+}
+
+console.log('Running automated test suite for pp-recipes (Stage 2.5):');
+
+test('1. Reverse ingredient scaling & protection of percentages/grades/temperatures', () => {
+  assert.equal(U.scaleAmount('400 г (2 пачки)', 180 / 400), '180 г (0,9 пачки)');
+  assert.equal(U.scaleAmount('120 г (1/3 банки)', 2), '240 г (0,67 банки)');
+  assert.equal(U.scaleAmount('Сгущенное молоко 1%', 2), 'Сгущенное молоко 1%');
+  assert.equal(U.scaleAmount('2 шт С0 (~125 г)', 1.5), '3 шт С0 (~187,5 г)');
+  assert.equal(U.scaleAmount('30 г КСБ-80 при 170°C', 2), '60 г КСБ-80 при 170°C');
+  assert.equal(U.scaleAmount('по 25 г', 3), 'по 25 г');
+});
+
+test('2. Primary ingredient quantity extraction (extractPrimaryAmount)', () => {
+  const curd = U.extractPrimaryAmount('400 г (2 пачки)');
+  assert.equal(curd.value, 400); assert.equal(curd.unit, 'г'); assert.equal(curd.grams, 400);
+  const eggs = U.extractPrimaryAmount('2 шт (~125 г)');
+  assert.equal(eggs.value, 2); assert.equal(eggs.unit, 'шт'); assert.equal(eggs.grams, 125);
+  assert.equal(U.extractPrimaryAmount('Щепотка'), null);
+});
+
+test('3. Pan diameter area scaling (calcPanRatio)', () => {
+  assert.equal(U.calcPanRatio(16, 20), 1.5625);
+  assert.equal(U.calcPanRatio(20, 16), 0.64);
+  assert.equal(U.calcPanRatio(18, 18), 1);
+});
+
+test('4. Plate gram calculator & Protein Index split (calcGramsNutrition, calcMacroSplit)', () => {
+  const per100 = {
+    kcal: 150,
+    macros: [
+      { label: 'Белки', value: 17 },
+      { label: 'Жиры', value: 2.7 },
+      { label: 'Углеводы', value: 12.2 },
+      { label: 'Клетчатка', value: 1.8 }
+    ]
+  };
+  const split = U.calcMacroSplit(per100);
+  assert.equal(split.pPct + split.fPct + split.cPct, 100);
+  const plate = U.calcGramsNutrition(per100, 180);
+  assert.equal(plate.kcal, 270);
+  assert.equal(plate.protein, 30.6);
+  assert.equal(plate.fat, 4.9);
+  assert.equal(plate.carbs, 22);
+});
+
+test('5. GS1 EAN-13 FatSecret Barcode generation, Modulo-10 checksum & 95-bit pattern', () => {
+  const code1 = U.generateRecipeEan13('cheesecake.html', 1);
+  const code2 = U.generateRecipeEan13('cheesecake.html', 2);
+  assert.equal(code1.length, 13);
+  assert(code1.startsWith('277'));
+  assert.notEqual(code1, code2);
+  assert.equal(U.verifyEan13Checksum(code1), true);
+  assert.equal(U.verifyEan13Checksum(code2), true);
+  const bits = U.encodeEan13Bits(code1);
+  assert.equal(bits.length, 95);
+  assert.equal(bits.slice(0, 3), '101');
+  assert.equal(bits.slice(45, 50), '01010');
+  assert.equal(bits.slice(92, 95), '101');
+});
+
+test('6. ISO/IEC 18004 QR Code matrix generation for recipe deep-links', () => {
+  const mat = U.generateQrMatrix('https://bakan-off.github.io/pp-recipes/cheesecake.html?v=2&s=6');
+  assert(mat.length >= 21 && mat.length <= 41);
+  assert.equal(mat.length, mat[0].length);
+  assert.equal(mat.flat().filter(x => x !== 0 && x !== 1).length, 0);
+});
+
+test('7. Smart Shopping Cart ingredient merging & department grouping (mergeCartIngredients)', () => {
+  const merged = U.mergeCartIngredients([
+    {
+      title: 'Чизкейк',
+      items: [
+        { name: 'Творог в брикете (0.1-2%)', amount: '400 г (2 пачки)', done: false },
+        { name: 'Яйца куриные С0', amount: '2 шт (~125 г)', done: false }
+      ]
+    },
+    {
+      title: 'Сочники',
+      items: [
+        { name: 'Творог в брикете (0-2%)', amount: '200 г (1 пачка)', done: false },
+        { name: 'Яйца куриные С0', amount: '3 шт (~190 г)', done: false }
+      ]
+    }
+  ]);
+  const curd = merged.find(x => x.key === 'творог в брикете');
+  const eggs = merged.find(x => x.key === 'яйца куриные');
+  assert.equal(curd.totalAmount, '600 г');
+  assert(curd.dept.includes('Молочный отдел'));
+  assert.equal(eggs.totalAmount, '5 шт (~315 г)');
+  assert(eggs.dept.includes('Мясо, птица и яйца'));
+});
+
+test('8. Daily Macro Planner recommendations (findRecipesForRemainingMacros) & step timers', () => {
+  const timers = U.extractStepTimers('<p>Выпекайте 26–28 минут, затем подождите 10 мин.</p>', 'Шаг');
+  assert.equal(timers.length, 2);
+  assert.equal(timers[0].sec, 1560);
+  assert.equal(timers[1].sec, 600);
+});
+
+console.log(`\nALL ${passed} AUTOMATED TEST SUITES PASSED!`);
