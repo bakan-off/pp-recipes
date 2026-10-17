@@ -16,7 +16,7 @@ if (fs.existsSync('assets/recipes-data.js')) {
   vm.runInNewContext(fs.readFileSync('assets/recipes-data.js', 'utf8'), context);
   const recipes = context.window.RECIPES;
   assert.equal(recipes.length, 26);
-  assert.equal(recipes.reduce((n, r) => n + r.variants.length, 0), 43);
+  assert.equal(recipes.reduce((n, r) => n + r.variants.length, 0), 44);
   for (const r of recipes) {
     assert(fs.existsSync(r.slug));
     assert(fs.existsSync(r.image));
@@ -112,7 +112,7 @@ if (context.window.RECIPES) {
       seenBarcodes.add(code);
     }
   }
-  assert.equal(seenBarcodes.size, 43);
+  assert.equal(seenBarcodes.size, 44);
 }
 
 // 3.5 QR Code Matrix Generator
@@ -268,4 +268,4 @@ assert(!recRes.appEl.innerHTML.includes('onclick='));
 assert.equal(recRes.elsById.get('servings').textContent, 'Масштаб ×0,45');
 assert.equal(recRes.elsById.get('plate-calc-output').textContent.includes('ккал'), true);
 
-console.log('PASS: JS syntax; 26 routes; 43 variants; Stage 2.5 unit & DOM tests (reverse scaling, pan ratio, FatSecret EAN-13, QR matrix, smart cart merge, macro planner, timers).');
+console.log('PASS: JS syntax; 26 routes; 44 variants; Stage 2.5 unit & DOM tests (reverse scaling, pan ratio, FatSecret EAN-13, QR matrix, smart cart merge, macro planner, timers).');
