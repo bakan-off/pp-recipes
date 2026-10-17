@@ -1268,129 +1268,195 @@ function startKitchenTimer(seconds, label) {
   }
 }
 
-/* Canvas PNG Recipe Card Generator (1080x1350 with QR & FatSecret EAN-13) */
-async function downloadRecipeCardPng(r, variant, ratio, servingsLabel, shareUrl) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1080;
-  canvas.height = 1350;
-  const ctx = canvas.getContext('2d');
-
-  // Background
-  ctx.fillStyle = '#FAF8F5';
-  ctx.fillRect(0, 0, 1080, 1350);
-
-  // Header brand
-  ctx.fillStyle = '#59674F';
-  ctx.font = '600 22px Arial, sans-serif';
-  ctx.fillText('ПП · РЕЦЕПТЫ   |   КОЛЛЕКЦИЯ ВЫСОКОБЕЛКОВЫХ БЛЮД', 64, 68);
-
-  // Title & Variation
-  ctx.fillStyle = '#1C1917';
-  ctx.font = '46px Georgia, serif';
-  const titleWords = r.shortTitle.split(' ');
+function wrapCanvasLines(ctx, text, maxWidth) {
+  const words = String(text || '').trim().split(/ +/).filter(Boolean);
+  if (!words.length) return [''];
+  const lines = [];
   let line = '';
-  let y = 135;
-  for (const w of titleWords) {
-    const test = line ? `${line} ${w}` : w;
-    if (ctx.measureText(test).width > 950) {
-      ctx.fillText(line, 64, y);
-      line = w;
-      y += 54;
+  for (const word of words) {
+    const test = line ? `${line} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
     } else {
       line = test;
     }
   }
-  if (line) ctx.fillText(line, 64, y);
+  if (line) lines.push(line);
+  return lines;
+}
 
-  y += 42;
-  ctx.fillStyle = '#59674F';
-  ctx.font = '26px Arial, sans-serif';
-  ctx.fillText(`Вариация: ${variant.name}  ·  ${servingsLabel}  ·  ${r.time}`, 64, y);
+function drawRoundedBox(ctx, x, y, w, h, r, fill, stroke) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1.5; ctx.stroke(); }
+}
 
-  // Nutrition Card Box
-  y += 34;
-  ctx.fillStyle = '#EFECE6';
-  ctx.fillRect(64, y, 952, 150);
-  const p100 = variant.per100 || variant.total;
-  const split = calcMacroSplit(p100);
-  const metrics = [
-    { lbl: 'КАЛОРИИ (100 Г)', val: `${fmt(p100.kcal)} ккал` },
-    { lbl: 'БЕЛКИ (100 Г)', val: `${fmt(macro(p100, 'Белки'))} г` },
-    { lbl: 'ЖИРЫ (100 Г)', val: `${fmt(macro(p100, 'Жиры'))} г` },
-    { lbl: 'УГЛЕВОДЫ (100 Г)', val: `${fmt(macro(p100, 'Углеводы'))} г` },
-    { lbl: 'ПРОТЕИНОВЫЙ ИНДЕКС', val: `${split.pPct}% ккал` }
-  ];
-  metrics.forEach((m, idx) => {
-    const mx = 92 + idx * 186;
-    ctx.fillStyle = '#68635D';
-    ctx.font = '600 15px Arial, sans-serif';
-    ctx.fillText(m.lbl, mx, y + 52);
-    ctx.fillStyle = idx === 1 || idx === 4 ? '#59674F' : '#1C1917';
-    ctx.font = 'bold 34px Georgia, serif';
-    ctx.fillText(m.val, mx, y + 104);
+async function downloadRecipeCardPng(r, variant, ratio, servingsLabel, shareUrl) {
+  const measureCanvas = document.createElement('canvas');
+  const mctx = measureCanvas.getContext('2d');
+
+  mctx.font = '46px Georgia, serif';
+  const titleLines = wrapCanvasLines(mctx, r.shortTitle, 952);
+
+  mctx.font = '24px Arial, sans-serif';
+  const nbspServings = String(servingsLabel || '').replace(/\s+/g, '\u00A0');
+  const nbspTime = String(r.time || '').replace(/\s+/g, '\u00A0');
+  const subText = `Вариация: ${variant.name}  ·  ${nbspServings}  ·  ${nbspTime}`;
+  const subLines = wrapCanvasLines(mctx, subText, 952);
+
+  const ings = variant.ingredients.filter(x => !x.group);
+  mctx.font = '22px Arial, sans-serif';
+  const ingRows = ings.map(ing => {
+    const scaled = scaleAmount(ing.amount, ratio);
+    const nameLines = wrapCanvasLines(mctx, `• ${ing.name}`, 500);
+    const amtLines = wrapCanvasLines(mctx, scaled, 410);
+    const linesCount = Math.max(nameLines.length, amtLines.length);
+    return { nameLines, amtLines, linesCount, height: linesCount * 30 + 22 };
   });
 
-  // Ingredients Section
-  y += 205;
+  const headerH = 92 + titleLines.length * 54 + subLines.length * 34 + 24;
+  const nutriH = 148;
+  const ingHeaderH = 82;
+  const totalIngH = ingRows.reduce((acc, row) => acc + row.height, 0);
+  const footY = headerH + nutriH + ingHeaderH + totalIngH + 28;
+  const totalH = footY + 244 + 56;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = totalH;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#FAF8F5';
+  ctx.fillRect(0, 0, 1080, totalH);
+
+  ctx.fillStyle = '#59674F';
+  ctx.font = '600 20px Arial, sans-serif';
+  ctx.fillText('ПП · РЕЦЕПТЫ   |   КОЛЛЕКЦИЯ ВЫСОКОБЕЛКОВЫХ БЛЮД', 64, 62);
+  ctx.fillStyle = 'rgba(207,199,189,0.7)';
+  ctx.fillRect(64, 80, 952, 1);
+
+  let y = 136;
+  ctx.fillStyle = '#1C1917';
+  ctx.font = '46px Georgia, serif';
+  for (const tl of titleLines) {
+    ctx.fillText(tl, 64, y);
+    y += 54;
+  }
+
+  y -= 10;
+  ctx.fillStyle = '#59674F';
+  ctx.font = '24px Arial, sans-serif';
+  for (const sl of subLines) {
+    ctx.fillText(sl, 64, y);
+    y += 34;
+  }
+
+  y += 12;
+  const p100 = variant.per100 || variant.total;
+  const split = calcMacroSplit(p100);
+  const cards = [
+    { lbl: 'КАЛОРИИ', val: fmt(p100.kcal), unit: 'ккал / 100 г', accent: false },
+    { lbl: 'БЕЛКИ', val: fmt(macro(p100, 'Белки')), unit: 'г / 100 г', accent: true },
+    { lbl: 'ЖИРЫ', val: fmt(macro(p100, 'Жиры')), unit: 'г / 100 г', accent: false },
+    { lbl: 'УГЛЕВОДЫ', val: fmt(macro(p100, 'Углеводы')), unit: 'г / 100 г', accent: false },
+    { lbl: 'БЕЛКОВЫЙ ИНДЕКС', val: `${split.pPct}%`, unit: 'ккал из белка', accent: true }
+  ];
+  const cardGap = 14;
+  const cardW = (952 - cardGap * 4) / 5;
+  const cardH = 136;
+  cards.forEach((c, idx) => {
+    const cx = 64 + idx * (cardW + cardGap);
+    drawRoundedBox(ctx, cx, y, cardW, cardH, 10, c.accent ? '#EDF0E8' : '#EFECE6', c.accent ? '#8CA37B' : '#DDD6CC');
+    ctx.fillStyle = '#68635D';
+    ctx.font = '600 12px Arial, sans-serif';
+    ctx.fillText(c.lbl, cx + 16, y + 32);
+    ctx.fillStyle = c.accent ? '#59674F' : '#1C1917';
+    ctx.font = 'bold 36px Georgia, serif';
+    ctx.fillText(c.val, cx + 16, y + 80);
+    ctx.fillStyle = '#68635D';
+    ctx.font = '15px Arial, sans-serif';
+    ctx.fillText(c.unit, cx + 16, y + 112);
+  });
+
+  y += cardH + 52;
   ctx.fillStyle = '#1C1917';
   ctx.font = '32px Georgia, serif';
   ctx.fillText('Ингредиенты на выбранный объём:', 64, y);
   y += 38;
 
-  const ings = variant.ingredients.filter(x => !x.group);
-  ctx.font = '23px Arial, sans-serif';
-  for (let i = 0; i < Math.min(14, ings.length); i++) {
-    const ing = ings[i];
-    const scaled = scaleAmount(ing.amount, ratio);
-    ctx.fillStyle = '#1C1917';
-    ctx.fillText(`• ${ing.name}`, 64, y);
-    ctx.fillStyle = '#59674F';
-    ctx.fillText(scaled, 680, y);
-    ctx.fillStyle = 'rgba(207,199,189,0.5)';
-    ctx.fillRect(64, y + 12, 952, 1);
-    y += 42;
+  ctx.font = '22px Arial, sans-serif';
+  for (const row of ingRows) {
+    for (let li = 0; li < row.linesCount; li++) {
+      const lineY = y + li * 30;
+      if (row.nameLines[li]) {
+        ctx.fillStyle = '#1C1917';
+        ctx.fillText(row.nameLines[li], 64, lineY);
+      }
+      if (row.amtLines[li]) {
+        ctx.fillStyle = '#59674F';
+        ctx.fillText(row.amtLines[li], 596, lineY);
+      }
+    }
+    const bottomLineY = y + (row.linesCount - 1) * 30 + 14;
+    ctx.fillStyle = 'rgba(207,199,189,0.55)';
+    ctx.fillRect(64, bottomLineY, 952, 1);
+    y += row.height;
   }
 
-  // Footer Box with FatSecret EAN-13 Barcode & QR Code
-  const footY = 1060;
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(64, footY, 952, 230);
-  ctx.strokeStyle = '#CFC7BD';
-  ctx.strokeRect(64, footY, 952, 230);
+  drawRoundedBox(ctx, 64, footY, 952, 244, 12, '#FFFFFF', '#CFC7BD');
 
-  // Draw EAN-13 Barcode on left
   const ean13 = generateRecipeEan13(r.slug, variant.id);
   const eanBits = encodeEan13Bits(ean13);
-  ctx.fillStyle = '#68635D';
-  ctx.font = '600 16px Arial, sans-serif';
-  ctx.fillText('ШТРИХКОД ДЛЯ СКАНЕРА FATSECRET (EAN-13):', 96, footY + 40);
-  const bx0 = 96;
-  const by0 = footY + 58;
+  ctx.fillStyle = '#59674F';
+  ctx.font = '600 15px Arial, sans-serif';
+  ctx.fillText('ШТРИХКОД ДЛЯ СКАНЕРА FATSECRET (EAN-13):', 92, footY + 38);
+  const bx0 = 92;
+  const by0 = footY + 54;
   for (let i = 0; i < eanBits.length; i++) {
     if (eanBits[i] === '1') {
       const isGuard = i < 3 || (i >= 45 && i < 50) || i >= 92;
       ctx.fillStyle = '#1C1917';
-      ctx.fillRect(bx0 + i * 3, by0, 3, isGuard ? 110 : 94);
+      ctx.fillRect(bx0 + i * 3, by0, 3, isGuard ? 106 : 90);
     }
   }
   ctx.fillStyle = '#1C1917';
-  ctx.font = 'bold 22px monospace';
-  ctx.fillText(`${ean13[0]}  ${ean13.slice(1, 7)}  ${ean13.slice(7)}`, bx0 + 36, by0 + 135);
+  ctx.font = 'bold 21px monospace';
+  ctx.fillText(`${ean13[0]}  ${ean13.slice(1, 7)}  ${ean13.slice(7)}`, bx0 + 30, by0 + 130);
+  ctx.fillStyle = '#68635D';
+  ctx.font = '14px Arial, sans-serif';
+  ctx.fillText('Отсканируйте в FatSecret для быстрого ввода порции', 92, footY + 218);
 
-  // Draw QR Code on right
+  ctx.fillStyle = 'rgba(207,199,189,0.75)';
+  ctx.fillRect(492, footY + 24, 1, 196);
+
+  ctx.fillStyle = '#59674F';
+  ctx.font = '600 15px Arial, sans-serif';
+  ctx.fillText('ОТКРЫТЬ РЕЦЕПТ И ТАЙМЕРЫ:', 518, footY + 46);
+
+  ctx.fillStyle = '#1C1917';
+  ctx.font = '19px Arial, sans-serif';
+  const qrNoteLines = wrapCanvasLines(
+    ctx,
+    'Наведите камеру телефона на QR-код, чтобы открыть эту вариацию, пересчёт порций и таймеры готовки.',
+    262
+  );
+  qrNoteLines.forEach((ql, qi) => {
+    ctx.fillText(ql, 518, footY + 82 + qi * 28);
+  });
+
   const qrMat = generateQrMatrix(shareUrl);
   const qn = qrMat.length;
-  const cell = Math.floor(165 / qn);
-  const qx0 = 980 - qn * cell;
-  const qy0 = footY + 34;
-  ctx.fillStyle = '#68635D';
-  ctx.font = '600 16px Arial, sans-serif';
-  ctx.fillText('ОТКРЫТЬ РЕЦЕПТ И ТАЙМЕРЫ:', 540, footY + 75);
-  ctx.fillStyle = '#1C1917';
-  ctx.font = '20px Arial, sans-serif';
-  ctx.fillText('Наведите камеру на QR-код,', 540, footY + 112);
-  ctx.fillText('чтобы открыть эту вариацию', 540, footY + 140);
-  ctx.fillText('в интерактивном режиме готовки.', 540, footY + 168);
+  const cell = Math.max(3, Math.floor(172 / qn));
+  const qrSize = qn * cell;
+  const qx0 = 990 - qrSize;
+  const qy0 = footY + Math.round((244 - qrSize) / 2);
 
   for (let qr = 0; qr < qn; qr++) {
     for (let qc = 0; qc < qn; qc++) {
