@@ -155,7 +155,9 @@ assert.equal(timers[1].sec, 15 * 60);
 assert(Array.isArray(U.INGREDIENT_SWAPS) && U.INGREDIENT_SWAPS.length >= 4);
 const cfg = U.getIngredientSwapConfig('Сыр лёгкий 25% (или Сулугуни)');
 assert(cfg && cfg.category === 'cheese');
-assert.equal(U.getIngredientSwapConfig('Куриная грудка'), null);
+const meatCfg = U.getIngredientSwapConfig('Куриная грудка');
+assert(meatCfg && meatCfg.category === 'meat');
+assert.equal(U.getIngredientSwapConfig('Соль поваренная'), null);
 
 const curdCfg = U.getIngredientSwapConfig('Творог 5% мягкий');
 assert(curdCfg && curdCfg.category === 'curd');
