@@ -1298,6 +1298,93 @@ function drawRoundedBox(ctx, x, y, w, h, r, fill, stroke) {
   if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1.5; ctx.stroke(); }
 }
 
+function openCardPreviewModal(canvas, r, variant) {
+  const dataUrl = canvas.toDataURL('image/png');
+  const fileName = `pp-recipe-${r.slug.replace('.html', '')}-v${variant.id}.png`;
+  const ean13 = generateRecipeEan13(r.slug, variant.id);
+  const p100 = variant.per100 || variant.total;
+  const productName = `${r.shortTitle} (${variant.name})`;
+  const fsCopySummary = [
+    `Марка: ПП · рецепты`,
+    `Название продукта: ${productName}`,
+    `Штрихкод EAN-13: ${ean13}`,
+    `Порция: 100 г`,
+    `Калории: ${fmt(p100.kcal)} ккал`,
+    `Белки: ${fmt(macro(p100, 'Белки'))} г`,
+    `Жиры: ${fmt(macro(p100, 'Жиры'))} г`,
+    `Углеводы: ${fmt(macro(p100, 'Углеводы'))} г`
+  ].join('\n');
+
+  let dlg = document.getElementById('card-preview-dialog');
+  if (!dlg) {
+    dlg = document.createElement('dialog');
+    dlg.id = 'card-preview-dialog';
+    dlg.className = 'shopping-dialog';
+    dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+    document.body.appendChild(dlg);
+  }
+
+  dlg.innerHTML = `
+    <div class="dialog-inner" style="max-width:720px;">
+      <div class="dialog-header">
+        <div>
+          <small>БЕЗ СКАЧИВАНИЯ НА ПК · СКАНИРУЙТЕ С ЭКРАНА</small>
+          <h2>Карточка рецепта и штрихкод</h2>
+        </div>
+        <button type="button" class="icon-button" id="close-card-preview" aria-label="Закрыть окно">${icon('close')}</button>
+      </div>
+      <div class="shopping-body" style="display:grid; gap:16px;">
+        <div class="fs-code-box" style="text-align:center; padding:16px; background:#FFFFFF; border:1px solid var(--line, #CFC7BD); border-radius:12px;">
+          <small style="display:block; margin-bottom:8px; color:#59674F; font-weight:600;">НАВЕДИТЕ СКАНЕР FATSECRET НА ЭКРАН (EAN-13):</small>
+          <div style="display:flex; justify-content:center;">${renderEan13Svg(ean13, 310, 112)}</div>
+          <div style="margin-top:10px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+            <button type="button" class="share-chip" id="preview-copy-fs">${icon('copy')} Скопировать БЖУ на 100 г</button>
+            <button type="button" class="share-chip" id="preview-copy-img">${icon('copy')} Скопировать картинку (Ctrl+V)</button>
+            <button type="button" class="share-chip" id="preview-download-png">${icon('download')} Скачать PNG на ПК</button>
+          </div>
+        </div>
+        <div style="background:#FAF8F5; border:1px solid var(--line, #CFC7BD); border-radius:12px; padding:10px; max-height:58vh; overflow:auto;">
+          <img src="${dataUrl}" alt="Карточка рецепта ${esc(r.shortTitle)}" style="width:100%; height:auto; display:block; border-radius:8px;">
+        </div>
+      </div>
+    </div>
+  `;
+
+  dlg.querySelector('#close-card-preview').addEventListener('click', () => dlg.close());
+  dlg.querySelector('#preview-download-png').addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = fileName;
+    link.href = dataUrl;
+    link.click();
+    showToast('Файл PNG сохранён на устройство');
+  });
+  dlg.querySelector('#preview-copy-fs').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(fsCopySummary);
+      showToast('Данные КБЖУ на 100 г скопированы!');
+    } catch {
+      showToast('Не удалось скопировать текст');
+    }
+  });
+  dlg.querySelector('#preview-copy-img').addEventListener('click', () => {
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+      showToast('Браузер не поддерживает копирование картинок');
+      return;
+    }
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        showToast('Картинка скопирована в буфер (вставьте через Ctrl+V)!');
+      } catch {
+        showToast('Не удалось скопировать картинку');
+      }
+    }, 'image/png');
+  });
+
+  dlg.showModal();
+}
+
 async function downloadRecipeCardPng(r, variant, ratio, servingsLabel, shareUrl) {
   const measureCanvas = document.createElement('canvas');
   const mctx = measureCanvas.getContext('2d');
@@ -1467,10 +1554,7 @@ async function downloadRecipeCardPng(r, variant, ratio, servingsLabel, shareUrl)
     }
   }
 
-  const link = document.createElement('a');
-  link.download = `pp-recipe-${r.slug.replace('.html', '')}-v${variant.id}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
+  openCardPreviewModal(canvas, r, variant);
 }
 
 /* ==========================================================================
@@ -1817,7 +1901,7 @@ function initRecipe(r) {
             <button type="button" class="share-btn share-max" id="share-max" title="Отправить в мессенджер MAX">${icon('max')} MAX</button>
             <button type="button" class="share-btn share-vk" id="share-vk" title="Поделиться ВКонтакте">${icon('vk')} ВК</button>
             <button type="button" class="share-btn" id="copy-recipe-text" title="Скопировать полный рецепт с КБЖУ и ингредиентами">${icon('copy')} Текст рецепта</button>
-            <button type="button" class="share-btn" id="download-card-png" title="Скачать карточку рецепта с QR и штрихкодом для FatSecret">${icon('download')} Карточка PNG</button>
+            <button type="button" class="share-btn" id="download-card-png" title="Открыть карточку рецепта с QR и штрихкодом для FatSecret">${icon('download')} Карточка и штрихкод</button>
             <button type="button" class="share-btn" id="copy-share-link" title="Скопировать прямую ссылку на эту вариацию">Ссылка</button>
           </div>
         </div>
@@ -2052,7 +2136,6 @@ function initRecipe(r) {
   });
 
   document.getElementById('download-card-png').addEventListener('click', async () => {
-    showToast('Формируем карточку рецепта с QR и штрихкодом...');
     await downloadRecipeCardPng(r, variant, currentRatio(), getServingsLabel(), getShareUrl());
   });
 
