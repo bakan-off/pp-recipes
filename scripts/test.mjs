@@ -121,4 +121,42 @@ test('8. Daily Macro Planner recommendations (findRecipesForRemainingMacros) & s
   assert.equal(timers[1].sec, 600);
 });
 
+test('9. Smart ingredient & cheese swap with KBJU delta recalculation and immutability', () => {
+  assert(Array.isArray(U.INGREDIENT_SWAPS) && U.INGREDIENT_SWAPS.length >= 4);
+  const cfg = U.getIngredientSwapConfig('Сыр лёгкий 25% (или Сулугуни)');
+  assert(cfg && cfg.category === 'cheese');
+  assert.equal(U.getIngredientSwapConfig('Куриная грудка'), null);
+
+  const curdCfg = U.getIngredientSwapConfig('Творог 5% мягкий');
+  assert(curdCfg && curdCfg.category === 'curd');
+
+  if (context.window.RECIPES) {
+    const khacha = context.window.RECIPES.find(r => r.slug === 'pp-khachapuri.html');
+    const v1 = khacha.variants[0];
+    const initialKcal = v1.total.kcal;
+    const initialFat = v1.total.macros.find(m => m.label.startsWith('Жиры')).value;
+    const initialProt = v1.total.macros.find(m => m.label.startsWith('Белки')).value;
+
+    const cheeseSwap = U.INGREDIENT_SWAPS.find(c => c.category === 'cheese');
+    const brest = cheeseSwap.presets.find(p => p.id === 'brest-45');
+    const swapped = U.applyIngredientSwapsToVariant(v1, { cheese: brest });
+
+    // 180g of cheese: (340 - 232) * 1.8 = +194.4 kcal
+    assert.equal(swapped.total.kcal, 1490);
+    assert.equal(swapped.total.macros.find(m => m.label.startsWith('Белки')).value, 87.9);
+    assert.equal(swapped.total.macros.find(m => m.label.startsWith('Жиры')).value, 57.2);
+
+    // Verify per 100g delta
+    assert.equal(swapped.per100.kcal, 257);
+    assert.equal(swapped.per100.macros.find(m => m.label.startsWith('Белки')).value, 15.1);
+    assert.equal(swapped.per100.macros.find(m => m.label.startsWith('Жиры')).value, 9.9);
+
+    // Immutability: original recipe variant object must NOT be modified
+    assert.equal(v1.total.kcal, initialKcal);
+    assert.equal(v1.total.macros.find(m => m.label.startsWith('Жиры')).value, initialFat);
+    assert.equal(v1.total.macros.find(m => m.label.startsWith('Белки')).value, initialProt);
+    assert.equal(v1.ingredients[0].name.includes('вместо:'), false);
+  }
+});
+
 console.log(`\nALL ${passed} AUTOMATED TEST SUITES PASSED!`);

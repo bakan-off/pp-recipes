@@ -136,6 +136,458 @@ function extractPrimaryAmount(amountStr) {
   };
 }
 
+const INGREDIENT_SWAPS = [
+  {
+    category: 'cheese',
+    matchRx: /(^|[\s(])(сыр|сулугуни|моцарелл|пармезан|чеддер|гауда|тильзитер|ламбер|адыгейск|фета|брынз|халуми)/i,
+    excludeRx: /творожн|сливочн|рикотт|маскарпоне|филадельф|сырник|плавлен/i,
+    label: 'Сыр в рецепте',
+    presets: [
+      {
+        id: 'default',
+        name: 'По рецепту (Сыр лёгкий 25% — 232 ккал | Б 31 | Ж 12 | У 0)',
+        shortName: 'Сыр лёгкий 25%',
+        kcal: 232, p: 31, f: 12, c: 0,
+        packs: [
+          { label: '125 г (нарезка)', grams: 125 },
+          { label: '180 г (брусок)', grams: 180 },
+          { label: '200 г', grams: 200 }
+        ]
+      },
+      {
+        id: 'brest-45',
+        name: 'Сыр «Брест-Литовск Классический» 45% (340 ккал | Б 26,3 | Ж 26,1 | У 0)',
+        shortName: 'Сыр «Брест-Литовск Классический» 45%',
+        kcal: 340, p: 26.3, f: 26.1, c: 0,
+        packs: [
+          { label: '130 г (нарезка)', grams: 130 },
+          { label: '200 г (брусок)', grams: 200 },
+          { label: '500 г (брусок)', grams: 500 }
+        ]
+      },
+      {
+        id: 'brest-light-35',
+        name: 'Сыр «Брест-Литовск Лёгкий» 35% (265 ккал | Б 28,2 | Ж 16,6 | У 0)',
+        shortName: 'Сыр «Брест-Литовск Лёгкий» 35%',
+        kcal: 265, p: 28.2, f: 16.6, c: 0,
+        packs: [
+          { label: '130 г (нарезка)', grams: 130 },
+          { label: '200 г (брусок)', grams: 200 }
+        ]
+      },
+      {
+        id: 'brest-creamy-50',
+        name: 'Сыр «Брест-Литовск Сливочный» 50% (363 ккал | Б 23,8 | Ж 29,5 | У 0)',
+        shortName: 'Сыр «Брест-Литовск Сливочный» 50%',
+        kcal: 363, p: 23.8, f: 29.5, c: 0,
+        packs: [
+          { label: '130 г (нарезка)', grams: 130 },
+          { label: '200 г (брусок)', grams: 200 }
+        ]
+      },
+      {
+        id: 'cheese-15-ultra',
+        name: 'Сыр ультра-лёгкий 15% (Fitness / Natura Light — 213 ккал | Б 33 | Ж 9 | У 0)',
+        shortName: 'Сыр ультра-лёгкий 15%',
+        kcal: 213, p: 33, f: 9, c: 0,
+        packs: [
+          { label: '125 г (нарезка)', grams: 125 },
+          { label: '180 г (брусок)', grams: 180 },
+          { label: '200 г', grams: 200 }
+        ]
+      },
+      {
+        id: 'oltermanni-17',
+        name: 'Сыр Oltermanni Light 17% (270 ккал | Б 29 | Ж 17 | У 0)',
+        shortName: 'Сыр Oltermanni Light 17%',
+        kcal: 270, p: 29, f: 17, c: 0,
+        packs: [
+          { label: '125 г', grams: 125 },
+          { label: '200 г', grams: 200 },
+          { label: '250 г', grams: 250 }
+        ]
+      },
+      {
+        id: 'suluguni-45',
+        name: 'Сулугуни классический 45% (Умалат / Предгорье Кавказа — 285 ккал | Б 21,5 | Ж 22 | У 0)',
+        shortName: 'Сыр Сулугуни 45%',
+        kcal: 285, p: 21.5, f: 22, c: 0,
+        packs: [
+          { label: '180 г', grams: 180 },
+          { label: '250 г', grams: 250 },
+          { label: '280 г', grams: 280 },
+          { label: '300 г', grams: 300 }
+        ]
+      },
+      {
+        id: 'adygeysky-20',
+        name: 'Сыр Адыгейский / Сулугуни лёгкий 18–20% (215 ккал | Б 22 | Ж 14 | У 0,5)',
+        shortName: 'Сыр Адыгейский 20%',
+        kcal: 215, p: 22, f: 14, c: 0.5,
+        packs: [
+          { label: '200 г', grams: 200 },
+          { label: '250 г', grams: 250 },
+          { label: '300 г', grams: 300 }
+        ]
+      },
+      {
+        id: 'mozzarella-pizza-45',
+        name: 'Моцарелла для пиццы полутвёрдая 45% (Galbani / Bonfesto — 298 ккал | Б 24 | Ж 22 | У 1)',
+        shortName: 'Моцарелла для пиццы 45%',
+        kcal: 298, p: 24, f: 22, c: 1,
+        packs: [
+          { label: '180 г', grams: 180 },
+          { label: '200 г', grams: 200 },
+          { label: '250 г', grams: 250 },
+          { label: '350 г', grams: 350 }
+        ]
+      },
+      {
+        id: 'mozzarella-brine-45',
+        name: 'Моцарелла в рассоле 45% (Galbani / Unagrande — 242 ккал | Б 18 | Ж 18,5 | У 0,7)',
+        shortName: 'Моцарелла в рассоле 45%',
+        kcal: 242, p: 18, f: 18.5, c: 0.7,
+        packs: [
+          { label: '100 г (мини)', grams: 100 },
+          { label: '125 г (1 шарик)', grams: 125 },
+          { label: '250 г', grams: 250 }
+        ]
+      },
+      {
+        id: 'mozzarella-light-18',
+        name: 'Моцарелла Light 18% (Galbani Light / ВкусВилл — 206 ккал | Б 24 | Ж 12 | У 0,5)',
+        shortName: 'Моцарелла Light 18%',
+        kcal: 206, p: 24, f: 12, c: 0.5,
+        packs: [
+          { label: '125 г (шарик)', grams: 125 },
+          { label: '200 г', grams: 200 }
+        ]
+      },
+      {
+        id: 'lamber-50',
+        name: 'Сыр Ламбер / Российский / Тильзитер 50% (364 ккал | Б 23,7 | Ж 30 | У 0)',
+        shortName: 'Сыр Ламбер / Российский 50%',
+        kcal: 364, p: 23.7, f: 30, c: 0,
+        packs: [
+          { label: '150 г (нарезка)', grams: 150 },
+          { label: '180 г', grams: 180 },
+          { label: '200 г', grams: 200 },
+          { label: '230 г', grams: 230 }
+        ]
+      },
+      {
+        id: 'gouda-45',
+        name: 'Сыр Гауда / Эдам / Маасдам 45% (334 ккал | Б 25 | Ж 26 | У 0)',
+        shortName: 'Сыр Гауда 45%',
+        kcal: 334, p: 25, f: 26, c: 0,
+        packs: [
+          { label: '150 г', grams: 150 },
+          { label: '200 г', grams: 200 },
+          { label: '250 г', grams: 250 }
+        ]
+      },
+      {
+        id: 'cheddar-50',
+        name: 'Сыр Чеддер 45–50% (368 ккал | Б 24 | Ж 30 | У 0)',
+        shortName: 'Сыр Чеддер 50%',
+        kcal: 368, p: 24, f: 30, c: 0,
+        packs: [
+          { label: '150 г', grams: 150 },
+          { label: '200 г', grams: 200 }
+        ]
+      },
+      {
+        id: 'parmesan-40',
+        name: 'Сыр Пармезан твёрдый 40% (392 ккал | Б 33 | Ж 28 | У 0)',
+        shortName: 'Сыр Пармезан 40%',
+        kcal: 392, p: 33, f: 28, c: 0,
+        packs: [
+          { label: '50 г (тёртый)', grams: 50 },
+          { label: '100 г', grams: 100 },
+          { label: '150 г', grams: 150 },
+          { label: '200 г', grams: 200 }
+        ]
+      },
+      {
+        id: 'feta-45',
+        name: 'Сыр Фета / Сиртаки / Брынза 40–45% (255 ккал | Б 15 | Ж 21 | У 1,5)',
+        shortName: 'Сыр Фета / Брынза 45%',
+        kcal: 255, p: 15, f: 21, c: 1.5,
+        packs: [
+          { label: '180 г', grams: 180 },
+          { label: '200 г', grams: 200 },
+          { label: '250 г', grams: 250 }
+        ]
+      },
+      {
+        id: 'custom',
+        name: '✏️ Свой сыр с упаковки (ввести КБЖУ на 100 г вручную)...',
+        shortName: 'Сыр (свой КБЖУ)',
+        kcal: 340, p: 26.3, f: 26.1, c: 0,
+        packs: []
+      }
+    ]
+  },
+  {
+    category: 'curd',
+    matchRx: /творог/i,
+    excludeRx: /творожн\S*\s+сыр/i,
+    label: 'Творог в рецепте',
+    presets: [
+      {
+        id: 'default',
+        name: 'По рецепту (Творог 0–2% — 85 ккал | Б 18 | Ж 1 | У 1,8)',
+        shortName: 'Творог 0–2%',
+        kcal: 85, p: 18, f: 1, c: 1.8,
+        packs: [
+          { label: '180 г (1 пачка)', grams: 180 },
+          { label: '200 г (1 пачка)', grams: 200 },
+          { label: '360 г (2 пачки)', grams: 360 }
+        ]
+      },
+      {
+        id: 'curd-5',
+        name: 'Творог 5% классический (121 ккал | Б 16 | Ж 5 | У 3)',
+        shortName: 'Творог 5%',
+        kcal: 121, p: 16, f: 5, c: 3,
+        packs: [
+          { label: '180 г (1 пачка)', grams: 180 },
+          { label: '200 г (1 пачка)', grams: 200 },
+          { label: '360 г (2 пачки)', grams: 360 }
+        ]
+      },
+      {
+        id: 'curd-9',
+        name: 'Творог 9% (159 ккал | Б 16 | Ж 9 | У 2)',
+        shortName: 'Творог 9%',
+        kcal: 159, p: 16, f: 9, c: 2,
+        packs: [
+          { label: '180 г (1 пачка)', grams: 180 },
+          { label: '200 г (1 пачка)', grams: 200 }
+        ]
+      },
+      {
+        id: 'curd-soft-0',
+        name: 'Мягкий творог 0–0,1% в тубе/ванночке (65 ккал | Б 12 | Ж 0,1 | У 3,5)',
+        shortName: 'Мягкий творог 0%',
+        kcal: 65, p: 12, f: 0.1, c: 3.5,
+        packs: [
+          { label: '125 г', grams: 125 },
+          { label: '170 г', grams: 170 }
+        ]
+      },
+      {
+        id: 'custom',
+        name: '✏️ Свой творог с упаковки (ввести КБЖУ вручную)...',
+        shortName: 'Творог (свой КБЖУ)',
+        kcal: 121, p: 16, f: 5, c: 3,
+        packs: []
+      }
+    ]
+  },
+  {
+    category: 'yogurt',
+    matchRx: /йогурт|сметан|скир/i,
+    excludeRx: /$/i,
+    label: 'Йогурт / сметана в рецепте',
+    presets: [
+      {
+        id: 'default',
+        name: 'По рецепту (Греческий йогурт 2% — 66 ккал | Б 8 | Ж 2 | У 4)',
+        shortName: 'Греческий йогурт 2%',
+        kcal: 66, p: 8, f: 2, c: 4,
+        packs: [
+          { label: '120 г (баночка)', grams: 120 },
+          { label: '140 г (баночка)', grams: 140 },
+          { label: '250 г', grams: 250 }
+        ]
+      },
+      {
+        id: 'sourcream-10',
+        name: 'Сметана 10% (115 ккал | Б 3 | Ж 10 | У 3,2)',
+        shortName: 'Сметана 10%',
+        kcal: 115, p: 3, f: 10, c: 3.2,
+        packs: [
+          { label: '180 г', grams: 180 },
+          { label: '300 г', grams: 300 }
+        ]
+      },
+      {
+        id: 'sourcream-15',
+        name: 'Сметана 15% (158 ккал | Б 2,6 | Ж 15 | У 3)',
+        shortName: 'Сметана 15%',
+        kcal: 158, p: 2.6, f: 15, c: 3,
+        packs: [
+          { label: '180 г', grams: 180 },
+          { label: '300 г', grams: 300 }
+        ]
+      },
+      {
+        id: 'sourcream-20',
+        name: 'Сметана 20% (204 ккал | Б 2,5 | Ж 20 | У 3,4)',
+        shortName: 'Сметана 20%',
+        kcal: 204, p: 2.5, f: 20, c: 3.4,
+        packs: [
+          { label: '180 г', grams: 180 },
+          { label: '300 г', grams: 300 }
+        ]
+      },
+      {
+        id: 'custom',
+        name: '✏️ Свой йогурт/сметана (ввести КБЖУ вручную)...',
+        shortName: 'Йогурт/сметана (свой КБЖУ)',
+        kcal: 115, p: 3, f: 10, c: 3.2,
+        packs: []
+      }
+    ]
+  },
+  {
+    category: 'creamcheese',
+    matchRx: /творожн\S*\s+сыр|сливочн\S*\s+сыр|рикотт|филадельф/i,
+    excludeRx: /$/i,
+    label: 'Творожный сыр / Рикотта',
+    presets: [
+      {
+        id: 'default',
+        name: 'По рецепту (Рикотта Light / Творожный лёгкий — 145 ккал | Б 10 | Ж 9 | У 4)',
+        shortName: 'Рикотта / Творожный лёгкий',
+        kcal: 145, p: 10, f: 9, c: 4,
+        packs: [
+          { label: '140 г', grams: 140 },
+          { label: '200 г', grams: 200 },
+          { label: '250 г', grams: 250 }
+        ]
+      },
+      {
+        id: 'almette-classic',
+        name: 'Творожный сыр классический 60% (Almette / Hochland / Violette — 245 ккал | Б 6,5 | Ж 23 | У 3)',
+        shortName: 'Творожный сыр классический',
+        kcal: 245, p: 6.5, f: 23, c: 3,
+        packs: [
+          { label: '140 г', grams: 140 },
+          { label: '150 г', grams: 150 },
+          { label: '180 г', grams: 180 }
+        ]
+      },
+      {
+        id: 'philadelphia-light',
+        name: 'Крем-чиз Light 11–12% (155 ккал | Б 8,5 | Ж 12 | У 3,5)',
+        shortName: 'Крем-чиз Light',
+        kcal: 155, p: 8.5, f: 12, c: 3.5,
+        packs: [
+          { label: '150 г', grams: 150 },
+          { label: '175 г', grams: 175 }
+        ]
+      },
+      {
+        id: 'custom',
+        name: '✏️ Свой творожный сыр (ввести КБЖУ вручную)...',
+        shortName: 'Творожный сыр (свой КБЖУ)',
+        kcal: 245, p: 6.5, f: 23, c: 3,
+        packs: []
+      }
+    ]
+  }
+];
+
+function getIngredientSwapConfig(ingName) {
+  const s = String(ingName || '');
+  for (const cfg of INGREDIENT_SWAPS) {
+    if (cfg.matchRx.test(s) && (!cfg.excludeRx || !cfg.excludeRx.test(s))) {
+      return cfg;
+    }
+  }
+  return null;
+}
+
+function inferBaselineNutrition(ingName, cfg) {
+  const s = String(ingName || '');
+  const def = { ...cfg.presets[0] };
+  if (cfg.category === 'cheese') {
+    if (/15\s*%/.test(s)) return { kcal: 213, p: 33, f: 9, c: 0 };
+    if (/17\s*%|18\s*%/.test(s)) return { kcal: 206, p: 24, f: 12, c: 0.5 };
+    if (/35\s*%/.test(s)) return { kcal: 265, p: 28.2, f: 16.6, c: 0 };
+    if (/45\s*%/.test(s) && /сулугуни|моцарелл/i.test(s)) return { kcal: 285, p: 21.5, f: 22, c: 0 };
+    if (/45\s*%/.test(s)) return { kcal: 340, p: 26.3, f: 26.1, c: 0 };
+    if (/50\s*%/.test(s)) return { kcal: 364, p: 23.7, f: 30, c: 0 };
+    if (/пармезан/i.test(s)) return { kcal: 392, p: 33, f: 28, c: 0 };
+  }
+  if (cfg.category === 'curd') {
+    if (/5\s*%/.test(s)) return { kcal: 121, p: 16, f: 5, c: 3 };
+    if (/9\s*%/.test(s)) return { kcal: 159, p: 16, f: 9, c: 2 };
+  }
+  if (cfg.category === 'yogurt') {
+    if (/10\s*%/.test(s)) return { kcal: 115, p: 3, f: 10, c: 3.2 };
+    if (/15\s*%/.test(s)) return { kcal: 158, p: 2.6, f: 15, c: 3 };
+    if (/20\s*%/.test(s)) return { kcal: 204, p: 2.5, f: 20, c: 3.4 };
+  }
+  return def;
+}
+
+function applyIngredientSwapsToVariant(baseVariant, activeSwaps) {
+  if (!activeSwaps || Object.keys(activeSwaps).length === 0) return baseVariant;
+  const clone = {
+    ...baseVariant,
+    total: {
+      kcal: baseVariant.total.kcal,
+      macros: baseVariant.total.macros.map(m => ({ ...m }))
+    },
+    per100: baseVariant.per100 ? {
+      kcal: baseVariant.per100.kcal,
+      macros: baseVariant.per100.macros.map(m => ({ ...m }))
+    } : null,
+    ingredients: baseVariant.ingredients.map(ing => ({ ...ing }))
+  };
+
+  const dishWeightGrams = (baseVariant.per100?.kcal > 0)
+    ? (baseVariant.total.kcal / baseVariant.per100.kcal) * 100
+    : 500;
+
+  let dKcal = 0, dP = 0, dF = 0, dC = 0;
+
+  clone.ingredients.forEach((ing) => {
+    if (ing.group) return;
+    const cfg = getIngredientSwapConfig(ing.name);
+    if (!cfg) return;
+    const swap = activeSwaps[cfg.category];
+    if (!swap || swap.id === 'default') return;
+
+    const primary = extractPrimaryAmount(ing.amount);
+    const grams = primary?.grams || (primary?.unit === 'г' ? primary.value : 0);
+    if (grams > 0) {
+      const baseMacro = inferBaselineNutrition(ing.name, cfg);
+      const factor = grams / 100;
+      dKcal += (swap.kcal - baseMacro.kcal) * factor;
+      dP += (swap.p - baseMacro.p) * factor;
+      dF += (swap.f - baseMacro.f) * factor;
+      dC += (swap.c - baseMacro.c) * factor;
+    }
+    ing.originalName = ing.name;
+    ing.name = `${swap.shortName || swap.name} (вместо: ${ing.name})`;
+    ing.swapped = true;
+  });
+
+  const addMacro = (macrosArr, labelPrefix, delta) => {
+    const item = macrosArr.find(m => m.label.startsWith(labelPrefix));
+    if (item) item.value = Math.max(0, Math.round((item.value + delta) * 10) / 10);
+  };
+
+  clone.total.kcal = Math.max(1, Math.round(clone.total.kcal + dKcal));
+  addMacro(clone.total.macros, 'Белки', dP);
+  addMacro(clone.total.macros, 'Жиры', dF);
+  addMacro(clone.total.macros, 'Углеводы', dC);
+
+  if (clone.per100 && dishWeightGrams > 0) {
+    const per100Factor = 100 / dishWeightGrams;
+    clone.per100.kcal = Math.max(1, Math.round((clone.per100.kcal + dKcal * per100Factor) * 10) / 10);
+    addMacro(clone.per100.macros, 'Белки', dP * per100Factor);
+    addMacro(clone.per100.macros, 'Жиры', dF * per100Factor);
+    addMacro(clone.per100.macros, 'Углеводы', dC * per100Factor);
+  }
+
+  return clone;
+}
+
 function canonicalIngredientKey(name) {
   const s = String(name || '').toLocaleLowerCase('ru').replace(/ё/g, 'е').trim();
   const baseBeforeParen = s.replace(/\s*\([^)]*\)/g, '').trim();
@@ -544,7 +996,10 @@ window.RecipeUtils = {
   generateQrMatrix,
   mergeCartIngredients,
   extractStepTimers,
-  findRecipesForRemainingMacros
+  findRecipesForRemainingMacros,
+  INGREDIENT_SWAPS,
+  getIngredientSwapConfig,
+  applyIngredientSwapsToVariant
 };
 
 if (!app) return;
@@ -1841,9 +2296,11 @@ function updateRecipeSchema(r, variant, ratio, servings) {
 function initRecipe(r) {
   const params = new URLSearchParams(location.search);
   const urlVarId = Number(params.get('v') || params.get('variant') || location.hash.replace('#var', ''));
-  let variant = r.variants.find(v => v.id === urlVarId) || r.variants.find(v => v.id === r.defaultVariant) || r.variants[0];
+  let baseVariant = r.variants.find(v => v.id === urlVarId) || r.variants.find(v => v.id === r.defaultVariant) || r.variants[0];
+  let activeSwaps = {}; // { [category]: { id, name, shortName, kcal, p, f, c } }
+  let variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
   const urlServings = Number(params.get('s') || params.get('servings'));
-  let servings = (urlServings >= 1 && urlServings <= 20) ? urlServings : variant.baseServings;
+  let servings = (urlServings >= 1 && urlServings <= 20) ? urlServings : baseVariant.baseServings;
   const urlRatio = Number(params.get('r'));
   let customRatio = (urlRatio > 0 && urlRatio <= 10) ? urlRatio : null;
   let customScaleNote = customRatio ? `Масштаб ×${fmt(customRatio)} от базового рецепта` : '';
@@ -2208,8 +2665,10 @@ function initRecipe(r) {
     panBase.value = '18';
     panTarget.value = '18';
     activeScaleIngIdx = null;
+    activeSwaps = {};
+    variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
     renderVariant();
-    showToast('Возвращён стандартный расчёт по порциям');
+    showToast('Сброшены замены и масштабирование рецепта');
   });
 
   /* Variant Comparison Table */
@@ -2261,8 +2720,10 @@ function initRecipe(r) {
     compareWrap.querySelectorAll('[data-pick-variant]').forEach(row => {
       row.addEventListener('click', () => {
         const id = Number(row.dataset.pickVariant);
-        variant = r.variants.find(v => v.id === id) || variant;
-        servings = variant.baseServings;
+        baseVariant = r.variants.find(v => v.id === id) || baseVariant;
+        activeSwaps = {};
+        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+        servings = baseVariant.baseServings;
         customRatio = null;
         customScaleNote = '';
         checks = new Set(readChecks());
@@ -2366,10 +2827,17 @@ function initRecipe(r) {
       document.getElementById('increase').disabled = customRatio === null && servings >= 20;
     }
 
+    const hasSwaps = Object.keys(activeSwaps).length > 0;
     const banner = document.getElementById('custom-scale-banner');
     if (banner) {
-      banner.hidden = customRatio === null;
-      document.getElementById('custom-scale-text').textContent = customScaleNote || `Активен точный коэффициент ×${fmt(customRatio || 1)}`;
+      banner.hidden = customRatio === null && !hasSwaps;
+      if (hasSwaps) {
+        const swapNames = Object.values(activeSwaps).map(s => s.shortName || s.name).join(', ');
+        const scalePart = customRatio !== null ? ` · ${customScaleNote || `Масштаб ×${fmt(customRatio)}`}` : '';
+        document.getElementById('custom-scale-text').textContent = `🧀 Замена: ${swapNames} (КБЖУ пересчитано)${scalePart}`;
+      } else {
+        document.getElementById('custom-scale-text').textContent = customScaleNote || `Активен точный коэффициент ×${fmt(customRatio || 1)}`;
+      }
     }
 
     window.dispatchEvent(new CustomEvent('recipe:servings-update', { detail: servings }));
@@ -2464,6 +2932,32 @@ function initRecipe(r) {
     });
   }
 
+  function renderPackChips(swapCfg, presetId, idx) {
+    const preset = swapCfg.presets.find(p => p.id === presetId) || swapCfg.presets[0];
+    if (!preset || !preset.packs || !preset.packs.length) return '';
+    return `<span class="ing-packs-hint">Стандартные пачки:</span> ` +
+      preset.packs.map(pk =>
+        `<button type="button" class="ing-pack-chip" data-pack-grams="${pk.grams}" data-pack-idx="${idx}">${esc(pk.label)}</button>`
+      ).join('');
+  }
+
+  function bindPackChips(container) {
+    if (!container) return;
+    container.querySelectorAll('.ing-pack-chip').forEach(chip => {
+      chip.addEventListener('click', e => {
+        e.preventDefault();
+        const grams = Number(chip.dataset.packGrams);
+        const idx = Number(chip.dataset.packIdx);
+        const inp = document.getElementById(`ing-input-${idx}`);
+        if (inp && grams > 0) {
+          inp.value = grams;
+          inp.focus();
+          inp.select();
+        }
+      });
+    });
+  }
+
   function renderVariant() {
     document.querySelectorAll('[data-variant]').forEach(b => b.setAttribute('aria-pressed', Number(b.dataset.variant) === variant.id));
     const meta = variant.meta.map(m => `<div><small>${esc(m.label)}</small><strong data-meta="${esc(m.label)}" data-meta-original="${esc(m.value)}">${esc(m.value)}</strong></div>`).join('');
@@ -2471,8 +2965,68 @@ function initRecipe(r) {
 
     document.getElementById('ingredient-list').innerHTML = variant.ingredients.map((x, i) => {
       if (x.group) return `<li class="ing-group-title">${esc(x.group)}</li>`;
+      const baseIng = baseVariant.ingredients[i] || x;
+      const swapCfg = getIngredientSwapConfig(baseIng.name);
+      const activeSwap = swapCfg ? activeSwaps[swapCfg.category] : null;
+      const isSwapped = !!(activeSwap && activeSwap.id !== 'default');
       const primary = extractPrimaryAmount(x.amount);
       const curVal = primary ? Math.round(primary.value * currentRatio() * 100) / 100 : null;
+
+      let btnLabel = '⚖ Изменить';
+      if (swapCfg) {
+        btnLabel = isSwapped ? '🔄 Заменён · Изменить' : '⚖ Вес / Замена';
+      }
+
+      let popoverContent = '';
+      if (swapCfg) {
+        popoverContent = `
+          <div class="ing-swap-section">
+            <label for="ing-swap-select-${i}" class="ing-swap-label">
+              <small><strong>${esc(swapCfg.label)}:</strong></small>
+            </label>
+            <select id="ing-swap-select-${i}" class="ing-swap-select" data-swap-select="${i}">
+              ${swapCfg.presets.map(p => {
+                const sel = (activeSwap ? activeSwap.id === p.id : p.id === 'default') ? 'selected' : '';
+                return `<option value="${p.id}" ${sel}>${esc(p.name)}</option>`;
+              }).join('')}
+            </select>
+
+            <div class="ing-custom-macros" id="ing-custom-macros-${i}" ${activeSwap?.id === 'custom' ? '' : 'hidden'}>
+              <small>КБЖУ на 100 г продукта с упаковки:</small>
+              <input type="text" class="ing-custom-name-input" id="ing-custom-name-${i}" placeholder="Название продукта" value="${esc(activeSwap?.shortName || '')}">
+              <div class="ing-custom-grid">
+                <label><small>Ккал</small><input type="number" id="ing-custom-kcal-${i}" value="${activeSwap?.kcal ?? 340}" min="0" step="1"></label>
+                <label><small>Белки</small><input type="number" id="ing-custom-p-${i}" value="${activeSwap?.p ?? 26}" min="0" step="0.1"></label>
+                <label><small>Жиры</small><input type="number" id="ing-custom-f-${i}" value="${activeSwap?.f ?? 26}" min="0" step="0.1"></label>
+                <label><small>Углеводы</small><input type="number" id="ing-custom-c-${i}" value="${activeSwap?.c ?? 0}" min="0" step="0.1"></label>
+              </div>
+            </div>
+
+            <div class="ing-packs-wrap" id="ing-packs-${i}">
+              ${renderPackChips(swapCfg, activeSwap?.id || 'default', i)}
+            </div>
+
+            <div class="ing-swap-weight-row">
+              <span>Вес в рецепте:</span>
+              <input type="number" class="ing-scale-input" id="ing-input-${i}" value="${curVal}" min="0.1" step="any" aria-label="Количество продукта ${esc(x.name)} (${esc(primary?.unit || 'г')})">
+              <span class="ing-scale-unit">${esc(primary?.unit || 'г')}</span>
+            </div>
+
+            <div class="ing-swap-actions">
+              <button type="button" class="share-chip ing-btn-swap-only" data-apply-swap-only="${i}">Заменить продукт (вес по рецепту)</button>
+              <button type="button" class="share-chip ing-btn-scale" data-apply-scale="${i}">Заменить + пересчитать рецепт под этот вес</button>
+            </div>
+          </div>
+        `;
+      } else if (primary) {
+        popoverContent = `
+          <span>У меня есть:</span>
+          <input type="number" class="ing-scale-input" id="ing-input-${i}" value="${curVal}" min="0.1" step="any" aria-label="Количество продукта ${esc(x.name)} (${esc(primary.unit)})">
+          <span class="ing-scale-unit">${esc(primary.unit)}</span>
+          <button type="button" class="share-chip" data-apply-scale="${i}">Пересчитать</button>
+        `;
+      }
+
       return `<li class="ingredient-item" id="ing-row-${i}">
         <div class="ing-row-main">
           <input type="checkbox" id="ing-${i}" data-check="${i}" ${checks.has(i) ? 'checked' : ''}>
@@ -2483,13 +3037,10 @@ function initRecipe(r) {
               <span class="ing-amount" data-amount="${i}"></span>
             </span>
           </label>
-          ${primary ? `<button type="button" class="ing-scale-trigger" data-scale-ing="${i}" title="Пересчитать весь рецепт от этого продукта">⚖ Изменить</button>` : ''}
+          ${(primary || swapCfg) ? `<button type="button" class="ing-scale-trigger ${isSwapped ? 'swapped' : ''}" data-scale-ing="${i}" title="${swapCfg ? 'Заменить продукт или изменить вес' : 'Пересчитать весь рецепт от этого продукта'}">${btnLabel}</button>` : ''}
         </div>
-        ${primary ? `<div class="ing-scale-popover" id="ing-pop-${i}" ${activeScaleIngIdx === i ? '' : 'hidden'}>
-          <span>У меня есть:</span>
-          <input type="number" class="ing-scale-input" id="ing-input-${i}" value="${curVal}" min="0.1" step="any" aria-label="Количество продукта ${esc(x.name)} (${esc(primary.unit)})">
-          <span class="ing-scale-unit">${esc(primary.unit)}</span>
-          <button type="button" class="share-chip" data-apply-scale="${i}">Пересчитать</button>
+        ${popoverContent ? `<div class="ing-scale-popover ${swapCfg ? 'ing-swap-popover' : ''}" id="ing-pop-${i}" ${activeScaleIngIdx === i ? '' : 'hidden'}>
+          ${popoverContent}
         </div>` : ''}
       </li>`;
     }).join('');
@@ -2505,12 +3056,13 @@ function initRecipe(r) {
         e.preventDefault();
         const idx = Number(btn.dataset.scaleIng);
         activeScaleIngIdx = activeScaleIngIdx === idx ? null : idx;
-        document.querySelectorAll('.ing-scale-popover').forEach((pop, pi) => {
+        document.querySelectorAll('.ing-scale-popover').forEach(pop => {
           pop.hidden = pop.id !== `ing-pop-${activeScaleIngIdx}`;
         });
         if (activeScaleIngIdx !== null) {
           const inp = document.getElementById(`ing-input-${activeScaleIngIdx}`);
-          const primary = extractPrimaryAmount(variant.ingredients[activeScaleIngIdx].amount);
+          const baseIng = baseVariant.ingredients[activeScaleIngIdx];
+          const primary = extractPrimaryAmount(baseIng?.amount || variant.ingredients[activeScaleIngIdx]?.amount);
           if (inp && primary) {
             inp.value = Math.round(primary.value * currentRatio() * 100) / 100;
             inp.focus();
@@ -2520,23 +3072,109 @@ function initRecipe(r) {
       });
     });
 
+    document.querySelectorAll('[data-swap-select]').forEach(sel => {
+      sel.addEventListener('change', () => {
+        const idx = Number(sel.dataset.swapSelect);
+        const baseIng = baseVariant.ingredients[idx];
+        const cfg = getIngredientSwapConfig(baseIng?.name);
+        if (!cfg) return;
+        const presetId = sel.value;
+        const customBox = document.getElementById(`ing-custom-macros-${idx}`);
+        if (customBox) {
+          customBox.hidden = presetId !== 'custom';
+        }
+        const packsWrap = document.getElementById(`ing-packs-${idx}`);
+        if (packsWrap) {
+          packsWrap.innerHTML = renderPackChips(cfg, presetId, idx);
+          bindPackChips(packsWrap);
+        }
+      });
+    });
+
+    bindPackChips(document.getElementById('ingredient-list'));
+
+    document.querySelectorAll('[data-apply-swap-only]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.applySwapOnly);
+        const baseIng = baseVariant.ingredients[idx];
+        const cfg = getIngredientSwapConfig(baseIng?.name);
+        if (!cfg) return;
+        const sel = document.getElementById(`ing-swap-select-${idx}`);
+        const presetId = sel ? sel.value : 'default';
+
+        if (presetId === 'default') {
+          delete activeSwaps[cfg.category];
+        } else if (presetId === 'custom') {
+          const customName = document.getElementById(`ing-custom-name-${idx}`)?.value?.trim() || `${cfg.label} (свой КБЖУ)`;
+          const kcal = Number(document.getElementById(`ing-custom-kcal-${idx}`)?.value || 0);
+          const p = Number(document.getElementById(`ing-custom-p-${idx}`)?.value || 0);
+          const f = Number(document.getElementById(`ing-custom-f-${idx}`)?.value || 0);
+          const c = Number(document.getElementById(`ing-custom-c-${idx}`)?.value || 0);
+          activeSwaps[cfg.category] = {
+            id: 'custom',
+            name: customName,
+            shortName: customName,
+            kcal, p, f, c
+          };
+        } else {
+          const preset = cfg.presets.find(p => p.id === presetId);
+          if (preset) {
+            activeSwaps[cfg.category] = { ...preset };
+          }
+        }
+
+        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+        activeScaleIngIdx = null;
+        renderVariant();
+        showToast('Продукт заменён, КБЖУ пересчитано!');
+      });
+    });
+
     function applyIngredientScale(idx) {
       const inp = document.getElementById(`ing-input-${idx}`);
+      const baseIng = baseVariant.ingredients[idx];
       const ing = variant.ingredients[idx];
-      const primary = extractPrimaryAmount(ing?.amount);
+      const primary = extractPrimaryAmount(baseIng?.amount || ing?.amount);
       if (!inp || !primary) return;
       const userVal = Number(String(inp.value).replace(',', '.'));
       if (!(userVal > 0)) {
         showToast('Введите положительное число');
         return;
       }
+
+      const cfg = getIngredientSwapConfig(baseIng?.name);
+      if (cfg) {
+        const sel = document.getElementById(`ing-swap-select-${idx}`);
+        const presetId = sel ? sel.value : (activeSwaps[cfg.category]?.id || 'default');
+        if (presetId === 'default') {
+          delete activeSwaps[cfg.category];
+        } else if (presetId === 'custom') {
+          const customName = document.getElementById(`ing-custom-name-${idx}`)?.value?.trim() || `${cfg.label} (свой КБЖУ)`;
+          const kcal = Number(document.getElementById(`ing-custom-kcal-${idx}`)?.value || 0);
+          const p = Number(document.getElementById(`ing-custom-p-${idx}`)?.value || 0);
+          const f = Number(document.getElementById(`ing-custom-f-${idx}`)?.value || 0);
+          const c = Number(document.getElementById(`ing-custom-c-${idx}`)?.value || 0);
+          activeSwaps[cfg.category] = {
+            id: 'custom',
+            name: customName,
+            shortName: customName,
+            kcal, p, f, c
+          };
+        } else {
+          const preset = cfg.presets.find(p => p.id === presetId);
+          if (preset) {
+            activeSwaps[cfg.category] = { ...preset };
+          }
+        }
+        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+      }
+
       customRatio = userVal / primary.value;
-      customScaleNote = `⚖ От продукта «${ing.name.split('(')[0].trim()}»: ${fmt(userVal)} ${primary.unit} (×${fmt(customRatio)})`;
+      const displayName = activeSwaps[cfg?.category]?.shortName || baseIng.name;
+      customScaleNote = `⚖ От продукта «${displayName.split('(')[0].trim()}»: ${fmt(userVal)} ${primary.unit} (×${fmt(customRatio)})`;
       activeScaleIngIdx = null;
-      const pop = document.getElementById(`ing-pop-${idx}`);
-      if (pop) pop.hidden = true;
-      updateNumbers();
-      showToast(`Весь рецепт пересчитан под ${fmt(userVal)} ${primary.unit} (×${fmt(customRatio)})`);
+      renderVariant();
+      showToast(`Рецепт пересчитан под ${fmt(userVal)} ${primary.unit} (×${fmt(customRatio)})`);
     }
 
     document.querySelectorAll('[data-apply-scale]').forEach(btn => {
@@ -2577,8 +3215,10 @@ function initRecipe(r) {
   window.addEventListener('recipe:servings-change', e => setServings(Number(e.detail)));
 
   document.querySelectorAll('[data-variant]').forEach(b => b.addEventListener('click', () => {
-    variant = r.variants.find(v => v.id === Number(b.dataset.variant));
-    servings = variant.baseServings;
+    baseVariant = r.variants.find(v => v.id === Number(b.dataset.variant)) || baseVariant;
+    activeSwaps = {};
+    variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+    servings = baseVariant.baseServings;
     customRatio = null;
     customScaleNote = '';
     checks = new Set(readChecks());
@@ -2587,9 +3227,11 @@ function initRecipe(r) {
   }));
   window.addEventListener('hashchange', () => {
     const target = r.variants.find(v => v.id === Number(location.hash.replace('#var', '')));
-    if (target && target !== variant) {
-      variant = target;
-      servings = variant.baseServings;
+    if (target && target !== baseVariant) {
+      baseVariant = target;
+      activeSwaps = {};
+      variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+      servings = baseVariant.baseServings;
       customRatio = null;
       customScaleNote = '';
       checks = new Set(readChecks());

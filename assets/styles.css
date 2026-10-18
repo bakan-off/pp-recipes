@@ -53,3 +53,26 @@
 @media print{.nav,.breadcrumb,.primary,.filters,.fridge-filter,.search,.steps-header button,.footer,.variant-tabs,.ingredient-progress,.share-toolbar,.cart-add-btn,.fav-pill-btn,.nutrition-mode-switch,.step-timers,.pan-converter,.ing-scale-trigger,.related-section{display:none!important}.shell{width:100%}.kitchen-layout{display:block}.ingredient-panel{position:static}.detail-hero{display:block}.detail-image img{height:200px}.ingredient-panel,.step{break-inside:avoid}body{background:white;color:black}.detail-hero h1{font-size:32px}.cooking-dialog,.shopping-dialog{display:none}}
 /* Compact recipe metadata pills. */
 .card-topline{flex-wrap:wrap;gap:6px}.card-topline>span{padding:3px 9px;border:1px solid var(--line);border-radius:30px;background:var(--linen);font-size:12px}.card-nutrition>span{border:1px solid var(--line);border-radius:12px;padding:6px 4px;text-align:center;background:var(--linen)}.card-nutrition{gap:6px}
+
+/* Ingredient Swap Popover & Pack Sizing */
+.ing-scale-trigger.swapped{border-color:var(--sage);color:var(--sage);background:var(--white);font-weight:600}
+.ing-swap-popover{display:flex;flex-direction:column;gap:10px;width:100%;box-sizing:border-box}
+.ing-swap-section{display:flex;flex-direction:column;gap:8px;width:100%}
+.ing-swap-label small{color:var(--ink);font-size:12px}
+.ing-swap-select{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--white);color:var(--ink);font-size:12px}
+.ing-custom-macros{padding:8px 10px;background:var(--white);border:1px dashed var(--line);border-radius:6px;display:flex;flex-direction:column;gap:6px}
+.ing-custom-macros>small{font-size:11px;color:var(--muted)}
+.ing-custom-name-input{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:4px;background:var(--surface-alt);color:var(--ink);font-size:12px;box-sizing:border-box}
+.ing-custom-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ing-custom-grid label{display:flex;flex-direction:column;font-size:11px;color:var(--muted);gap:2px}
+.ing-custom-grid input{width:100%;padding:4px;border:1px solid var(--line);border-radius:4px;background:var(--surface-alt);color:var(--ink);font-size:12px;box-sizing:border-box}
+.ing-packs-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:2px}
+.ing-packs-hint{font-size:11px;color:var(--muted)}
+.ing-pack-chip{border:1px solid var(--line);background:var(--white);border-radius:12px;padding:3px 8px;font-size:11px;cursor:pointer;color:var(--ink);transition:all .15s}
+.ing-pack-chip:hover{border-color:var(--sage);background:var(--linen)}
+.ing-swap-weight-row{display:flex;align-items:center;gap:8px;font-size:12px;margin-top:4px}
+.ing-swap-actions{display:flex;flex-direction:column;gap:6px;width:100%;margin-top:4px}
+.ing-swap-actions button{width:100%;justify-content:center;cursor:pointer;padding:7px 10px;font-size:12px}
+.ing-btn-swap-only{background:var(--white);border:1px solid var(--line)}
+.ing-btn-scale{background:var(--sage-soft);border:1px solid var(--sage);color:var(--sage);font-weight:600}
+.ing-btn-scale:hover{background:var(--sage);color:#fff}
