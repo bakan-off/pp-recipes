@@ -15,8 +15,8 @@ const context = { window: {}, TextEncoder, URLSearchParams };
 if (fs.existsSync('assets/recipes-data.js')) {
   vm.runInNewContext(fs.readFileSync('assets/recipes-data.js', 'utf8'), context);
   const recipes = context.window.RECIPES;
-  assert.equal(recipes.length, 27);
-  assert.equal(recipes.reduce((n, r) => n + r.variants.length, 0), 46);
+  assert.equal(recipes.length, 28);
+  assert.equal(recipes.reduce((n, r) => n + r.variants.length, 0), 48);
   for (const r of recipes) {
     assert(fs.existsSync(r.slug));
     assert(fs.existsSync(r.image));
@@ -112,7 +112,7 @@ if (context.window.RECIPES) {
       seenBarcodes.add(code);
     }
   }
-  assert.equal(seenBarcodes.size, 46);
+  assert.equal(seenBarcodes.size, 48);
 }
 
 // 3.5 QR Code Matrix Generator
@@ -307,4 +307,4 @@ assert(!recRes.appEl.innerHTML.includes('onclick='));
 assert.equal(recRes.elsById.get('servings').textContent, 'Масштаб ×0,45');
 assert.equal(recRes.elsById.get('plate-calc-output').textContent.includes('ккал'), true);
 
-console.log('PASS: JS syntax; 27 routes; 46 variants; Stage 2.5 unit & DOM tests (reverse scaling, pan ratio, FatSecret EAN-13, QR matrix, smart cart merge, macro planner, timers, smart cheese & ingredient swaps).');
+console.log('PASS: JS syntax; 28 routes; 48 variants; Stage 2.5 unit & DOM tests (reverse scaling, pan ratio, FatSecret EAN-13, QR matrix, smart cart merge, macro planner, timers, smart cheese & ingredient swaps).');
