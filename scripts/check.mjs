@@ -15,8 +15,8 @@ const context = { window: {}, TextEncoder, URLSearchParams };
 if (fs.existsSync('assets/recipes-data.js')) {
   vm.runInNewContext(fs.readFileSync('assets/recipes-data.js', 'utf8'), context);
   const recipes = context.window.RECIPES;
-  assert.equal(recipes.length, 28);
-  assert.equal(recipes.reduce((n, r) => n + r.variants.length, 0), 48);
+  assert.equal(recipes.length, 29);
+  assert.equal(recipes.reduce((n, r) => n + r.variants.length, 0), 52);
   for (const r of recipes) {
     assert(fs.existsSync(r.slug));
     assert(fs.existsSync(r.image));
@@ -112,7 +112,7 @@ if (context.window.RECIPES) {
       seenBarcodes.add(code);
     }
   }
-  assert.equal(seenBarcodes.size, 48);
+  assert.equal(seenBarcodes.size, 52);
 }
 
 // 3.5 QR Code Matrix Generator
