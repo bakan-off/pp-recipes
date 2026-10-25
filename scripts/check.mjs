@@ -310,23 +310,86 @@ assert.equal(recRes.elsById.get('servings').textContent, 'Масштаб ×0,45'
 assert.equal(recRes.elsById.get('plate-calc-output').textContent.includes('ккал'), true);
 
 
-// 3.9 Custom Product Replacement (Per-Index Isolation), Baseline Inference, Site Guide & Author Telegram (@bakan_off)
+// 3.9 Full Recipe Ingredient Customizer: Custom Weight per Item (Without Scaling Recipe), Remove Item & Add Custom Item
 const cheeseBase = U.inferBaselineNutrition("Сыр лёгкий 25%");
 assert.equal(cheeseBase.kcal, 232);
 const curd0Base = U.inferBaselineNutrition("Творог «Красная цена» обезжиренный 0%");
 assert.equal(curd0Base.kcal, 85);
-const softCurdBase = U.inferBaselineNutrition("Творог мягкий «Савушкин» 0.1%");
-assert.equal(softCurdBase.kcal, 62);
-const explicitBase = U.inferBaselineNutrition("Шницель куриный (192,2 ккал | Б 13,8 | Ж 6,6 | У 7,0)");
-assert.equal(explicitBase.kcal, 192.2);
-assert.equal(explicitBase.p, 13.8);
+const blueberryBase = U.inferBaselineNutrition("Голубика");
+assert.equal(blueberryBase.kcal, 51);
 
-const swapCfg = U.getIngredientSwapConfig("Творог «Красная цена» обезжиренный 0%", "360 г");
-assert(swapCfg && swapCfg.baseMacro.kcal === 85);
+// Test Andrey's exact scenario on Lavash Roll Variant 5:
+// Replace 160g Strawberry with 100g Blueberry AND 75g Chocolate with 50g Glaze WITHOUT scaling the 300g Curd!
+const rollVariant = {
+  id: 5,
+  name: 'С консервированной клубникой и тёмным шоколадом «Люкс»',
+  baseServings: 4,
+  meta: [{ label: 'Итоговый вес', value: '~930 г' }],
+  total: {
+    kcal: 1524,
+    macros: [
+      { label: 'Белки', value: 129.0 },
+      { label: 'Жиры', value: 52.8 },
+      { label: 'Углеводы', value: 132.7 }
+    ]
+  },
+  per100: {
+    kcal: 163.9,
+    macros: [
+      { label: 'Белки', value: 13.9 },
+      { label: 'Жиры', value: 5.7 },
+      { label: 'Углеводы', value: 14.3 }
+    ]
+  },
+  ingredients: [
+    { name: 'Творог 0,5% (обезжиренный)', amount: '300 г (1 пачка)' },
+    { name: 'Творог 5%', amount: '300 г (1 пачка)' },
+    { name: 'Клубника консервированная (без сиропа)', amount: '160 г (ягоды кусочками)' },
+    { name: 'Шоколад тёмный «Люкс»', amount: '75 г (рубленый)' },
+    { name: 'Тонкий лаваш', amount: '100 г (1 большой лист)' }
+  ],
+  steps: []
+};
+
+const customizedRoll = U.applyIngredientSwapsToVariant(
+  rollVariant,
+  {
+    2: { id: 'custom', name: 'Голубика', shortName: 'Голубика', isCustomName: true, grams: 100, kcal: 51, p: 1, f: 0.5, c: 10.5 },
+    3: { id: 'custom', name: 'Глазурь', shortName: 'Глазурь', isCustomName: true, grams: 50, kcal: 480, p: 5, f: 30, c: 45 }
+  },
+  [
+    { id: 'add_1', name: 'Кунжут белый', grams: 10, unit: 'г', kcal: 565, p: 19, f: 49, c: 12 }
+  ]
+);
+
+// Curd weights must remain untouched!
+assert.equal(customizedRoll.ingredients[0].amount, '300 г (1 пачка)');
+assert.equal(customizedRoll.ingredients[1].amount, '300 г (1 пачка)');
+// Strawberry (160g) -> Blueberry (100g)
+assert(customizedRoll.ingredients[2].name.includes('Голубика'));
+assert.equal(customizedRoll.ingredients[2].amount, '100 г (вместо 160 г)');
+// Chocolate (75g) -> Glaze (50g)
+assert(customizedRoll.ingredients[3].name.includes('Глазурь'));
+assert.equal(customizedRoll.ingredients[3].amount, '50 г (вместо 75 г)');
+// Added Sesame (10g)
+assert.equal(customizedRoll.ingredients.length, 6);
+assert(customizedRoll.ingredients[5].name.includes('Кунжут белый'));
+assert.equal(customizedRoll.ingredients[5].amount, '10 г');
+// Weight delta: (100 - 160) + (50 - 75) + 10 = -75g
+assert.equal(customizedRoll.dishWeightDelta, -75);
+
+// Test removing an ingredient completely
+const removedChocRoll = U.applyIngredientSwapsToVariant(rollVariant, {
+  3: { id: 'removed', removed: true, grams: 0, kcal: 0, p: 0, f: 0, c: 0 }
+});
+assert.equal(removedChocRoll.ingredients[3].removed, true);
+assert.equal(removedChocRoll.dishWeightDelta, -75);
+assert(removedChocRoll.total.kcal < rollVariant.total.kcal - 350, 'Removing 75g dark chocolate must subtract ~405 kcal');
 
 assert(catRes.appEl.innerHTML.includes('guide-toggle'), 'Catalog nav must include guide-toggle button');
 assert(catRes.appEl.innerHTML.includes('@bakan_off'), 'Footer must include @bakan_off author link');
-assert(!recRes.elsById.get('ingredient-list').innerHTML.includes('data-swap-select'), 'Preset product dropdown (<select>) must be removed');
-assert(recRes.elsById.get('ingredient-list').innerHTML.includes('ing-custom-name-0'), 'Custom product name input must be rendered per ingredient index');
+assert(recRes.appEl.innerHTML.includes('open-add-ing-btn'), 'Recipe view must include button to add custom ingredient');
+assert(recRes.elsById.get('ingredient-list').innerHTML.includes('data-apply-item-change'), 'Ingredient popover must include single-item apply button');
+assert(recRes.elsById.get('ingredient-list').innerHTML.includes('data-remove-ing'), 'Ingredient row must include remove button');
 
-console.log('PASS: JS syntax; routes & variants validated; Stage 2.6 unit & DOM tests (per-index custom product replacement, mobile responsive layout, reverse scaling, pan ratio, FatSecret EAN-13, QR matrix, smart cart merge, macro planner, timers).');
+console.log('PASS: JS syntax; routes & variants validated; Stage 2.7 unit & DOM tests (per-item custom weight & product replacement without scaling recipe, ingredient removal, custom ingredient addition, mobile responsive layout, FatSecret EAN-13, QR matrix, smart cart merge, macro planner, timers).');

@@ -225,3 +225,27 @@ html,body{overflow-x:hidden;max-width:100%}
   .catalog-selects{grid-template-columns:1fr}
   .shopping-footer .share-row{grid-template-columns:1fr}
 }
+
+/* Individual Ingredient Editor, Quick Remove & Add Custom Product */
+.ing-row-btns{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;margin-top:2px}
+.ing-remove-quick-btn{border:1px solid var(--line);background:var(--linen);color:var(--muted);border-radius:14px;padding:3px 8px;font-size:11px;line-height:1.3;transition:all .18s}
+.ing-remove-quick-btn:hover{border-color:#c94a4a;color:#c94a4a;background:var(--white)}
+.ing-item-removed{opacity:.6;background:var(--surface-alt);padding-inline:8px;border-radius:6px}
+.ing-removed-copy .ing-name{text-decoration:line-through;color:var(--muted)}
+.ing-removed-copy .ing-amount{color:#c94a4a;font-size:12px}
+.ing-item-added{background:var(--sage-soft);padding-inline:8px;border-radius:6px}
+.ing-macro-pill{font-size:11px;color:var(--muted);font-weight:400}
+.ing-edit-top-grid{display:grid;grid-template-columns:140px minmax(0,1fr);gap:8px;width:100%;align-items:end}
+.ing-edit-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ing-edit-field>small{font-size:11px;color:var(--muted);font-weight:600}
+.ing-secondary-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%}
+.ing-btn-remove{background:var(--white);border:1px solid var(--line);color:#b84242}
+.ing-btn-remove:hover{border-color:#c94a4a;background:rgba(201,74,74,.08)}
+.add-custom-ing-wrap{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.add-custom-ing-btn{width:100%;border:1px dashed var(--sage);background:var(--linen);color:var(--sage);border-radius:6px;padding:10px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.add-custom-ing-btn:hover{background:var(--sage-soft);border-style:solid}
+.ing-add-top-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;width:100%;align-items:center}
+.ing-add-actions-row{display:grid;grid-template-columns:1.6fr 1fr;gap:8px}
+@media(max-width:760px){
+  .ing-edit-top-grid,.ing-secondary-actions,.ing-add-top-row,.ing-add-actions-row{grid-template-columns:minmax(0,1fr)}
+}

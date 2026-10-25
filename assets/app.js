@@ -141,7 +141,7 @@ const BASELINE_NUTRITION_RULES = [
   { rx: /творог.*мягк.*0[.,]?1\s*%|мягк.*творог.*0[.,]?1\s*%|савушкин.*0[.,]?1\s*%|teos/i, kcal: 62, p: 11, f: 0.1, c: 4 },
   { rx: /творог.*мягк.*5\s*%|мягк.*творог.*5\s*%/i, kcal: 94, p: 10, f: 5, c: 3.8 },
   { rx: /творог.*зерн/i, kcal: 105, p: 13, f: 4.5, c: 2.5 },
-  { rx: /творог.*(?:0\s*%|0[–-]\s*0[.,]5\s*%|обезжир)/i, kcal: 85, p: 18, f: 0.3, c: 1.8 },
+  { rx: /творог.*(?:0\s*%|0[.,]5\s*%|0[–-]\s*0[.,]5\s*%|обезжир)/i, kcal: 85, p: 18, f: 0.3, c: 1.8 },
   { rx: /творог.*2\s*%/i, kcal: 103, p: 18, f: 2, c: 3.3 },
   { rx: /творог.*5\s*%/i, kcal: 121, p: 17.2, f: 5, c: 1.8 },
   { rx: /творог.*9\s*%/i, kcal: 159, p: 16.7, f: 9, c: 2 },
@@ -198,18 +198,47 @@ const BASELINE_NUTRITION_RULES = [
   { rx: /крахмал/i, kcal: 343, p: 0.3, f: 0.1, c: 85 },
   { rx: /мук[аи]|круп|рис|гречк|манк|манн/i, kcal: 345, p: 9, f: 2, c: 72 },
   { rx: /какао/i, kcal: 310, p: 22, f: 11, c: 14 },
-  { rx: /шоколад/i, kcal: 450, p: 9, f: 35, c: 25 },
+  { rx: /глазур.*без\s+сахар|глазур.*протеин/i, kcal: 430, p: 12, f: 32, c: 22 },
+  { rx: /глазур/i, kcal: 510, p: 4.5, f: 32, c: 50 },
+  { rx: /шоколад.*люкс|шоколад.*т[её]мн/i, kcal: 540, p: 6.5, f: 31, c: 54 },
+  { rx: /шоколад.*без\s+сахар/i, kcal: 440, p: 8.5, f: 34, c: 24 },
+  { rx: /шоколад/i, kcal: 515, p: 7.5, f: 34, c: 44 },
   { rx: /арахисов\S*\s+паст|урбеч/i, kcal: 588, p: 26, f: 50, c: 14 },
+  { rx: /орех|грецк|миндал|фундук|кешью|арахис|фисташк/i, kcal: 630, p: 16, f: 56, c: 13 },
+  { rx: /кунжут|семечк|чиа|лен|лён/i, kcal: 565, p: 19, f: 49, c: 12 },
   { rx: /масло.*(?:оливк|растит|кокос|гхи|подсолн)/i, kcal: 898, p: 0, f: 99.8, c: 0 },
   { rx: /масло/i, kcal: 662, p: 0.8, f: 72.5, c: 1.4 },
   { rx: /лаваш|тортиль|лепешк|пита/i, kcal: 236, p: 7.9, f: 1, c: 48.5 },
   { rx: /банан/i, kcal: 95, p: 1.5, f: 0.2, c: 21.8 },
-  { rx: /яблок|груш|ягод|вишн|клубник|малин|голубик|черник|ананас|персик/i, kcal: 46, p: 0.8, f: 0.4, c: 9.5 },
+  { rx: /голубик|черник/i, kcal: 51, p: 1, f: 0.5, c: 10.5 },
+  { rx: /клубник.*консерв/i, kcal: 58, p: 0.7, f: 0.2, c: 13.5 },
+  { rx: /клубник|земляник/i, kcal: 41, p: 0.8, f: 0.4, c: 7.5 },
+  { rx: /малин|ежевик|смородин|брусник|клюкв/i, kcal: 46, p: 0.8, f: 0.4, c: 9.0 },
+  { rx: /вишн|черешн/i, kcal: 52, p: 0.9, f: 0.4, c: 11.0 },
+  { rx: /яблок|груш|ягод|персик|абрикос|слив|ананас|манго|киви|апельсин|мандарин/i, kcal: 47, p: 0.5, f: 0.3, c: 10.2 },
+  { rx: /мед|мёд/i, kcal: 304, p: 0.8, f: 0, c: 80 },
+  { rx: /сахар/i, kcal: 398, p: 0, f: 0, c: 99.8 },
+  { rx: /сироп.*без\s+сахар|топинг.*без\s+сахар/i, kcal: 35, p: 0, f: 0, c: 8 },
+  { rx: /сироп|джем|варень/i, kcal: 240, p: 0.3, f: 0.1, c: 60 },
   { rx: /соев\S*\s+соус/i, kcal: 55, p: 6, f: 0, c: 7.5 },
-  { rx: /чеснок/i, kcal: 149, p: 6.5, f: 0.5, c: 30 }
+  { rx: /чеснок/i, kcal: 149, p: 6.5, f: 0.5, c: 30 },
+  { rx: /ванилин|разрыхлител|соль|перец|кориц|специ|трав|подсластител|фитпарад|эритрит|стеви|вода/i, kcal: 0, p: 0, f: 0, c: 0 }
 ];
 
 const INGREDIENT_SWAPS = [];
+
+function getIngredientGrams(amountStr) {
+  const primary = extractPrimaryAmount(amountStr);
+  if (!primary) return 0;
+  if (primary.grams > 0) return primary.grams;
+  if (primary.unit === 'г' || primary.unit === 'мл') return primary.value;
+  if (primary.unit === 'кг' || primary.unit === 'л') return primary.value * 1000;
+  if (primary.unit === 'шт') return primary.value * 55;
+  if (primary.unit === 'скуп') return primary.value * 30;
+  if (primary.unit === 'ст. л.') return primary.value * 20;
+  if (primary.unit === 'ч. л.') return primary.value * 5;
+  return 0;
+}
 
 function inferBaselineNutrition(ingName) {
   const s = String(ingName || '').trim();
@@ -233,20 +262,21 @@ function inferBaselineNutrition(ingName) {
 function getIngredientSwapConfig(ingName, ingAmount = '') {
   const s = String(ingName || '').trim();
   if (!s) return null;
-  const primary = ingAmount ? extractPrimaryAmount(ingAmount) : null;
-  if (primary && (primary.grams > 0 || primary.unit === 'г' || primary.unit === 'кг' || primary.unit === 'мл' || primary.unit === 'шт' || primary.unit === 'скуп' || primary.unit === 'пач.' || primary.unit === 'бан.')) {
-    const base = inferBaselineNutrition(s);
-    return {
-      category: s,
-      label: s,
-      baseMacro: base
-    };
-  }
-  return null;
+  const baseGrams = getIngredientGrams(ingAmount);
+  const base = baseGrams > 0 ? inferBaselineNutrition(s) : { kcal: 0, p: 0, f: 0, c: 0 };
+  return {
+    category: s,
+    label: s,
+    baseGrams,
+    baseMacro: base
+  };
 }
 
-function applyIngredientSwapsToVariant(baseVariant, activeSwaps) {
-  if (!activeSwaps || Object.keys(activeSwaps).length === 0) return baseVariant;
+function applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients = []) {
+  const hasSwaps = activeSwaps && Object.keys(activeSwaps).length > 0;
+  const hasAdded = Array.isArray(customAddedIngredients) && customAddedIngredients.length > 0;
+  if (!hasSwaps && !hasAdded) return baseVariant;
+
   const clone = {
     ...baseVariant,
     total: {
@@ -260,40 +290,112 @@ function applyIngredientSwapsToVariant(baseVariant, activeSwaps) {
     ingredients: baseVariant.ingredients.map(ing => ({ ...ing }))
   };
 
-  const dishWeightGrams = (baseVariant.per100?.kcal > 0)
+  const baseDishWeight = (baseVariant.per100?.kcal > 0)
     ? (baseVariant.total.kcal / baseVariant.per100.kcal) * 100
     : 500;
 
-  let dKcal = 0, dP = 0, dF = 0, dC = 0;
+  let dKcal = 0, dP = 0, dF = 0, dC = 0, dWeight = 0;
 
   clone.ingredients.forEach((ing, idx) => {
     if (ing.group) return;
-    const swap = activeSwaps[idx] ?? activeSwaps[String(idx)] ?? activeSwaps[ing.name];
+    const swap = activeSwaps ? (activeSwaps[idx] ?? activeSwaps[String(idx)] ?? activeSwaps[ing.name]) : null;
     if (!swap || swap.id === 'default') return;
 
     const primary = extractPrimaryAmount(ing.amount);
-    const grams = primary?.grams || (primary?.unit === 'г' || primary?.unit === 'мл' ? primary.value : (primary?.unit === 'шт' ? primary.value * 55 : (primary?.unit === 'скуп' ? primary.value * 30 : 0)));
-    if (grams > 0) {
-      const baseMacro = inferBaselineNutrition(ing.name);
-      const factor = grams / 100;
-      const sKcal = Number.isFinite(Number(swap.kcal)) ? Number(swap.kcal) : baseMacro.kcal;
-      const sP = Number.isFinite(Number(swap.p)) ? Number(swap.p) : baseMacro.p;
-      const sF = Number.isFinite(Number(swap.f)) ? Number(swap.f) : baseMacro.f;
-      const sC = Number.isFinite(Number(swap.c)) ? Number(swap.c) : baseMacro.c;
-      dKcal += (sKcal - baseMacro.kcal) * factor;
-      dP += (sP - baseMacro.p) * factor;
-      dF += (sF - baseMacro.f) * factor;
-      dC += (sC - baseMacro.c) * factor;
+    const baseGrams = getIngredientGrams(ing.amount);
+    const baseMacro = baseGrams > 0 ? inferBaselineNutrition(ing.name) : { kcal: 0, p: 0, f: 0, c: 0 };
+    const origFactor = baseGrams / 100;
+
+    if (swap.removed) {
+      if (baseGrams > 0) {
+        dKcal -= baseMacro.kcal * origFactor;
+        dP -= baseMacro.p * origFactor;
+        dF -= baseMacro.f * origFactor;
+        dC -= baseMacro.c * origFactor;
+        dWeight -= baseGrams;
+      }
+      ing.originalName = ing.name;
+      ing.originalAmount = ing.amount;
+      ing.amount = '0 г (убрано из рецепта)';
+      ing.removed = true;
+      ing.swapped = true;
+      ing.customGrams = 0;
+      return;
     }
+
+    const newGrams = (swap.grams !== undefined && swap.grams !== null && Number.isFinite(Number(swap.grams)) && Number(swap.grams) >= 0)
+      ? Number(swap.grams)
+      : baseGrams;
+    const newFactor = newGrams / 100;
+
+    const sKcal = Number.isFinite(Number(swap.kcal)) ? Number(swap.kcal) : baseMacro.kcal;
+    const sP = Number.isFinite(Number(swap.p)) ? Number(swap.p) : baseMacro.p;
+    const sF = Number.isFinite(Number(swap.f)) ? Number(swap.f) : baseMacro.f;
+    const sC = Number.isFinite(Number(swap.c)) ? Number(swap.c) : baseMacro.c;
+
+    dKcal += (sKcal * newFactor) - (baseMacro.kcal * origFactor);
+    dP += (sP * newFactor) - (baseMacro.p * origFactor);
+    dF += (sF * newFactor) - (baseMacro.f * origFactor);
+    dC += (sC * newFactor) - (baseMacro.c * origFactor);
+    dWeight += (newGrams - baseGrams);
+
     ing.originalName = ing.name;
-    const cleanTargetName = (swap.shortName || swap.name || 'Свой продукт').trim();
-    ing.name = `${cleanTargetName} (вместо: ${ing.name})`;
+    ing.originalAmount = ing.amount;
+    const cleanBaseTitle = ing.name.split('(')[0].trim();
+    const cleanTargetName = (swap.shortName || swap.name || ing.name).trim();
+    const isSameProduct = !swap.isCustomName && (
+      cleanTargetName.toLocaleLowerCase('ru') === cleanBaseTitle.toLocaleLowerCase('ru') ||
+      cleanTargetName.toLocaleLowerCase('ru') === ing.name.trim().toLocaleLowerCase('ru')
+    );
+
+    if (!isSameProduct) {
+      ing.name = `${cleanTargetName} (вместо: ${cleanBaseTitle})`;
+    }
+    const unit = primary?.unit === 'мл' ? 'мл' : 'г';
+    if (Math.abs(newGrams - baseGrams) > 0.05) {
+      ing.amount = baseGrams > 0
+        ? `${fmt(newGrams)} ${unit} (вместо ${fmt(baseGrams)} г)`
+        : `${fmt(newGrams)} ${unit}`;
+    }
     ing.swapped = true;
+    ing.customGrams = newGrams;
   });
+
+  if (hasAdded) {
+    for (const item of customAddedIngredients) {
+      const g = Math.max(0, Number(item.grams) || 0);
+      const factor = g / 100;
+      const kcal = Math.max(0, Number(item.kcal) || 0);
+      const p = Math.max(0, Number(item.p) || 0);
+      const f = Math.max(0, Number(item.f) || 0);
+      const c = Math.max(0, Number(item.c) || 0);
+
+      dKcal += kcal * factor;
+      dP += p * factor;
+      dF += f * factor;
+      dC += c * factor;
+      dWeight += g;
+
+      clone.ingredients.push({
+        name: `${item.name} (добавлено)`,
+        originalName: item.name,
+        amount: `${fmt(g)} ${item.unit || 'г'}`,
+        addedByUser: true,
+        addedId: item.id,
+        swapped: true,
+        customGrams: g,
+        customMacro: { kcal, p, f, c }
+      });
+    }
+  }
 
   const addMacro = (macrosArr, labelPrefix, delta) => {
     const item = macrosArr.find(m => m.label.startsWith(labelPrefix));
     if (item) item.value = Math.max(0, Math.round((item.value + delta) * 10) / 10);
+  };
+  const setMacro = (macrosArr, labelPrefix, val) => {
+    const item = macrosArr.find(m => m.label.startsWith(labelPrefix));
+    if (item) item.value = Math.max(0, Math.round(val * 10) / 10);
   };
 
   clone.total.kcal = Math.max(1, Math.round(clone.total.kcal + dKcal));
@@ -301,12 +403,24 @@ function applyIngredientSwapsToVariant(baseVariant, activeSwaps) {
   addMacro(clone.total.macros, 'Жиры', dF);
   addMacro(clone.total.macros, 'Углеводы', dC);
 
-  if (clone.per100 && dishWeightGrams > 0) {
-    const per100Factor = 100 / dishWeightGrams;
-    clone.per100.kcal = Math.max(1, Math.round((clone.per100.kcal + dKcal * per100Factor) * 10) / 10);
-    addMacro(clone.per100.macros, 'Белки', dP * per100Factor);
-    addMacro(clone.per100.macros, 'Жиры', dF * per100Factor);
-    addMacro(clone.per100.macros, 'Углеводы', dC * per100Factor);
+  const newDishWeight = Math.max(50, baseDishWeight + dWeight);
+  clone.dishWeightDelta = Math.round(dWeight);
+  clone.estimatedDishWeight = Math.round(newDishWeight);
+
+  if (clone.per100 && baseDishWeight > 0) {
+    if (Math.abs(dWeight) < 0.1) {
+      const per100Factor = 100 / baseDishWeight;
+      clone.per100.kcal = Math.max(1, Math.round((clone.per100.kcal + dKcal * per100Factor) * 10) / 10);
+      addMacro(clone.per100.macros, 'Белки', dP * per100Factor);
+      addMacro(clone.per100.macros, 'Жиры', dF * per100Factor);
+      addMacro(clone.per100.macros, 'Углеводы', dC * per100Factor);
+    } else {
+      const wRatio = 100 / newDishWeight;
+      clone.per100.kcal = Math.max(1, Math.round(clone.total.kcal * wRatio * 10) / 10);
+      setMacro(clone.per100.macros, 'Белки', macro(clone.total, 'Белки') * wRatio);
+      setMacro(clone.per100.macros, 'Жиры', macro(clone.total, 'Жиры') * wRatio);
+      setMacro(clone.per100.macros, 'Углеводы', macro(clone.total, 'Углеводы') * wRatio);
+    }
   }
 
   return clone;
@@ -723,6 +837,7 @@ window.RecipeUtils = {
   extractStepTimers,
   findRecipesForRemainingMacros,
   INGREDIENT_SWAPS,
+  getIngredientGrams,
   inferBaselineNutrition,
   getIngredientSwapConfig,
   applyIngredientSwapsToVariant
@@ -1316,16 +1431,16 @@ function ensureGlobalModals() {
           <div class="guide-cards-grid">
             <!-- Feature 1 -->
             <div class="guide-feature-card" data-guide-section="swap">
-              <span class="guide-badge">1 · ТОЧНАЯ ИНДИВИДУАЛЬНАЯ ЗАМЕНА И МАСШТАБ ПАЧКИ</span>
-              <h3>🔄 Свой продукт вместо любого ингредиента + пересчёт под вашу пачку</h3>
-              <p>У вас другой бренд творога, сыра, протеина или мяса с другими цифрами КБЖУ на этикетке? Или в рецепте два разных вида творога, а вы хотите заменить только один из них?</p>
+              <span class="guide-badge">1 · ПОЛНЫЙ КОНСТРУКТОР СОСТАВА ПОД ВАШИ ПРОДУКТЫ</span>
+              <h3>🔄 Замена продукта и его веса, удаление и добавление своих ингредиентов</h3>
+              <p>Подстраивайте любой рецепт под то, что реально есть дома (например, <code>100 г голубики</code> вместо <code>160 г клубники</code> или <code>50 г глазури</code> вместо <code>75 г шоколада</code>) без сбоя остальных пропорций рецепта!</p>
               <ol class="guide-steps-list">
-                <li>Нажмите кнопку <strong>«⚖ Вес / Замена»</strong> напротив конкретного ингредиента — каждый пункт списка настраивается полностью независимо от остальных.</li>
-                <li>Чтобы просто пересчитать пропорции рецепта под имеющееся у вас количество продукта (например, пачка <code>180 г</code> вместо <code>360 г</code>), введите вес и нажмите <strong>«Пересчитать вес рецепта»</strong>.</li>
-                <li>Чтобы подставить свой продукт, впишите его название и КБЖУ на 100 г с вашей упаковки и нажмите <strong>«Заменить продукт (вес по рецепту)»</strong> (пересчитается только КБЖУ блюда) или <strong>«Заменить + пересчитать под этот вес»</strong> (обновится и продукт, и масштаб всего рецепта).</li>
+                <li><strong>Свой вес и свой продукт (кнопка «✏️ Вес / Замена»):</strong> измените граммовку конкретного продукта, впишите новое название (например, <em>Голубика</em>) и при желании КБЖУ с упаковки, затем нажмите <strong>«✓ Применить к этому продукту»</strong> — изменится только эта строка и пересчитается КБЖУ блюда, а остальные ингредиенты останутся на месте!</li>
+                <li><strong>Удаление лишнего (кнопка «✕» / «🗑 Убрать»):</strong> не хотите класть шоколад, кунжут или топпинг? Уберите его в 1 клик — калории и вес вычтутся автоматически.</li>
+                <li><strong>Добавление своего продукта («➕ Добавить свой продукт в рецепт»):</strong> добавьте любой дополнительный ингредиент со своим весом и БЖУ прямо внизу списка.</li>
               </ol>
               <div class="guide-card-foot">
-                <a href="caramel-cheesecake.html#ingredients" class="share-chip">Попробовать в рецепте чизкейка →</a>
+                <a href="cottage-cheese-lavash-roll.html?v=5#ingredients" class="share-chip">Попробовать в рулете с лавашом →</a>
               </div>
             </div>
 
@@ -1935,7 +2050,7 @@ async function downloadRecipeCardPng(r, variant, ratio, servingsLabel, shareUrl)
   const subText = `Вариация: ${variant.name}  ·  ${nbspServings}  ·  ${nbspTime}`;
   const subLines = wrapCanvasLines(mctx, subText, 952);
 
-  const ings = variant.ingredients.filter(x => !x.group);
+  const ings = variant.ingredients.filter(x => !x.group && !x.removed);
   mctx.font = '22px Arial, sans-serif';
   const ingRows = ings.map(ing => {
     const scaled = scaleAmount(ing.amount, ratio);
@@ -2364,7 +2479,7 @@ function updateRecipeSchema(r, variant, ratio, servings) {
       fatContent: `${fmt(macro(variant.per100, 'Жиры'))} г`,
       carbohydrateContent: `${fmt(macro(variant.per100, 'Углеводы'))} г`
     },
-    recipeIngredient: variant.ingredients.filter(x => !x.group).map(x => `${x.name} — ${scaleAmount(x.amount, ratio)}`),
+    recipeIngredient: variant.ingredients.filter(x => !x.group && !x.removed).map(x => `${x.name} — ${scaleAmount(x.amount, ratio)}`),
     recipeInstructions: variant.steps.map((s, idx) => ({
       '@type': 'HowToStep',
       position: idx + 1,
@@ -2379,8 +2494,9 @@ function initRecipe(r) {
   const params = new URLSearchParams(location.search);
   const urlVarId = Number(params.get('v') || params.get('variant') || location.hash.replace('#var', ''));
   let baseVariant = r.variants.find(v => v.id === urlVarId) || r.variants.find(v => v.id === r.defaultVariant) || r.variants[0];
-  let activeSwaps = {}; // { [category]: { id, name, shortName, kcal, p, f, c } }
-  let variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+  let activeSwaps = {}; // { [ingIndex]: { id, name, shortName, isCustomName, grams, kcal, p, f, c, removed } }
+  let customAddedIngredients = []; // [{ id, name, grams, unit, kcal, p, f, c }]
+  let variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
   const urlServings = Number(params.get('s') || params.get('servings'));
   let servings = (urlServings >= 1 && urlServings <= 20) ? urlServings : baseVariant.baseServings;
   const urlRatio = Number(params.get('r'));
@@ -2490,8 +2606,36 @@ function initRecipe(r) {
           <span id="custom-scale-text"></span>
           <button type="button" class="text-button" id="reset-custom-scale">Сбросить</button>
         </div>
-        <p class="ingredient-hint">Нажмите <strong>«⚖ Вес / Замена»</strong> напротив нужного продукта, чтобы подставить свой продукт с упаковки (с автопересчётом КБЖУ именно для этой строки) или пересчитать весь рецепт под вес вашей пачки.</p>
+        <p class="ingredient-hint">Нажмите <strong>«✏️ Вес / Замена»</strong> напротив любого продукта, чтобы изменить его граммовку, заменить на свой продукт (без сбоя остальных ингредиентов!) или убрать из рецепта. Внизу списка можно <strong>добавить свой продукт</strong>.</p>
         <ul class="ingredient-list" id="ingredient-list"></ul>
+        <div class="add-custom-ing-wrap">
+          <button type="button" class="add-custom-ing-btn" id="open-add-ing-btn">➕ Добавить свой продукт в рецепт</button>
+          <div class="ing-scale-popover ing-add-popover" id="add-ing-popover" hidden>
+            <div class="ing-swap-section">
+              <div class="ing-custom-head">
+                <strong class="ing-box-title">Добавить дополнительный продукт в рецепт</strong>
+                <small class="ing-base-macro-hint" id="add-ing-macro-hint">Впишите название и вес — КБЖУ подставится автоматически или с вашей этикетки:</small>
+              </div>
+              <div class="ing-add-top-row">
+                <input type="text" class="ing-custom-name-input" id="add-ing-name" placeholder="Название (напр.: Голубика, Глазурь, Орехи)">
+                <div class="ing-weight-input-wrap">
+                  <input type="number" class="ing-scale-input" id="add-ing-grams" value="50" min="1" step="any" aria-label="Вес добавляемого продукта в граммах">
+                  <span class="ing-scale-unit">г</span>
+                </div>
+              </div>
+              <div class="ing-custom-grid">
+                <label><small>Ккал / 100 г</small><input type="number" id="add-ing-kcal" placeholder="100" min="0" step="any"></label>
+                <label><small>Белки, г</small><input type="number" id="add-ing-p" placeholder="8" min="0" step="any"></label>
+                <label><small>Жиры, г</small><input type="number" id="add-ing-f" placeholder="3" min="0" step="any"></label>
+                <label><small>Углеводы, г</small><input type="number" id="add-ing-c" placeholder="10" min="0" step="any"></label>
+              </div>
+              <div class="ing-swap-actions ing-add-actions-row">
+                <button type="button" class="share-chip ing-btn-scale" id="confirm-add-ing-btn">✓ Добавить в рецепт (пересчитать КБЖУ)</button>
+                <button type="button" class="share-chip ing-btn-swap-only" id="cancel-add-ing-btn">Отмена</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="ingredient-progress">
           <span id="check-progress" aria-live="polite"></span>
           <button class="text-button" id="clear-checks">Снять отметки</button>
@@ -2616,6 +2760,7 @@ function initRecipe(r) {
     if (includeIngredients) {
       lines.push('\n📋 Ингредиенты:');
       for (const ing of variant.ingredients) {
+        if (ing.removed) continue;
         if (ing.group) lines.push(`\n${ing.group}:`);
         else lines.push(`• ${ing.name} — ${scaleAmount(ing.amount, ratio)}`);
       }
@@ -2696,7 +2841,7 @@ function initRecipe(r) {
 
   document.getElementById('add-to-cart').addEventListener('click', () => {
     const ratio = currentRatio();
-    const items = variant.ingredients.filter(x => !x.group).map(x => ({
+    const items = variant.ingredients.filter(x => !x.group && !x.removed).map(x => ({
       name: x.name,
       amount: scaleAmount(x.amount, ratio),
       done: false
@@ -2748,7 +2893,8 @@ function initRecipe(r) {
     panTarget.value = '18';
     activeScaleIngIdx = null;
     activeSwaps = {};
-    variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+    customAddedIngredients = [];
+    variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
     renderVariant();
     showToast('Сброшены замены и масштабирование рецепта');
   });
@@ -2804,7 +2950,8 @@ function initRecipe(r) {
         const id = Number(row.dataset.pickVariant);
         baseVariant = r.variants.find(v => v.id === id) || baseVariant;
         activeSwaps = {};
-        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+        customAddedIngredients = [];
+        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
         servings = baseVariant.baseServings;
         customRatio = null;
         customScaleNote = '';
@@ -2909,14 +3056,23 @@ function initRecipe(r) {
       document.getElementById('increase').disabled = customRatio === null && servings >= 20;
     }
 
-    const hasSwaps = Object.keys(activeSwaps).length > 0;
+    const hasSwaps = Object.keys(activeSwaps).length > 0 || customAddedIngredients.length > 0;
     const banner = document.getElementById('custom-scale-banner');
     if (banner) {
       banner.hidden = customRatio === null && !hasSwaps;
       if (hasSwaps) {
-        const swapNames = Object.values(activeSwaps).map(s => s.shortName || s.name).join(', ');
+        const parts = [];
+        for (const [k, s] of Object.entries(activeSwaps)) {
+          const bIng = baseVariant.ingredients[Number(k)];
+          const bTitle = bIng?.name?.split('(')[0]?.trim() || 'Продукт';
+          if (s.removed) parts.append ? parts.push(`убрано: ${bTitle}`) : parts.push(`убрано: ${bTitle}`);
+          else parts.push(`${s.shortName || s.name || bTitle}${s.grams !== undefined ? ` (${fmt(s.grams)} г)` : ''}`);
+        }
+        for (const addIt of customAddedIngredients) {
+          parts.push(`+${addIt.name} (${fmt(addIt.grams)} г)`);
+        }
         const scalePart = customRatio !== null ? ` · ${customScaleNote || `Масштаб ×${fmt(customRatio)}`}` : '';
-        document.getElementById('custom-scale-text').textContent = `🧀 Замена: ${swapNames} (КБЖУ пересчитано)${scalePart}`;
+        document.getElementById('custom-scale-text').textContent = `🔄 Свой состав: ${parts.join(', ')} (КБЖУ пересчитано)${scalePart}`;
       } else {
         document.getElementById('custom-scale-text').textContent = customScaleNote || `Активен точный коэффициент ×${fmt(customRatio || 1)}`;
       }
@@ -2931,8 +3087,13 @@ function initRecipe(r) {
       const label = el.dataset.meta;
       if (/Порци|порци|Количество/.test(label) && !/Вес|вес/.test(label))
         el.textContent = getServingsLabel();
-      else if (/Вес|вес|Объем|Основа яйц|Калорийность|Чистый белок/.test(label) && !/Вес порции/.test(label))
-        el.textContent = scaleAmount(el.dataset.metaOriginal, ratio);
+      else if (/Вес|вес|Объем|Основа яйц|Калорийность|Чистый белок/.test(label) && !/Вес порции/.test(label)) {
+        if (/Вес|вес/.test(label) && variant.dishWeightDelta) {
+          el.textContent = `~${fmt(Math.max(50, Math.round(variant.estimatedDishWeight * ratio)))} г`;
+        } else {
+          el.textContent = scaleAmount(el.dataset.metaOriginal, ratio);
+        }
+      }
     });
 
     const total = variant.total;
@@ -3014,14 +3175,17 @@ function initRecipe(r) {
     });
   }
 
-  function readCustomSwapFromInputs(idx, baseIng, baseMacro) {
+  function readItemChangeFromInputs(idx, baseIng, baseMacro, baseGrams) {
     const rawName = document.getElementById(`ing-custom-name-${idx}`)?.value?.trim() || '';
+    const rawWeight = document.getElementById(`ing-input-${idx}`)?.value?.trim() ?? '';
     const rawKcal = document.getElementById(`ing-custom-kcal-${idx}`)?.value?.trim() ?? '';
     const rawP = document.getElementById(`ing-custom-p-${idx}`)?.value?.trim() ?? '';
     const rawF = document.getElementById(`ing-custom-f-${idx}`)?.value?.trim() ?? '';
     const rawC = document.getElementById(`ing-custom-c-${idx}`)?.value?.trim() ?? '';
-    const hasAnyInput = Boolean(rawName || rawKcal !== '' || rawP !== '' || rawF !== '' || rawC !== '');
-    if (!hasAnyInput) return null;
+
+    const cleanBaseName = baseIng.name.split('(')[0].trim();
+    const isCustomName = Boolean(rawName && rawName.toLocaleLowerCase('ru') !== cleanBaseName.toLocaleLowerCase('ru') && rawName.toLocaleLowerCase('ru') !== baseIng.name.trim().toLocaleLowerCase('ru'));
+    const effectiveMacroBase = isCustomName ? inferBaselineNutrition(rawName) : baseMacro;
 
     const parseMacroInput = (val, fallback) => {
       if (val === '') return fallback;
@@ -3029,26 +3193,131 @@ function initRecipe(r) {
       return Number.isFinite(n) && n >= 0 ? n : fallback;
     };
 
-    const p = parseMacroInput(rawP, baseMacro.p);
-    const f = parseMacroInput(rawF, baseMacro.f);
-    const c = parseMacroInput(rawC, baseMacro.c);
+    const ratio = currentRatio();
+    let userGrams = baseGrams;
+    if (rawWeight !== '') {
+      const parsedW = Number(String(rawWeight).replace(',', '.'));
+      if (Number.isFinite(parsedW) && parsedW >= 0) {
+        userGrams = ratio > 0 ? Math.round((parsedW / ratio) * 100) / 100 : parsedW;
+      }
+    }
+
+    const p = parseMacroInput(rawP, effectiveMacroBase.p);
+    const f = parseMacroInput(rawF, effectiveMacroBase.f);
+    const c = parseMacroInput(rawC, effectiveMacroBase.c);
     const defaultKcal = (rawP !== '' || rawF !== '' || rawC !== '')
       ? Math.round((p * 4 + f * 9 + c * 4) * 10) / 10
-      : baseMacro.kcal;
+      : effectiveMacroBase.kcal;
     const kcal = parseMacroInput(rawKcal, defaultKcal);
-    const cleanBaseName = baseIng.name.split('(')[0].trim();
-    const finalName = rawName || `${cleanBaseName} (свой продукт)`;
+    const finalName = rawName || cleanBaseName;
 
     return {
       id: 'custom',
       name: finalName,
       shortName: finalName,
+      isCustomName,
+      grams: userGrams,
       kcal,
       p,
       f,
       c
     };
   }
+
+  /* Bind "+ Добавить свой продукт в рецепт" form */
+  const openAddIngBtn = document.getElementById('open-add-ing-btn');
+  const addIngPop = document.getElementById('add-ing-popover');
+  const addIngName = document.getElementById('add-ing-name');
+  const addIngGrams = document.getElementById('add-ing-grams');
+  const addIngKcal = document.getElementById('add-ing-kcal');
+  const addIngP = document.getElementById('add-ing-p');
+  const addIngF = document.getElementById('add-ing-f');
+  const addIngC = document.getElementById('add-ing-c');
+  const addIngHint = document.getElementById('add-ing-macro-hint');
+
+  function syncAddIngPlaceholders() {
+    const typed = addIngName?.value?.trim() || '';
+    const inferred = typed ? inferBaselineNutrition(typed) : { kcal: 100, p: 8, f: 3, c: 10 };
+    if (addIngKcal) addIngKcal.placeholder = String(inferred.kcal);
+    if (addIngP) addIngP.placeholder = String(inferred.p);
+    if (addIngF) addIngF.placeholder = String(inferred.f);
+    if (addIngC) addIngC.placeholder = String(inferred.c);
+    if (addIngHint) {
+      addIngHint.textContent = typed
+        ? `Авто-оценка на 100 г для «${typed}»: ~${fmt(inferred.kcal)} ккал · Б ${fmt(inferred.p)} · Ж ${fmt(inferred.f)} · У ${fmt(inferred.c)} (или впишите с этикетки)`
+        : 'Впишите название и вес — КБЖУ подставится автоматически или с вашей этикетки:';
+    }
+  }
+
+  addIngName?.addEventListener('input', syncAddIngPlaceholders);
+
+  openAddIngBtn?.addEventListener('click', () => {
+    const isHidden = addIngPop.hidden;
+    addIngPop.hidden = !isHidden;
+    if (isHidden) {
+      syncAddIngPlaceholders();
+      if (!window.matchMedia?.('(max-width: 760px)').matches) {
+        addIngName?.focus();
+      }
+    }
+  });
+
+  document.getElementById('cancel-add-ing-btn')?.addEventListener('click', () => {
+    addIngPop.hidden = true;
+  });
+
+  document.getElementById('confirm-add-ing-btn')?.addEventListener('click', () => {
+    const name = addIngName?.value?.trim() || '';
+    if (!name) {
+      showToast('Введите название продукта (например: Голубика или Глазурь)');
+      addIngName?.focus();
+      return;
+    }
+    const rawW = Number(String(addIngGrams?.value || '0').replace(',', '.'));
+    if (!(rawW > 0)) {
+      showToast('Введите вес продукта в граммах (больше 0)');
+      addIngGrams?.focus();
+      return;
+    }
+    const ratio = currentRatio();
+    const baseG = ratio > 0 ? Math.round((rawW / ratio) * 100) / 100 : rawW;
+    const inferred = inferBaselineNutrition(name);
+    const parseOr = (inp, fb) => {
+      const v = inp?.value?.trim() ?? '';
+      if (v === '') return fb;
+      const n = Number(v.replace(',', '.'));
+      return Number.isFinite(n) && n >= 0 ? n : fb;
+    };
+    const p = parseOr(addIngP, inferred.p);
+    const f = parseOr(addIngF, inferred.f);
+    const c = parseOr(addIngC, inferred.c);
+    const hasCustomMacros = (addIngP?.value?.trim() !== '' || addIngF?.value?.trim() !== '' || addIngC?.value?.trim() !== '');
+    const defKcal = hasCustomMacros ? Math.round((p * 4 + f * 9 + c * 4) * 10) / 10 : inferred.kcal;
+    const kcal = parseOr(addIngKcal, defKcal);
+
+    customAddedIngredients.push({
+      id: 'add_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      name,
+      grams: baseG,
+      unit: 'г',
+      kcal,
+      p,
+      f,
+      c
+    });
+
+    if (addIngName) addIngName.value = '';
+    if (addIngGrams) addIngGrams.value = '50';
+    if (addIngKcal) addIngKcal.value = '';
+    if (addIngP) addIngP.value = '';
+    if (addIngF) addIngF.value = '';
+    if (addIngC) addIngC.value = '';
+    addIngPop.hidden = true;
+
+    variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
+    renderVariant();
+    showToast(`Добавлено в рецепт: «${name}» (${fmt(rawW)} г)`);
+  });
 
   function renderVariant() {
     document.querySelectorAll('[data-variant]').forEach(b => b.setAttribute('aria-pressed', Number(b.dataset.variant) === variant.id));
@@ -3057,77 +3326,102 @@ function initRecipe(r) {
 
     document.getElementById('ingredient-list').innerHTML = variant.ingredients.map((x, i) => {
       if (x.group) return `<li class="ing-group-title">${esc(x.group)}</li>`;
+
+      /* User-added custom ingredient row */
+      if (x.addedByUser) {
+        const cm = x.customMacro || { kcal: 0, p: 0, f: 0, c: 0 };
+        return `<li class="ingredient-item ing-item-added" id="ing-row-${i}">
+          <div class="ing-row-main">
+            <input type="checkbox" id="ing-${i}" data-check="${i}" ${checks.has(i) ? 'checked' : ''}>
+            <label for="ing-${i}">
+              <span class="checkbox-ui" aria-hidden="true"></span>
+              <span class="ingredient-copy">
+                <span class="ing-name">${esc(x.name)} <small class="ing-macro-pill">(${fmt(cm.kcal)} ккал · Б ${fmt(cm.p)} · Ж ${fmt(cm.f)} · У ${fmt(cm.c)} на 100 г)</small></span>
+                <span class="ing-amount" data-amount="${i}"></span>
+              </span>
+            </label>
+            <div class="ing-row-btns">
+              <button type="button" class="ing-remove-quick-btn" data-delete-added="${esc(x.addedId)}" title="Удалить добавленный продукт">🗑 Убрать</button>
+            </div>
+          </div>
+        </li>`;
+      }
+
       const baseIng = baseVariant.ingredients[i] || x;
       const swapCfg = getIngredientSwapConfig(baseIng.name, baseIng.amount);
       const activeSwap = activeSwaps[i] || null;
-      const isSwapped = !!(activeSwap && activeSwap.id !== 'default');
+      const isRemoved = !!(activeSwap && activeSwap.removed);
+      const isSwapped = !!(activeSwap && !activeSwap.removed && activeSwap.id !== 'default');
       const primary = extractPrimaryAmount(baseIng.amount || x.amount);
-      const curVal = primary ? Math.round(primary.value * currentRatio() * 100) / 100 : null;
+      const baseGrams = getIngredientGrams(baseIng.amount || x.amount);
+      const effectiveBaseGrams = (activeSwap && activeSwap.grams !== undefined) ? activeSwap.grams : baseGrams;
+      const curVal = effectiveBaseGrams > 0
+        ? Math.round(effectiveBaseGrams * currentRatio() * 100) / 100
+        : (primary ? Math.round(primary.value * currentRatio() * 100) / 100 : 50);
       const baseMacro = swapCfg ? swapCfg.baseMacro : inferBaselineNutrition(baseIng.name);
       const shortBaseTitle = baseIng.name.split('(')[0].trim();
+      const unitLabel = primary?.unit === 'мл' ? 'мл' : 'г';
 
-      let btnLabel = '⚖ Вес / Замена';
-      if (isSwapped) {
-        btnLabel = '🔄 Заменён · Изменить';
-      } else if (!swapCfg && primary) {
-        btnLabel = '⚖ Изменить вес';
+      if (isRemoved) {
+        return `<li class="ingredient-item ing-item-removed" id="ing-row-${i}">
+          <div class="ing-row-main">
+            <span class="ingredient-copy ing-removed-copy">
+              <span class="ing-name">${esc(baseIng.name)}</span>
+              <span class="ing-amount" data-amount="${i}">0 г (убрано из рецепта)</span>
+            </span>
+            <button type="button" class="ing-scale-trigger swapped" data-reset-swap="${i}" title="Вернуть продукт обратно в рецепт">↩ Вернуть</button>
+          </div>
+        </li>`;
       }
 
-      let popoverContent = '';
-      if (swapCfg && primary) {
-        popoverContent = `
-          <div class="ing-swap-section">
-            ${isSwapped ? `
-              <div class="ing-swap-active-bar">
-                <span>Сейчас: <strong>${esc(activeSwap.shortName || activeSwap.name)}</strong> (${fmt(activeSwap.kcal)} ккал · Б ${fmt(activeSwap.p)} · Ж ${fmt(activeSwap.f)} · У ${fmt(activeSwap.c)})</span>
-                <button type="button" class="text-button ing-reset-single" data-reset-swap="${i}">Вернуть исходный</button>
-              </div>
-            ` : ''}
+      const btnLabel = isSwapped ? '🔄 Изменено' : '✏️ Вес / Замена';
 
-            <div class="ing-weight-box">
-              <small class="ing-box-title">1. Пересчитать весь рецепт под вес вашей пачки:</small>
-              <div class="ing-swap-weight-row">
+      const popoverContent = `
+        <div class="ing-swap-section">
+          ${isSwapped ? `
+            <div class="ing-swap-active-bar">
+              <span>Сейчас: <strong>${esc(activeSwap.shortName || activeSwap.name)}</strong> — <strong>${fmt(curVal)} ${unitLabel}</strong> (${fmt(activeSwap.kcal)} ккал · Б ${fmt(activeSwap.p)} · Ж ${fmt(activeSwap.f)} · У ${fmt(activeSwap.c)} на 100 г)</span>
+              <button type="button" class="text-button ing-reset-single" data-reset-swap="${i}">↩ Вернуть исходный</button>
+            </div>
+          ` : ''}
+
+          <div class="ing-custom-macros" id="ing-custom-macros-${i}">
+            <div class="ing-custom-head">
+              <strong class="ing-box-title">Изменить вес или заменить «${esc(shortBaseTitle)}» (остальной рецепт не меняется):</strong>
+              <small class="ing-base-macro-hint" id="ing-macro-hint-${i}">По рецепту: ${baseGrams > 0 ? `${fmt(baseGrams)} ${unitLabel} · ` : ''}на 100 г ~${fmt(baseMacro.kcal)} ккал · Б ${fmt(baseMacro.p)} · Ж ${fmt(baseMacro.f)} · У ${fmt(baseMacro.c)}</small>
+            </div>
+
+            <div class="ing-edit-top-grid">
+              <label class="ing-edit-field">
+                <small>Мой вес в рецепте (${unitLabel}):</small>
                 <div class="ing-weight-input-wrap">
-                  <input type="number" class="ing-scale-input" id="ing-input-${i}" value="${curVal}" min="0.1" step="any" aria-label="Количество продукта ${esc(baseIng.name)} (${esc(primary.unit)})">
-                  <span class="ing-scale-unit">${esc(primary.unit)}</span>
+                  <input type="number" class="ing-scale-input" id="ing-input-${i}" value="${curVal}" min="0" step="any" aria-label="Количество продукта ${esc(baseIng.name)} (${unitLabel})">
+                  <span class="ing-scale-unit">${unitLabel}</span>
                 </div>
-                <button type="button" class="share-chip ing-btn-scale-only" data-apply-scale-only="${i}">Пересчитать вес рецепта</button>
-              </div>
+              </label>
+              <label class="ing-edit-field">
+                <small>Название (если заменяете продукт):</small>
+                <input type="text" class="ing-custom-name-input" id="ing-custom-name-${i}" data-ing-name-idx="${i}" placeholder="${esc(shortBaseTitle)} (или впишите свой, напр. Голубика)" value="${esc(activeSwap?.isCustomName ? activeSwap.shortName : '')}">
+              </label>
             </div>
 
-            <div class="ing-custom-macros" id="ing-custom-macros-${i}">
-              <div class="ing-custom-head">
-                <small class="ing-box-title">2. Заменить «${esc(shortBaseTitle)}» на свой продукт:</small>
-                <small class="ing-base-macro-hint">В рецепте на 100 г: ~${fmt(baseMacro.kcal)} ккал · Б ${fmt(baseMacro.p)} · Ж ${fmt(baseMacro.f)} · У ${fmt(baseMacro.c)}</small>
-              </div>
-              <input type="text" class="ing-custom-name-input" id="ing-custom-name-${i}" placeholder="Название вашего продукта (например: Домик в деревне)" value="${esc(activeSwap?.shortName || '')}">
-              <div class="ing-custom-grid">
-                <label><small>Ккал / 100 г</small><input type="number" id="ing-custom-kcal-${i}" placeholder="${baseMacro.kcal}" value="${activeSwap ? activeSwap.kcal : ''}" min="0" step="any"></label>
-                <label><small>Белки, г</small><input type="number" id="ing-custom-p-${i}" placeholder="${baseMacro.p}" value="${activeSwap ? activeSwap.p : ''}" min="0" step="any"></label>
-                <label><small>Жиры, г</small><input type="number" id="ing-custom-f-${i}" placeholder="${baseMacro.f}" value="${activeSwap ? activeSwap.f : ''}" min="0" step="any"></label>
-                <label><small>Углеводы, г</small><input type="number" id="ing-custom-c-${i}" placeholder="${baseMacro.c}" value="${activeSwap ? activeSwap.c : ''}" min="0" step="any"></label>
-              </div>
-              <div class="ing-swap-actions">
-                <button type="button" class="share-chip ing-btn-swap-only" data-apply-swap-only="${i}">Заменить продукт (вес по рецепту)</button>
-                <button type="button" class="share-chip ing-btn-scale" data-apply-scale="${i}">Заменить + пересчитать под введённый вес</button>
+            <div class="ing-custom-grid">
+              <label><small>Ккал / 100 г</small><input type="number" id="ing-custom-kcal-${i}" placeholder="${baseMacro.kcal}" value="${activeSwap ? activeSwap.kcal : ''}" min="0" step="any"></label>
+              <label><small>Белки, г</small><input type="number" id="ing-custom-p-${i}" placeholder="${baseMacro.p}" value="${activeSwap ? activeSwap.p : ''}" min="0" step="any"></label>
+              <label><small>Жиры, г</small><input type="number" id="ing-custom-f-${i}" placeholder="${baseMacro.f}" value="${activeSwap ? activeSwap.f : ''}" min="0" step="any"></label>
+              <label><small>Углеводы, г</small><input type="number" id="ing-custom-c-${i}" placeholder="${baseMacro.c}" value="${activeSwap ? activeSwap.c : ''}" min="0" step="any"></label>
+            </div>
+
+            <div class="ing-swap-actions">
+              <button type="button" class="share-chip ing-btn-scale" data-apply-item-change="${i}">✓ Применить к этому продукту (остальной рецепт не менять)</button>
+              <div class="ing-secondary-actions">
+                <button type="button" class="share-chip ing-btn-remove" data-remove-ing="${i}">🗑 Убрать продукт из рецепта</button>
+                ${baseGrams > 0 ? `<button type="button" class="share-chip ing-btn-swap-only" data-apply-scale-all="${i}" title="Масштабировать все остальные продукты рецепта пропорционально введённому весу">⚖ Масштабировать весь рецепт под этот вес</button>` : ''}
               </div>
             </div>
           </div>
-        `;
-      } else if (primary) {
-        popoverContent = `
-          <div class="ing-weight-box">
-            <small class="ing-box-title">Пересчитать весь рецепт от этого количества:</small>
-            <div class="ing-swap-weight-row">
-              <div class="ing-weight-input-wrap">
-                <input type="number" class="ing-scale-input" id="ing-input-${i}" value="${curVal}" min="0.1" step="any" aria-label="Количество продукта ${esc(x.name)} (${esc(primary.unit)})">
-                <span class="ing-scale-unit">${esc(primary.unit)}</span>
-              </div>
-              <button type="button" class="share-chip ing-btn-scale-only" data-apply-scale-only="${i}">Пересчитать</button>
-            </div>
-          </div>
-        `;
-      }
+        </div>
+      `;
 
       return `<li class="ingredient-item" id="ing-row-${i}">
         <div class="ing-row-main">
@@ -3139,11 +3433,14 @@ function initRecipe(r) {
               <span class="ing-amount" data-amount="${i}"></span>
             </span>
           </label>
-          ${(primary || swapCfg) ? `<button type="button" class="ing-scale-trigger ${isSwapped ? 'swapped' : ''}" data-scale-ing="${i}" title="Изменить вес или подставить свой продукт">${btnLabel}</button>` : ''}
+          <div class="ing-row-btns">
+            <button type="button" class="ing-scale-trigger ${isSwapped ? 'swapped' : ''}" data-scale-ing="${i}" title="Изменить вес этого продукта или заменить на свой">${btnLabel}</button>
+            <button type="button" class="ing-remove-quick-btn" data-remove-ing="${i}" title="Убрать этот продукт из рецепта">✕</button>
+          </div>
         </div>
-        ${popoverContent ? `<div class="ing-scale-popover ${swapCfg ? 'ing-swap-popover' : ''}" id="ing-pop-${i}" ${activeScaleIngIdx === i ? '' : 'hidden'}>
+        <div class="ing-scale-popover ing-swap-popover" id="ing-pop-${i}" ${activeScaleIngIdx === i ? '' : 'hidden'}>
           ${popoverContent}
-        </div>` : ''}
+        </div>
       </li>`;
     }).join('');
 
@@ -3153,24 +3450,42 @@ function initRecipe(r) {
       updateProgress();
     }));
 
+    /* Live placeholder update when typing a new product name inside ingredient popover */
+    document.querySelectorAll('[data-ing-name-idx]').forEach(nameInp => {
+      nameInp.addEventListener('input', () => {
+        const idx = Number(nameInp.dataset.ingNameIdx);
+        const baseIng = baseVariant.ingredients[idx];
+        if (!baseIng) return;
+        const typed = nameInp.value.trim();
+        const inferred = typed ? inferBaselineNutrition(typed) : inferBaselineNutrition(baseIng.name);
+        const kcalEl = document.getElementById(`ing-custom-kcal-${idx}`);
+        const pEl = document.getElementById(`ing-custom-p-${idx}`);
+        const fEl = document.getElementById(`ing-custom-f-${idx}`);
+        const cEl = document.getElementById(`ing-custom-c-${idx}`);
+        const hintEl = document.getElementById(`ing-macro-hint-${idx}`);
+        if (kcalEl) kcalEl.placeholder = String(inferred.kcal);
+        if (pEl) pEl.placeholder = String(inferred.p);
+        if (fEl) fEl.placeholder = String(inferred.f);
+        if (cEl) cEl.placeholder = String(inferred.c);
+        if (hintEl && typed) {
+          hintEl.textContent = `Авто-оценка на 100 г для «${typed}»: ~${fmt(inferred.kcal)} ккал · Б ${fmt(inferred.p)} · Ж ${fmt(inferred.f)} · У ${fmt(inferred.c)} (или впишите свои цифры с пачки)`;
+        }
+      });
+    });
+
     document.querySelectorAll('[data-scale-ing]').forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
         const idx = Number(btn.dataset.scaleIng);
         activeScaleIngIdx = activeScaleIngIdx === idx ? null : idx;
-        document.querySelectorAll('.ing-scale-popover').forEach(pop => {
+        document.querySelectorAll('.ing-scale-popover:not(#add-ing-popover)').forEach(pop => {
           pop.hidden = pop.id !== `ing-pop-${activeScaleIngIdx}`;
         });
         if (activeScaleIngIdx !== null) {
           const inp = document.getElementById(`ing-input-${activeScaleIngIdx}`);
-          const baseIng = baseVariant.ingredients[activeScaleIngIdx];
-          const primary = extractPrimaryAmount(baseIng?.amount || variant.ingredients[activeScaleIngIdx]?.amount);
-          if (inp && primary) {
-            inp.value = Math.round(primary.value * currentRatio() * 100) / 100;
-            if (!window.matchMedia?.('(max-width: 760px)').matches) {
-              inp.focus();
-              inp.select();
-            }
+          if (inp && !window.matchMedia?.('(max-width: 760px)').matches) {
+            inp.focus();
+            inp.select();
           }
         }
       });
@@ -3180,76 +3495,95 @@ function initRecipe(r) {
       btn.addEventListener('click', () => {
         const idx = Number(btn.dataset.resetSwap);
         delete activeSwaps[idx];
-        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
         activeScaleIngIdx = null;
         renderVariant();
         showToast('Возвращён исходный продукт рецепта');
       });
     });
 
-    document.querySelectorAll('[data-apply-swap-only]').forEach(btn => {
+    document.querySelectorAll('[data-remove-ing]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const idx = Number(btn.dataset.applySwapOnly);
+        const idx = Number(btn.dataset.removeIng);
         const baseIng = baseVariant.ingredients[idx];
         if (!baseIng) return;
-        const baseMacro = inferBaselineNutrition(baseIng.name);
-        const newSwap = readCustomSwapFromInputs(idx, baseIng, baseMacro);
-        if (!newSwap) {
-          showToast('Впишите название или КБЖУ вашего продукта на 100 г');
-          document.getElementById(`ing-custom-name-${idx}`)?.focus();
-          return;
-        }
-        activeSwaps[idx] = newSwap;
-        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+        activeSwaps[idx] = { id: 'removed', removed: true, name: baseIng.name, shortName: baseIng.name, grams: 0, kcal: 0, p: 0, f: 0, c: 0 };
+        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
         activeScaleIngIdx = null;
         renderVariant();
-        showToast(`Заменено: «${newSwap.shortName}» (КБЖУ пересчитано)`);
+        showToast(`Убрано из рецепта: «${baseIng.name.split('(')[0].trim()}» (КБЖУ пересчитано)`);
       });
     });
 
-    function applyIngredientScale(idx, includeSwap = true) {
+    document.querySelectorAll('[data-delete-added]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.deleteAdded;
+        customAddedIngredients = customAddedIngredients.filter(it => it.id !== id);
+        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
+        renderVariant();
+        showToast('Добавленный продукт удалён из рецепта');
+      });
+    });
+
+    /* Primary action: Change ONLY this ingredient's weight and/or product without scaling other ingredients */
+    function applySingleItemChange(idx) {
+      const baseIng = baseVariant.ingredients[idx];
+      if (!baseIng) return;
+      const baseGrams = getIngredientGrams(baseIng.amount);
+      const baseMacro = baseGrams > 0 ? inferBaselineNutrition(baseIng.name) : { kcal: 0, p: 0, f: 0, c: 0 };
+      const rawWeight = document.getElementById(`ing-input-${idx}`)?.value?.trim() ?? '';
+      const parsedW = rawWeight !== '' ? Number(rawWeight.replace(',', '.')) : baseGrams;
+      if (parsedW === 0) {
+        activeSwaps[idx] = { id: 'removed', removed: true, name: baseIng.name, shortName: baseIng.name, grams: 0, kcal: 0, p: 0, f: 0, c: 0 };
+        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
+        activeScaleIngIdx = null;
+        renderVariant();
+        showToast(`Убрано из рецепта: «${baseIng.name.split('(')[0].trim()}»`);
+        return;
+      }
+      const newSwap = readItemChangeFromInputs(idx, baseIng, baseMacro, baseGrams);
+      activeSwaps[idx] = newSwap;
+      variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
+      activeScaleIngIdx = null;
+      renderVariant();
+      showToast(`Обновлено: «${newSwap.shortName}» (${fmt(parsedW)} г) — остальные продукты не изменены!`);
+    }
+
+    document.querySelectorAll('[data-apply-item-change]').forEach(btn => {
+      btn.addEventListener('click', () => applySingleItemChange(Number(btn.dataset.applyItemChange)));
+    });
+
+    /* Secondary action: Scale the ENTIRE recipe proportionally to this ingredient's weight */
+    function applyScaleEntireRecipe(idx) {
       const inp = document.getElementById(`ing-input-${idx}`);
       const baseIng = baseVariant.ingredients[idx];
-      const ing = variant.ingredients[idx];
-      const primary = extractPrimaryAmount(baseIng?.amount || ing?.amount);
-      if (!inp || !primary) return;
+      const primary = extractPrimaryAmount(baseIng?.amount);
+      const baseGrams = getIngredientGrams(baseIng?.amount);
+      if (!inp || !(baseGrams > 0 || primary?.value > 0)) return;
       const userVal = Number(String(inp.value).replace(',', '.'));
       if (!(userVal > 0)) {
         showToast('Введите положительное число');
         return;
       }
-
-      if (includeSwap && baseIng) {
-        const baseMacro = inferBaselineNutrition(baseIng.name);
-        const newSwap = readCustomSwapFromInputs(idx, baseIng, baseMacro);
-        if (newSwap) {
-          activeSwaps[idx] = newSwap;
-        }
-        variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
-      }
-
-      customRatio = userVal / primary.value;
-      const displayName = activeSwaps[idx]?.shortName || baseIng?.name || ing.name;
-      customScaleNote = `⚖ От продукта «${displayName.split('(')[0].trim()}»: ${fmt(userVal)} ${primary.unit} (×${fmt(customRatio)})`;
+      const baseRef = baseGrams > 0 ? baseGrams : primary.value;
+      customRatio = userVal / baseRef;
+      const displayName = activeSwaps[idx]?.shortName || baseIng?.name || '';
+      customScaleNote = `⚖ Пропорции всего рецепта от «${displayName.split('(')[0].trim()}»: ${fmt(userVal)} г (×${fmt(customRatio)})`;
       activeScaleIngIdx = null;
       renderVariant();
-      showToast(`Рецепт пересчитан под ${fmt(userVal)} ${primary.unit} (×${fmt(customRatio)})`);
+      showToast(`Весь рецепт масштабирован ×${fmt(customRatio)}`);
     }
 
-    document.querySelectorAll('[data-apply-scale-only]').forEach(btn => {
-      btn.addEventListener('click', () => applyIngredientScale(Number(btn.dataset.applyScaleOnly), false));
+    document.querySelectorAll('[data-apply-scale-all]').forEach(btn => {
+      btn.addEventListener('click', () => applyScaleEntireRecipe(Number(btn.dataset.applyScaleAll)));
     });
 
-    document.querySelectorAll('[data-apply-scale]').forEach(btn => {
-      btn.addEventListener('click', () => applyIngredientScale(Number(btn.dataset.applyScale), true));
-    });
-
-    document.querySelectorAll('.ing-scale-input').forEach(inp => {
+    document.querySelectorAll('.ing-scale-input:not(#add-ing-grams)').forEach(inp => {
       inp.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
           e.preventDefault();
           const idx = Number(inp.id.replace('ing-input-', ''));
-          applyIngredientScale(idx, false);
+          applySingleItemChange(idx);
         }
       });
     });
@@ -3281,7 +3615,8 @@ function initRecipe(r) {
   document.querySelectorAll('[data-variant]').forEach(b => b.addEventListener('click', () => {
     baseVariant = r.variants.find(v => v.id === Number(b.dataset.variant)) || baseVariant;
     activeSwaps = {};
-    variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+    customAddedIngredients = [];
+    variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
     servings = baseVariant.baseServings;
     customRatio = null;
     customScaleNote = '';
@@ -3294,7 +3629,8 @@ function initRecipe(r) {
     if (target && target !== baseVariant) {
       baseVariant = target;
       activeSwaps = {};
-      variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps);
+      customAddedIngredients = [];
+      variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
       servings = baseVariant.baseServings;
       customRatio = null;
       customScaleNote = '';

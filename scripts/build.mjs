@@ -61,7 +61,7 @@ const MANIFEST_JSON = JSON.stringify({
   ]
 }, null, 2);
 
-const SW_JS = `const CACHE_NAME = 'pp-recipes-cache-v3';
+const SW_JS = `const CACHE_NAME = 'pp-recipes-cache-v4';
 const CORE_ASSETS = ['./index.html', './assets/styles.css', './assets/app.js', './assets/recipes-data.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(CORE_ASSETS)).then(() => self.skipWaiting()));
