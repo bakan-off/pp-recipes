@@ -113,7 +113,7 @@ if (context.window.RECIPES) {
       seenBarcodes.add(code);
     }
   }
-  assert.equal(seenBarcodes.size, recipes.reduce((n, r) => n + r.variants.length, 0));
+  assert.equal(seenBarcodes.size, context.window.RECIPES.reduce((n, r) => n + r.variants.length, 0));
 }
 
 // 3.5 QR Code Matrix Generator

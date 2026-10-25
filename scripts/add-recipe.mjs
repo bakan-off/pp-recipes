@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Универсальный быстрый установщик рецептов для сайта «ПП · рецепты»
+ * Универсальный быстрый установщик рецептов для сайта «ПП · рецепты» (OpenCode & Antigravity)
  * Использование:
  *   node scripts/add-recipe.mjs new-recipe.json --cleanup
  */
@@ -38,48 +38,71 @@ for (const v of recipe.variants) {
   assert(Array.isArray(v.ingredients) && v.ingredients.some(i => i.name && i.amount), 'В вариации должны быть ингредиенты');
 }
 
-// 2. Обновление базы рецептов assets/recipes-data.js
+// 2. Автогенерация обложки рецепта (<slug>.jpg), если файла ещё нет в папке
+if (!fs.existsSync(recipe.image)) {
+  const promptText = recipe.imagePrompt || `Editorial food photography of ${recipe.slug.replace('.html', '').replace(/-/g, ' ')}, served on light ceramic tableware on natural beige linen tablecloth, soft warm morning daylight, Kinfolk magazine aesthetic, appetizing, clean composition, no text, no watermarks`;
+  const encodedPrompt = encodeURIComponent(promptText);
+  const seed = Math.floor(Math.random() * 90000) + 10000;
+  const imgUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1200&height=900&seed=${seed}&nologo=true&model=flux`;
+  console.log(`🎨 Обложка ${recipe.image} не найдена — генерируем фото блюда через ИИ...`);
+  try {
+    const res = await fetch(imgUrl, { signal: AbortSignal.timeout(25000) });
+    if (res.ok) {
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.length > 5000) {
+        fs.writeFileSync(recipe.image, buf);
+        console.log(`✅ Сгенерирована и сохранена обложка: ${recipe.image} (${Math.round(buf.length / 1024)} КБ)`);
+      }
+    }
+  } catch (err) {
+    console.warn(`⚠️ Не удалось скачать ИИ-обложку по сети (${err.message}).`);
+  }
+
+  if (!fs.existsSync(recipe.image)) {
+    const fallback = fs.readdirSync('.').find(f => /\.(jpg|png)$/i.test(f));
+    if (fallback) {
+      fs.copyFileSync(fallback, recipe.image);
+      console.warn(`⚠️ Временно скопирована обложка из ${fallback}.`);
+    }
+  }
+}
+
+// 3. Обновление базы рецептов assets/recipes-data.js
 const dataPath = 'assets/recipes-data.js';
 const ctx = { window: {} };
 vm.runInNewContext(fs.readFileSync(dataPath, 'utf8'), ctx);
 const recipes = ctx.window.RECIPES || [];
 
-const existingIdx = recipes.findIndex(r => r.slug === recipe.slug);
+const cleanRecipe = { ...recipe };
+delete cleanRecipe.imagePrompt;
+
+const existingIdx = recipes.findIndex(r => r.slug === cleanRecipe.slug);
 if (existingIdx >= 0) {
-  recipes[existingIdx] = recipe;
+  recipes[existingIdx] = cleanRecipe;
 } else {
-  recipes.unshift(recipe);
+  recipes.unshift(cleanRecipe);
 }
 fs.writeFileSync(dataPath, `window.RECIPES = ${JSON.stringify(recipes, null, 2)};\n`, 'utf8');
 
-// 3. Автоматическая генерация HTML-страницы рецепта (без inline onclick)
+// 4. Автоматическая генерация HTML-страницы рецепта (без inline onclick)
 const escAttr = s => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const htmlContent = `<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>${escAttr(recipe.title)} | ПП Рецепты</title>
-<meta content="${escAttr(recipe.description)}" name="description"/>
-<meta content="${escAttr(recipe.shortTitle)}" property="og:title"/>
-<meta content="${escAttr(recipe.description)}" property="og:description"/>
-<meta content="${escAttr(recipe.image)}" property="og:image"/>
+<title>${escAttr(cleanRecipe.title)} | ПП Рецепты</title>
+<meta content="${escAttr(cleanRecipe.description)}" name="description"/>
+<meta content="${escAttr(cleanRecipe.shortTitle)}" property="og:title"/>
+<meta content="${escAttr(cleanRecipe.description)}" property="og:description"/>
+<meta content="${escAttr(cleanRecipe.image)}" property="og:image"/>
 <meta content="article" property="og:type"/>
 <link href="assets/styles.css" rel="stylesheet"/>
 </head>
 <body><a class="skip-link" href="#main">К содержимому</a><div id="app"></div><script defer="" src="assets/recipes-data.js"></script><script defer="" src="assets/app.js"></script></body>
 </html>
 `;
-fs.writeFileSync(recipe.slug, htmlContent, 'utf8');
-
-// 4. Проверка наличия обложки (если картинка ещё не создана — создаём временную заглушку из существующей)
-if (!fs.existsSync(recipe.image)) {
-  const fallback = fs.readdirSync('.').find(f => /\.(jpg|png)$/i.test(f));
-  if (fallback) {
-    fs.copyFileSync(fallback, recipe.image);
-    console.warn(`⚠️ Обложка ${recipe.image} не найдена, временно скопирована из ${fallback}. Сгенерируйте уникальную обложку!`);
-  }
-}
+fs.writeFileSync(cleanRecipe.slug, htmlContent, 'utf8');
 
 // 5. Автоматическое обновление счётчиков в scripts/check.mjs
 const totalRecipes = recipes.length;
@@ -102,4 +125,4 @@ if (cleanup && fs.existsSync(jsonPath)) {
 execSync('node scripts/build.mjs --sync-html', { stdio: 'inherit' });
 execSync('node scripts/check.mjs', { stdio: 'inherit' });
 
-console.log(`\n✅ Рецепт «${recipe.shortTitle}» (${recipe.slug}) успешно опубликован! Всего рецептов: ${totalRecipes}, вариаций: ${totalVariants}.`);
+console.log(`\n✅ Рецепт «${cleanRecipe.shortTitle}» (${cleanRecipe.slug}) успешно опубликован! Всего рецептов: ${totalRecipes}, вариаций: ${totalVariants}.`);
