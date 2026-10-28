@@ -182,13 +182,14 @@ const BASELINE_NUTRITION_RULES = [
   { rx: /яйц|яиц/i, kcal: 157, p: 12.7, f: 11.5, c: 0.7 },
   { rx: /изолят/i, kcal: 372, p: 88, f: 1, c: 2 },
   { rx: /казеин/i, kcal: 365, p: 76, f: 2.5, c: 7 },
-  { rx: /протеин|ксб|whey|альбумин/i, kcal: 395, p: 78, f: 6.5, c: 6 },
+  { rx: /протеин|ксб|whey|альбумин/i, kcal: 430, p: 80, f: 9, c: 7 },
   { rx: /сгущен.*(?:1\s*%|4\s*%|л[её]гк|станция)/i, kcal: 220, p: 8.5, f: 4, c: 40 },
   { rx: /сгущен/i, kcal: 328, p: 7.2, f: 8.5, c: 56 },
   { rx: /сливк/i, kcal: 119, p: 2.7, f: 10, c: 4.5 },
   { rx: /молок.*0[.,]5\s*%/i, kcal: 35, p: 3.1, f: 0.5, c: 4.9 },
-  { rx: /молок.*(?:2[.,]5|3[.,]2)\s*%/i, kcal: 56, p: 2.9, f: 2.8, c: 4.8 },
-  { rx: /молок/i, kcal: 45, p: 3, f: 1.5, c: 4.8 },
+  { rx: /молок.*3[.,]2\s*%/i, kcal: 60, p: 2.9, f: 3.2, c: 4.7 },
+  { rx: /молок.*1[.,]5\s*%/i, kcal: 45, p: 3, f: 1.5, c: 4.8 },
+  { rx: /молок/i, kcal: 54, p: 2.9, f: 2.5, c: 4.8 },
   { rx: /лапш|макарон|паста|спагетти/i, kcal: 298, p: 10.4, f: 2, c: 59.2 },
   { rx: /псиллиум/i, kcal: 180, p: 2, f: 0.5, c: 12 },
   { rx: /овсян|геркулес/i, kcal: 352, p: 12.5, f: 6.2, c: 61 },
@@ -2253,6 +2254,11 @@ const FRIDGE_ITEMS = ['Творог', 'Курица', 'Яйца', 'Протеи�
 function initCatalog() {
   const totalVariants = recipes.reduce((n, r) => n + r.variants.length, 0);
   const favCount = getFavs().size;
+  const heroIdx = recipes.length ? Math.floor(Math.random() * recipes.length) : 0;
+  const heroRec = recipes[heroIdx] || { slug: "caramel-cheesecake.html", image: "caramel-cheesecake-hero.jpg", shortTitle: "Сливочный чизкейк", category: "Десерты" };
+  const heroVar = heroRec.variants?.find(x => x.id === heroRec.defaultVariant) || heroRec.variants?.[0];
+  const heroP100 = heroVar?.per100 || heroVar?.total;
+  const heroBadge = heroP100 ? `${fmt(heroP100.kcal)} ККАЛ · Б ${fmt(macro(heroP100, "Белки"))} Г` : "ВКУС БАЛАНСА";
 
   app.innerHTML = `<div class="shell">${nav()}<main id="main">
     <section class="editorial-hero">
@@ -2267,7 +2273,14 @@ function initCatalog() {
           <span>КБЖУ для каждого блюда</span>
         </div>
       </div>
-      (function() { const hIdx = recipes.length ? Math.floor(Math.random() * recipes.length) : 0; const hRec = recipes[hIdx] || { slug: "caramel-cheesecake.html", image: "caramel-cheesecake-hero.jpg", shortTitle: "Сливочный чизкейк", category: "Десерты" }; const hVar = hRec.variants?.find(x => x.id === hRec.defaultVariant) || hRec.variants?.[0]; const hP100 = hVar?.per100 || hVar?.total; const hBadge = hP100 ? fmt(hP100.kcal) + " ККАЛ · Б " + fmt(macro(hP100, "Белки")) + " Г" : "ВКУС БАЛАНСА"; return "<a class=\"hero-cover reveal\" href=\"\" + esc(hRec.slug) + "\"><img src=\"\" + esc(hRec.image) + "\" alt=\"\" + esc(hRec.shortTitle) + "\" width=\"600\" height=\"600\"><span class=\"issue\"><b>" + String(hIdx + 1).padStart(2, "0") + "</b>" + hBadge + "</span><div class=\"cover-label\"><div><small>Рецепт на обложке · " + esc(hRec.category || "Вкус баланса") + "</small><h2>" + esc(hRec.shortTitle) + "</h2></div><span class=\"round-arrow\">" + icon("arrow") + "</span></div></a>"; })()
+      <a class="hero-cover reveal" href="${esc(heroRec.slug)}">
+        <img src="${esc(heroRec.image)}" alt="${esc(heroRec.shortTitle)}" width="600" height="600">
+        <span class="issue"><b>${String(heroIdx + 1).padStart(2, "0")}</b>${heroBadge}</span>
+        <div class="cover-label">
+          <div><small>Рецепт на обложке · ${esc(heroRec.category || "Вкус баланса")}</small><h2>${esc(heroRec.shortTitle)}</h2></div>
+          <span class="round-arrow">${icon('arrow')}</span>
+        </div>
+      </a>
     </section>
     <div class="principles">
       <span>${icon('leaf')} Продуманный состав</span>
