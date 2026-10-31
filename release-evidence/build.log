@@ -1,0 +1,5 @@
+
+> pp-recipes-editorial@3.0.0 build
+> node scripts/build.mjs --sync-html
+
+Built 34 recipes / 66 variants. Static HTML + schema + responsive images + cache 2144e47c4b13.

@@ -10,3 +10,10 @@ dist/
 .antigravity/
 test-results/
 
+
+node_modules/
+dist/
+qa-output/
+*.log
+
+!release-evidence/*.log

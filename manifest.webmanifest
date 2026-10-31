@@ -1,17 +1,26 @@
 {
-  "name": "ПП · рецепты — Коллекция высокобелковых блюд",
+  "name": "ПП · рецепты — Ваши продукты. Ваш рецепт.",
   "short_name": "ПП · рецепты",
-  "description": "Авторские высокобелковые рецепты с точным пересчётом КБЖУ, штрихкодами для FatSecret и умным списком покупок.",
+  "description": "Рецепты под ваши продукты и порции: КБЖУ, покупки и пошаговая готовка.",
+  "id": "./",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#FAF8F5",
   "theme_color": "#59674F",
   "lang": "ru",
   "icons": [
     {
-      "src": "cheesecake.png",
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

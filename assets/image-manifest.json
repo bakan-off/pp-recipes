@@ -1,0 +1,920 @@
+{
+  "airfryer-syrniki-hero.jpg": [
+    {
+      "src": "assets/images/airfryer-syrniki-hero-480.webp",
+      "width": 480,
+      "height": 322
+    },
+    {
+      "src": "assets/images/airfryer-syrniki-hero-960.webp",
+      "width": 960,
+      "height": 643
+    },
+    {
+      "src": "assets/images/airfryer-syrniki-hero-1440.webp",
+      "width": 1024,
+      "height": 686
+    }
+  ],
+  "airfryer-syrniki-step-cut.jpg": [
+    {
+      "src": "assets/images/airfryer-syrniki-step-cut-480.webp",
+      "width": 480,
+      "height": 322
+    },
+    {
+      "src": "assets/images/airfryer-syrniki-step-cut-960.webp",
+      "width": 960,
+      "height": 643
+    },
+    {
+      "src": "assets/images/airfryer-syrniki-step-cut-1440.webp",
+      "width": 1024,
+      "height": 686
+    }
+  ],
+  "banana-souffle.png": [
+    {
+      "src": "assets/images/banana-souffle-480.webp",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "src": "assets/images/banana-souffle-960.webp",
+      "width": 836,
+      "height": 471
+    },
+    {
+      "src": "assets/images/banana-souffle-1440.webp",
+      "width": 836,
+      "height": 471
+    }
+  ],
+  "buckwheat-step-foil.jpg": [
+    {
+      "src": "assets/images/buckwheat-step-foil-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/buckwheat-step-foil-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/buckwheat-step-foil-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "buckwheat-step-milk.jpg": [
+    {
+      "src": "assets/images/buckwheat-step-milk-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/buckwheat-step-milk-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/buckwheat-step-milk-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "buckwheat-step-steep.jpg": [
+    {
+      "src": "assets/images/buckwheat-step-steep-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/buckwheat-step-steep-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/buckwheat-step-steep-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "caramel-cheesecake-choco.jpg": [
+    {
+      "src": "assets/images/caramel-cheesecake-choco-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-choco-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-choco-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "caramel-cheesecake-hero.jpg": [
+    {
+      "src": "assets/images/caramel-cheesecake-hero-480.webp",
+      "width": 480,
+      "height": 268
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-hero-960.webp",
+      "width": 960,
+      "height": 536
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-hero-1440.webp",
+      "width": 1376,
+      "height": 768
+    }
+  ],
+  "caramel-cheesecake-step-blend.jpg": [
+    {
+      "src": "assets/images/caramel-cheesecake-step-blend-480.webp",
+      "width": 480,
+      "height": 268
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-step-blend-960.webp",
+      "width": 960,
+      "height": 536
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-step-blend-1440.webp",
+      "width": 1376,
+      "height": 768
+    }
+  ],
+  "caramel-cheesecake-step-mix.jpg": [
+    {
+      "src": "assets/images/caramel-cheesecake-step-mix-480.webp",
+      "width": 480,
+      "height": 268
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-step-mix-960.webp",
+      "width": 960,
+      "height": 536
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-step-mix-1440.webp",
+      "width": 1376,
+      "height": 768
+    }
+  ],
+  "caramel-cheesecake-step-oven.jpg": [
+    {
+      "src": "assets/images/caramel-cheesecake-step-oven-480.webp",
+      "width": 480,
+      "height": 268
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-step-oven-960.webp",
+      "width": 960,
+      "height": 536
+    },
+    {
+      "src": "assets/images/caramel-cheesecake-step-oven-1440.webp",
+      "width": 1376,
+      "height": 768
+    }
+  ],
+  "cheesecake.png": [
+    {
+      "src": "assets/images/cheesecake-480.webp",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "src": "assets/images/cheesecake-960.webp",
+      "width": 836,
+      "height": 471
+    },
+    {
+      "src": "assets/images/cheesecake-1440.webp",
+      "width": 836,
+      "height": 471
+    }
+  ],
+  "chinese-velvet-chicken-spicy.jpg": [
+    {
+      "src": "assets/images/chinese-velvet-chicken-spicy-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/chinese-velvet-chicken-spicy-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/chinese-velvet-chicken-spicy-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "chinese-velvet-chicken.jpg": [
+    {
+      "src": "assets/images/chinese-velvet-chicken-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/chinese-velvet-chicken-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/chinese-velvet-chicken-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "chocolate-banana-brownie.png": [
+    {
+      "src": "assets/images/chocolate-banana-brownie-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/chocolate-banana-brownie-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/chocolate-banana-brownie-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "chocolate-banana-shake.png": [
+    {
+      "src": "assets/images/chocolate-banana-shake-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/chocolate-banana-shake-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/chocolate-banana-shake-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "chocolate-cherry.png": [
+    {
+      "src": "assets/images/chocolate-cherry-480.webp",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "src": "assets/images/chocolate-cherry-960.webp",
+      "width": 836,
+      "height": 471
+    },
+    {
+      "src": "assets/images/chocolate-cherry-1440.webp",
+      "width": 836,
+      "height": 471
+    }
+  ],
+  "chocolate-fudge-cheesecake.png": [
+    {
+      "src": "assets/images/chocolate-fudge-cheesecake-480.webp",
+      "width": 480,
+      "height": 268
+    },
+    {
+      "src": "assets/images/chocolate-fudge-cheesecake-960.webp",
+      "width": 960,
+      "height": 536
+    },
+    {
+      "src": "assets/images/chocolate-fudge-cheesecake-1440.webp",
+      "width": 1376,
+      "height": 768
+    }
+  ],
+  "chocolate-greek-yogurt.png": [
+    {
+      "src": "assets/images/chocolate-greek-yogurt-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/chocolate-greek-yogurt-960.webp",
+      "width": 960,
+      "height": 716
+    },
+    {
+      "src": "assets/images/chocolate-greek-yogurt-1440.webp",
+      "width": 1024,
+      "height": 764
+    }
+  ],
+  "chocolate-kefir-shake.png": [
+    {
+      "src": "assets/images/chocolate-kefir-shake-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/chocolate-kefir-shake-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/chocolate-kefir-shake-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "chocolate-oat-pancake-cake.jpg": [
+    {
+      "src": "assets/images/chocolate-oat-pancake-cake-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/chocolate-oat-pancake-cake-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/chocolate-oat-pancake-cake-1440.webp",
+      "width": 1440,
+      "height": 1075
+    }
+  ],
+  "cottage-cheese-baked-apples.jpg": [
+    {
+      "src": "assets/images/cottage-cheese-baked-apples-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/cottage-cheese-baked-apples-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/cottage-cheese-baked-apples-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "cottage-cheese-lavash-roll-var4.jpg": [
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-var4-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-var4-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-var4-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "cottage-cheese-lavash-roll-var5.jpg": [
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-var5-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-var5-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-var5-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "cottage-cheese-lavash-roll.jpg": [
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/cottage-cheese-lavash-roll-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "creamy-buckwheat-hero.jpg": [
+    {
+      "src": "assets/images/creamy-buckwheat-hero-480.webp",
+      "width": 480,
+      "height": 268
+    },
+    {
+      "src": "assets/images/creamy-buckwheat-hero-960.webp",
+      "width": 960,
+      "height": 536
+    },
+    {
+      "src": "assets/images/creamy-buckwheat-hero-1440.webp",
+      "width": 1376,
+      "height": 768
+    }
+  ],
+  "creamy-chicken-potatoes.png": [
+    {
+      "src": "assets/images/creamy-chicken-potatoes-480.webp",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "src": "assets/images/creamy-chicken-potatoes-960.webp",
+      "width": 836,
+      "height": 471
+    },
+    {
+      "src": "assets/images/creamy-chicken-potatoes-1440.webp",
+      "width": 836,
+      "height": 471
+    }
+  ],
+  "curd-plombir-blueberry.jpg": [
+    {
+      "src": "assets/images/curd-plombir-blueberry-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/curd-plombir-blueberry-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/curd-plombir-blueberry-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "egg-scramble-yolks.png": [
+    {
+      "src": "assets/images/egg-scramble-yolks-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/egg-scramble-yolks-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/egg-scramble-yolks-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "egg-white-scramble.png": [
+    {
+      "src": "assets/images/egg-white-scramble-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/egg-white-scramble-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/egg-white-scramble-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "eggplant-chicken-salad.jpg": [
+    {
+      "src": "assets/images/eggplant-chicken-salad-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/eggplant-chicken-salad-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/eggplant-chicken-salad-1440.webp",
+      "width": 1440,
+      "height": 1075
+    }
+  ],
+  "fluffy-boiled-rice.jpg": [
+    {
+      "src": "assets/images/fluffy-boiled-rice-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/fluffy-boiled-rice-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/fluffy-boiled-rice-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "juicy-chicken-breast.png": [
+    {
+      "src": "assets/images/juicy-chicken-breast-480.webp",
+      "width": 480,
+      "height": 268
+    },
+    {
+      "src": "assets/images/juicy-chicken-breast-960.webp",
+      "width": 960,
+      "height": 536
+    },
+    {
+      "src": "assets/images/juicy-chicken-breast-1440.webp",
+      "width": 1376,
+      "height": 768
+    }
+  ],
+  "lentil-apple-cake.jpg": [
+    {
+      "src": "assets/images/lentil-apple-cake-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/lentil-apple-cake-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/lentil-apple-cake-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "nori-chicken-sticks.jpg": [
+    {
+      "src": "assets/images/nori-chicken-sticks-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/nori-chicken-sticks-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/nori-chicken-sticks-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "nutritionist-tuna-salad.jpg": [
+    {
+      "src": "assets/images/nutritionist-tuna-salad-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/nutritionist-tuna-salad-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/nutritionist-tuna-salad-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "oat-bran-bread.png": [
+    {
+      "src": "assets/images/oat-bran-bread-480.webp",
+      "width": 480,
+      "height": 268
+    },
+    {
+      "src": "assets/images/oat-bran-bread-960.webp",
+      "width": 960,
+      "height": 536
+    },
+    {
+      "src": "assets/images/oat-bran-bread-1440.webp",
+      "width": 1376,
+      "height": 768
+    }
+  ],
+  "pineapple-cottage-cream.jpg": [
+    {
+      "src": "assets/images/pineapple-cottage-cream-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/pineapple-cottage-cream-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/pineapple-cottage-cream-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "pp-khachapuri-hero.jpg": [
+    {
+      "src": "assets/images/pp-khachapuri-hero-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/pp-khachapuri-hero-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/pp-khachapuri-hero-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "pp-khachapuri-step-dough.jpg": [
+    {
+      "src": "assets/images/pp-khachapuri-step-dough-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/pp-khachapuri-step-dough-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/pp-khachapuri-step-dough-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "pp-khachapuri-step-pan.jpg": [
+    {
+      "src": "assets/images/pp-khachapuri-step-pan-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/pp-khachapuri-step-pan-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/pp-khachapuri-step-pan-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "pp-khachapuri-step-shape.jpg": [
+    {
+      "src": "assets/images/pp-khachapuri-step-shape-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/pp-khachapuri-step-shape-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/pp-khachapuri-step-shape-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "pp-shakshuka.jpg": [
+    {
+      "src": "assets/images/pp-shakshuka-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/pp-shakshuka-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/pp-shakshuka-1440.webp",
+      "width": 1440,
+      "height": 1075
+    }
+  ],
+  "protein-doshirak.jpg": [
+    {
+      "src": "assets/images/protein-doshirak-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/protein-doshirak-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/protein-doshirak-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "sochniki.png": [
+    {
+      "src": "assets/images/sochniki-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/sochniki-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/sochniki-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "spanish-tortilla.jpg": [
+    {
+      "src": "assets/images/spanish-tortilla-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/spanish-tortilla-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/spanish-tortilla-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "stuffed-pepper-boats.jpg": [
+    {
+      "src": "assets/images/stuffed-pepper-boats-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/stuffed-pepper-boats-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/stuffed-pepper-boats-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "stuffed-peppers-step-baked.jpg": [
+    {
+      "src": "assets/images/stuffed-peppers-step-baked-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/stuffed-peppers-step-baked-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/stuffed-peppers-step-baked-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "stuffed-peppers-step-boats.jpg": [
+    {
+      "src": "assets/images/stuffed-peppers-step-boats-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/stuffed-peppers-step-boats-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/stuffed-peppers-step-boats-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "stuffed-peppers-step-layers.jpg": [
+    {
+      "src": "assets/images/stuffed-peppers-step-layers-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/stuffed-peppers-step-layers-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/stuffed-peppers-step-layers-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "stuffed-peppers-step-pouring.jpg": [
+    {
+      "src": "assets/images/stuffed-peppers-step-pouring-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/stuffed-peppers-step-pouring-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/stuffed-peppers-step-pouring-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "stuffed-pumpkin-boats.jpg": [
+    {
+      "src": "assets/images/stuffed-pumpkin-boats-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/stuffed-pumpkin-boats-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/stuffed-pumpkin-boats-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "troekurovo-schnitzel.jpg": [
+    {
+      "src": "assets/images/troekurovo-schnitzel-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/troekurovo-schnitzel-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/troekurovo-schnitzel-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
+  "tvorozhnyy-desert-golubika-sgushchonka.jpg": [
+    {
+      "src": "assets/images/tvorozhnyy-desert-golubika-sgushchonka-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets/images/tvorozhnyy-desert-golubika-sgushchonka-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets/images/tvorozhnyy-desert-golubika-sgushchonka-1440.webp",
+      "width": 1440,
+      "height": 1075
+    }
+  ]
+}

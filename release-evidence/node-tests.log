@@ -1,0 +1,18 @@
+
+> pp-recipes-editorial@3.0.0 test
+> node scripts/check.mjs && node scripts/test.mjs
+
+PASS: JS syntax; routes & variants validated; Stage 2.7 unit & DOM tests (per-item custom weight & product replacement without scaling recipe, ingredient removal, custom ingredient addition, mobile responsive layout, FatSecret EAN-13, QR matrix, smart cart merge, macro planner, timers).
+PASS Parenthetical grams follow the ingredient, not stale original
+PASS Percentages, temperatures, brand codes and times remain intact
+PASS Khachapuri cheese 180 → 90 in actual second step
+PASS Explicit ingredient tokens update product AND quantity
+PASS Ambiguous legacy quantities refer to list, never guessed
+PASS Image paths and markup attributes are not rescaled
+PASS Removing products cannot produce negative nutrition
+PASS 66 original barcodes are unchanged from release baseline
+PASS Every recipe variant supports quantity adaptation without mutation
+PASS Unsafe recipe import and path traversal are rejected
+PASS Declared labels and parenthetical oil mass are used
+PASS All shipped source scripts parse
+12 new regression groups passed.

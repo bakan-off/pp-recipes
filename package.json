@@ -1,23 +1,19 @@
 {
   "name": "pp-recipes-editorial",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "check": "node scripts/check.mjs",
-    "build": "node scripts/build.mjs",
-    "test": "node scripts/test.mjs",
-    "build:enhanced": "node scripts/build.mjs --enhanced"
-  },
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "framer-motion": "^12.0.0",
-    "lucide-react": "^0.468.0"
+    "test": "node scripts/check.mjs && node scripts/test.mjs",
+    "test:browser": "node scripts/browser-test.mjs",
+    "build": "node scripts/build.mjs --sync-html",
+    "images": "python3 scripts/optimize-images.py"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0",
+    "axe-core": "^4.14.0",
     "playwright": "^1.51.0"
-  }
+  },
+  "description": "ПП-рецепты под ваши продукты и порции: КБЖУ, покупки и пошаговая готовка."
 }

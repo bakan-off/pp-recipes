@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "checks": 27,
+  "results": [
+    "Recipe → modification → steps → reload → resume → planner → cart → saved version → pantry → backup passed",
+    "Dark theme, comparison, timer, PNG card, static HTML and offline reload passed"
+  ],
+  "errors": []
+}

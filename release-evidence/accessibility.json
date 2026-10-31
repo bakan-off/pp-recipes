@@ -1,0 +1,47 @@
+[
+  {
+    "label": "home-light",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 2
+      }
+    ]
+  },
+  {
+    "label": "home-dark",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "label": "recipe-dark",
+    "violations": [],
+    "incomplete": []
+  },
+  {
+    "label": "ingredient-dark",
+    "violations": [],
+    "incomplete": []
+  },
+  {
+    "label": "personal-dark",
+    "violations": [],
+    "incomplete": []
+  },
+  {
+    "label": "editor-dark",
+    "violations": [],
+    "incomplete": []
+  },
+  {
+    "label": "editor-light",
+    "violations": [],
+    "incomplete": []
+  }
+]

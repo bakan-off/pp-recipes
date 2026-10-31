@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "checks": 309,
+  "results": [
+    "36 routes × 3 viewport widths: layout and rendering passed",
+    "66 variant deep links passed",
+    "Recipe → modification → steps → reload → resume → planner → cart → saved version → pantry → backup passed",
+    "Dark theme, comparison, timer, PNG card, static HTML and offline reload passed"
+  ],
+  "errors": []
+}

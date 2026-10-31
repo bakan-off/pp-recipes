@@ -5,6 +5,7 @@
  *   node scripts/add-recipe.mjs new-recipe.json --cleanup
  */
 import fs from 'node:fs';
+import {validateRecipe} from './validate-recipe.mjs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import { execSync } from 'node:child_process';
@@ -19,7 +20,7 @@ if (!jsonPath || !fs.existsSync(jsonPath)) {
 }
 
 const rawJson = fs.readFileSync(jsonPath, 'utf8');
-const recipe = JSON.parse(rawJson);
+const recipe = validateRecipe(JSON.parse(rawJson));
 
 // 1. Валидация обязательных полей рецепта
 assert(recipe.slug && recipe.slug.endsWith('.html'), 'Поле slug должно заканчиваться на .html');
@@ -38,34 +39,8 @@ for (const v of recipe.variants) {
   assert(Array.isArray(v.ingredients) && v.ingredients.some(i => i.name && i.amount), 'В вариации должны быть ингредиенты');
 }
 
-// 2. Автогенерация обложки рецепта (<slug>.jpg), если файла ещё нет в папке
-if (!fs.existsSync(recipe.image)) {
-  const promptText = recipe.imagePrompt || `Editorial food photography of ${recipe.slug.replace('.html', '').replace(/-/g, ' ')}, served on light ceramic tableware on natural beige linen tablecloth, soft warm morning daylight, Kinfolk magazine aesthetic, appetizing, clean composition, no text, no watermarks`;
-  const encodedPrompt = encodeURIComponent(promptText);
-  const seed = Math.floor(Math.random() * 90000) + 10000;
-  const imgUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1200&height=900&seed=${seed}&nologo=true&model=flux`;
-  console.log(`🎨 Обложка ${recipe.image} не найдена — генерируем фото блюда через ИИ...`);
-  try {
-    const res = await fetch(imgUrl, { signal: AbortSignal.timeout(25000) });
-    if (res.ok) {
-      const buf = Buffer.from(await res.arrayBuffer());
-      if (buf.length > 5000) {
-        fs.writeFileSync(recipe.image, buf);
-        console.log(`✅ Сгенерирована и сохранена обложка: ${recipe.image} (${Math.round(buf.length / 1024)} КБ)`);
-      }
-    }
-  } catch (err) {
-    console.warn(`⚠️ Не удалось скачать ИИ-обложку по сети (${err.message}).`);
-  }
-
-  if (!fs.existsSync(recipe.image)) {
-    const fallback = fs.readdirSync('.').find(f => /\.(jpg|png)$/i.test(f));
-    if (fallback) {
-      fs.copyFileSync(fallback, recipe.image);
-      console.warn(`⚠️ Временно скопирована обложка из ${fallback}.`);
-    }
-  }
-}
+// 2. Фото должно быть подготовлено автором. Никаких скрытых сетевых запросов.
+assert(fs.existsSync(recipe.image), `Нет обложки ${recipe.image}. Скопируйте фото в корень проекта и повторите команду.`);
 
 // 3. Обновление базы рецептов assets/recipes-data.js
 const dataPath = 'assets/recipes-data.js';

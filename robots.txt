@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /editor.html
+Sitemap: https://bakan-off.github.io/pp-recipes/sitemap.xml

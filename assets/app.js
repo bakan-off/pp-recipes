@@ -2,6 +2,7 @@
 (() => {
 'use strict';
 const recipes = window.RECIPES || [];
+window.PPInitialSearch = typeof location !== 'undefined' ? location.search : '';
 const app = typeof document !== 'undefined' ? document.getElementById('app') : null;
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
@@ -12,6 +13,17 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
   "'": '&#39;'
 }[c]));
 
+function imageAttrs(src, sizes = '(max-width: 760px) 100vw, 600px') {
+  const a = window.PPImages?.[src];
+  if (!a) return `src="${esc(src)}"`;
+  const choices = [...new Map(a.map(x => [x.width,x])).values()];
+  return `src="${esc(a[1].src)}" srcset="${choices.map(x => `${esc(x.src)} ${x.width}w`).join(', ')}" sizes="${sizes}"`;
+}
+function optimizeImageMarkup(html) {
+  return String(html).replace(/<img\b([^>]*?)\bsrc="([^"]+)"([^>]*)>/gi, (_,a,src,b)=>`<img ${a}${imageAttrs(src)}${b}>`);
+}
+const adaptedTitle = (text, custom) => custom ? String(text).replace(/\s*\([^)]*\d+(?:[.,]\d+)?\s*(?:кг|г|шт\.?|штук[аи]?|порци[а-яё]*)[^)]*\)/gi,'').trim() : text;
+const recipeIntro = text => { const first=String(text||'').split(/(?<=[.!?])\s/)[0]; return first.length>220?first.slice(0,first.lastIndexOf(' ',220))+'…':first; };
 const fmt = n => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(n);
 
 const icon = (name) => {
@@ -137,8 +149,67 @@ function extractPrimaryAmount(amountStr) {
   };
 }
 
+
+function scaleIngredientName(name, ratio) {
+  return String(name || '').replace(/\([^)]*\)/g, part => part.replace(/(\d+(?:[.,]\d+)?)(?:\s*[–—-]\s*(\d+(?:[.,]\d+)?))?\s*(кг|г(?:рамм(?:а|ов)?)?|мл|л|шт\.?)(?![а-яёa-z])/gi,
+    (_, lo, hi, unit) => `${fmt(quantityNumber(lo) * ratio)}${hi ? '–'+fmt(quantityNumber(hi)*ratio) : ''} ${unit}`));
+}
+
+function ingredientStems(name) {
+  return (String(name).toLowerCase().match(/[а-яёa-z]{4,}/g) || [])
+    .filter(w => !/^(вместо|продукт|высокобел|рецепт|пачк|банка|ложк|грамм)/.test(w)).map(w => w.slice(0, Math.min(5, w.length)));
+}
+function adaptStepHtml(html, base, current, ratio = 1) {
+  const changed = ratio !== 1 || current.ingredients.some((x,i) => x.swapped || x.name !== base.ingredients[i]?.name);
+  let out = String(html || '').replace(/\{\{ingredient:(\d+)\}\}/g, (_, n) => {
+    const ing=current.ingredients[Number(n)];
+    return ing ? `<strong>${esc(scaleIngredientName(ing.name,ratio))} — ${esc(scaleAmount(ing.amount,ratio))}</strong>` : '[продукт не найден]';
+  });
+  if (!changed) return out;
+  // Never modify attributes, temperatures, percentages, cooking times or image URLs.
+  const text = out.replace(/<[^>]*>/g, ' ');
+  const entries=base.ingredients.map((x,i)=>({x,i,g:getIngredientGrams(x.amount),p:extractPrimaryAmount(x.amount),stems:ingredientStems(x.name)})).filter(e=>!e.x.group);
+  let cursor=0;
+  out=out.split(/(<[^>]*>)/g).map(part=>{
+    if(part.startsWith('<'))return part;
+    const start=cursor;cursor+=part.length;
+    return part.replace(/(\d+(?:[.,]\d+)?)\s*(кг|мл|г|л|шт\.?)(?![а-яёa-z])/gi,(all,n,unit,offset)=>{
+      const value=quantityNumber(n), grams=/^(кг|л)$/i.test(unit)?value*1000:value;
+      const candidates=entries.filter(e=> /^шт/i.test(unit)?e.p?.unit==='шт'&&Math.abs(e.p.value-value)<.02:Math.abs(e.g-grams)<.02&&e.g>0);
+      if(!candidates.length)return all;
+      const context=part.slice(Math.max(0,offset-85),offset+all.length+100).toLowerCase();
+      const ranked=candidates.map(e=>({...e,score:e.stems.reduce((z,w)=>z+(context.includes(w)?1:0),0)})).sort((a,b)=>b.score-a.score);
+      const ambiguous=ranked.length>1 && ranked[0].score===ranked[1].score;
+      if(ambiguous)return '<span class="quantity-ref">количество из списка ингредиентов</span>';
+      const e=ranked[0],ing=current.ingredients[e.i];
+      if(ing.removed)return '<span class="quantity-ref">0 г — продукт исключён</span>';
+      const newG=getIngredientGrams(ing.amount);
+      const factor=e.g>0?newG/e.g:1;
+      const newValue=/^шт/i.test(unit)?value*factor*ratio:/^(кг|л)$/i.test(unit)?newG*ratio/1000:newG*ratio;
+      return `<span class="quantity-ref" data-bound-ingredient="${e.i}">${fmt(newValue)} ${esc(unit)}</span>`;
+    });
+  }).join('');
+  // Replace complete product names only (not arbitrary stems / unrelated words).
+  for(const e of entries){
+    const ing=current.ingredients[e.i];
+    if(!ing?.swapped || ing.removed || !ing.name.includes(' (вместо:'))continue;
+    const original=e.x.name.split('(')[0].trim(), target=ing.name.split(' (вместо:')[0].trim();
+    if(original.length>=5 && target!==original){
+      const rx=new RegExp(original.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+      out=out.split(/(<[^>]*>)/g).map(x=>x.startsWith('<')?x:x.replace(rx,()=>esc(target))).join('');
+    }
+  }
+  out=out.split(/(<[^>]*>)/g).map(part=>part.startsWith('<')?part:part
+    .replace(/\([^)]*\d[^)]*(?:белка|ккал|калори|г\s+Б)[^)]*\)/gi,'(КБЖУ — в актуальном расчёте)')
+    .replace(/всю пачку|целую пачку/gi,'указанное количество')
+    .replace(new RegExp(`(на\\s+)${base.baseServings}(\\s+равн[а-яё]*\\s+част[а-яё]*)`,'gi'),(_,a,b)=>a+fmt(base.baseServings*ratio)+b)).join('');
+  return out;
+}
+
 const BASELINE_NUTRITION_RULES = [
-  { rx: /творог.*мягк.*0[.,]?1\s*%|мягк.*творог.*0[.,]?1\s*%|савушкин.*0[.,]?1\s*%|teos/i, kcal: 62, p: 11, f: 0.1, c: 4 },
+  { rx: /genifit.*protein|genifit/i, kcal: 232, p: 31, f: 12, c: 0 },
+  { rx: /(?:teos|теос).*2\s*%/i, kcal: 67, p: 8, f: 2, c: 4.2 },
+  { rx: /творог.*мягк.*0[.,]?1\s*%|мягк.*творог.*0[.,]?1\s*%|савушкин.*0[.,]?1\s*%/i, kcal: 62, p: 11, f: 0.1, c: 4 },
   { rx: /творог.*мягк.*5\s*%|мягк.*творог.*5\s*%/i, kcal: 94, p: 10, f: 5, c: 3.8 },
   { rx: /творог.*зерн/i, kcal: 105, p: 13, f: 4.5, c: 2.5 },
   { rx: /творог.*(?:0\s*%|0[.,]5\s*%|0[–-]\s*0[.,]5\s*%|обезжир)/i, kcal: 85, p: 18, f: 0.3, c: 1.8 },
@@ -230,7 +301,7 @@ const INGREDIENT_SWAPS = [];
 
 function getIngredientGrams(amountStr) {
   const primary = extractPrimaryAmount(amountStr);
-  if (!primary) return 0;
+  if (!primary) { const m=String(amountStr||'').match(/\(\s*~?\s*(\d+(?:[.,]\d+)?)\s*г(?:\s|\))/i); return m ? quantityNumber(m[1]) : 0; }
   if (primary.grams > 0) return primary.grams;
   if (primary.unit === 'г' || primary.unit === 'мл') return primary.value;
   if (primary.unit === 'кг' || primary.unit === 'л') return primary.value * 1000;
@@ -240,6 +311,8 @@ function getIngredientGrams(amountStr) {
   if (primary.unit === 'ч. л.') return primary.value * 5;
   return 0;
 }
+
+function ingredientNutrition(ing) { return ing.nutrition || inferBaselineNutrition(ing.name); }
 
 function inferBaselineNutrition(ingName) {
   const s = String(ingName || '').trim();
@@ -291,9 +364,9 @@ function applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngr
     ingredients: baseVariant.ingredients.map(ing => ({ ...ing }))
   };
 
-  const baseDishWeight = (baseVariant.per100?.kcal > 0)
+  const baseDishWeight = baseVariant.dishWeight || ((baseVariant.per100?.kcal > 0)
     ? (baseVariant.total.kcal / baseVariant.per100.kcal) * 100
-    : 500;
+    : 500);
 
   let dKcal = 0, dP = 0, dF = 0, dC = 0, dWeight = 0;
 
@@ -304,7 +377,7 @@ function applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngr
 
     const primary = extractPrimaryAmount(ing.amount);
     const baseGrams = getIngredientGrams(ing.amount);
-    const baseMacro = baseGrams > 0 ? inferBaselineNutrition(ing.name) : { kcal: 0, p: 0, f: 0, c: 0 };
+    const baseMacro = baseGrams > 0 ? ingredientNutrition(ing) : { kcal: 0, p: 0, f: 0, c: 0 };
     const origFactor = baseGrams / 100;
 
     if (swap.removed) {
@@ -358,6 +431,7 @@ function applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngr
         ? `${fmt(newGrams)} ${unit} (вместо ${fmt(baseGrams)} г)`
         : `${fmt(newGrams)} ${unit}`;
     }
+    if (isSameProduct && baseGrams > 0) ing.name = scaleIngredientName(ing.name, newGrams / baseGrams);
     ing.swapped = true;
     ing.customGrams = newGrams;
   });
@@ -823,6 +897,8 @@ function parseMinutes(timeStr) {
 }
 
 window.RecipeUtils = {
+  scaleIngredientName,
+  adaptStepHtml,
   wrapCanvasLines,
   scaleAmount,
   extractPrimaryAmount,
@@ -909,7 +985,7 @@ function applyTheme(theme) {
 applyTheme(getTheme());
 
 /* Register Service Worker for offline PWA support */
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost','127.0.0.1','[::1]'].includes(location.hostname))) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
@@ -950,9 +1026,9 @@ const nav = (detail = false) => {
   return `<nav class="nav" aria-label="Основная навигация">
     <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">${icon('leaf')}</span>ПП · рецепты</a>
     <div class="nav-right">
-      <a class="nav-link ${detail ? '' : 'active'}" href="index.html#catalog">Рецепты</a>
+      <a class="nav-link ${detail ? '' : 'active'}" href="index.html#catalog">Рецепты</a><button type="button" class="nav-kitchen" data-open-personal>Моя кухня</button>
       <button type="button" class="nav-guide-pill" id="guide-toggle" title="Наглядная демонстрация всех возможностей сайта">
-        ${icon('spark')} <span>Что умеет сайт (Демо)</span>
+        ${icon('spark')} <span>Возможности</span>
       </button>
       <div class="nav-actions">
         <button type="button" class="nav-icon-btn" id="planner-toggle" aria-label="Конструктор рациона на день" title="Рацион на день (КБЖУ)">
@@ -973,7 +1049,7 @@ const nav = (detail = false) => {
 
 const footer = () => `<footer class="footer">
   <div class="footer-brand-col">
-    <span class="footer-motto">Простая еда. Хорошая жизнь.</span>
+    <span class="footer-motto">Ваши продукты. Ваш рецепт.</span><div class="footer-tools"><button type="button" class="text-button" data-open-personal>Моя кухня и резервная копия</button><a href="editor.html">Редактор рецептов</a></div>
     <span class="footer-sub">Авторская коллекция высокобелковых блюд · КБЖУ, умная замена продуктов и штрихкоды FatSecret</span>
   </div>
   <div class="footer-author-box">
@@ -1164,6 +1240,8 @@ function addRecipeToPlanner(r, variant, servingsCount = 1) {
     variantId: variant.id,
     variantName: variant.name,
     servings: servingsCount,
+    ingredients: variant.ingredients.filter(x=>!x.group&&!x.removed).map(x=>({...x})),
+    baseServings: variant.baseServings,
     oneServKcal,
     oneServP,
     oneServF,
@@ -1338,7 +1416,7 @@ function ensureGlobalModals() {
             <h2 id="shopping-title">Список покупок</h2>
           </div>
           <div class="dialog-header-right">
-            <div class="nutrition-mode-switch" role="tablist" aria-label="Режим группировки покупок">
+            <div class="nutrition-mode-switch" role="group" aria-label="Режим группировки покупок">
               <button type="button" class="nutri-tab" data-cart-view="merged" aria-pressed="true">По отделам</button>
               <button type="button" class="nutri-tab" data-cart-view="recipes" aria-pressed="false">По блюдам</button>
             </div>
@@ -1390,7 +1468,7 @@ function ensureGlobalModals() {
           <button type="button" class="guide-tab" data-guide-tab="fatsecret" aria-selected="false">📊 2. Штрихкод FatSecret</button>
           <button type="button" class="guide-tab" data-guide-tab="plate" aria-selected="false">⚖ 3. Тарелка и форма</button>
           <button type="button" class="guide-tab" data-guide-tab="planner" aria-selected="false">🎯 4. Рацион и Корзина</button>
-          <button type="button" class="guide-tab" data-guide-tab="kitchen" aria-selected="false">🎙 5. Готовка с голосом</button>
+          <button type="button" class="guide-tab" data-guide-tab="kitchen" aria-selected="false">5. Режим готовки</button>
         </div>
 
         <div class="shopping-body guide-body">
@@ -1491,7 +1569,7 @@ function ensureGlobalModals() {
             <!-- Feature 5 -->
             <div class="guide-feature-card guide-card-wide" data-guide-section="kitchen">
               <span class="guide-badge">5 · СВОБОДНЫЕ РУКИ НА КУХНЕ</span>
-              <h3>🎙 Пошаговый кухонный режим с таймерами, защитой экрана и голосовыми командами</h3>
+              <h3>Пошаговая готовка с таймерами и включённым экраном</h3>
               <p>Когда руки в муке или тесте, сайт берёт управление на себя:</p>
               <div class="guide-wide-cols">
                 <div>
@@ -1502,10 +1580,7 @@ function ensureGlobalModals() {
                   <strong>🔆 Экран не гаснет (Wake Lock)</strong>
                   <p>Нажмите <strong>«Режим готовки»</strong> над шагами рецепта: откроется крупный полноэкранный режим, в котором экран смартфона или планшета не блокируется во время готовки.</p>
                 </div>
-                <div>
-                  <strong>🎙 Управление голосом (RU)</strong>
-                  <p>Включите микрофон внутри режима готовки и управляйте рецептом вслух без рук: скажите <strong>«Дальше»</strong>, <strong>«Назад»</strong>, <strong>«Таймер»</strong> или <strong>«Пауза»</strong>!</p>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -1636,15 +1711,15 @@ function ensureGlobalModals() {
       const r = recipes.find(x => x.slug === it.slug);
       if (!r) continue;
       const v = r.variants.find(x => x.id === it.variantId) || r.variants[0];
-      const ratio = it.servings / (v.baseServings || 1);
+      const ratio = it.servings / (it.baseServings || v.baseServings || 1);
       cart.push({
         slug: r.slug,
         title: r.shortTitle,
         variantName: v.name,
         servings: it.servings,
         url: `${r.slug}?v=${v.id}&s=${it.servings}`,
-        items: v.ingredients.filter(x => !x.group).map(x => ({
-          name: x.name,
+        items: (it.ingredients || v.ingredients).filter(x => !x.group && !x.removed).map(x => ({
+          name: scaleIngredientName(x.name, ratio),
           amount: scaleAmount(x.amount, ratio),
           done: false
         }))
@@ -1833,7 +1908,7 @@ function bindNavActions() {
    5. KITCHEN TIMER ENGINE & POSTER CANVAS GENERATOR
    ========================================================================== */
 
-let activeTimer = { interval: null, remaining: 0, running: false, label: '' };
+let activeTimer = { interval: null, remaining: 0, running: false, label: '', deadline: 0 };
 
 function playKitchenChime() {
   try {
@@ -1866,6 +1941,9 @@ function formatSeconds(sec) {
 function updateTimerUI() {
   const widget = document.getElementById('kitchen-timer-widget');
   if (!widget) return;
+  const panel=document.getElementById('focus-timer-panel');
+  if(panel){panel.hidden=activeTimer.remaining<=0&&!activeTimer.running;document.getElementById('focus-timer-display').textContent=formatSeconds(activeTimer.remaining);document.getElementById('focus-timer-toggle').textContent=activeTimer.running?'Пауза':'Пуск';}
+  try { if(activeTimer.remaining>0)localStorage.setItem('pp-active-timer-v3',JSON.stringify({remaining:activeTimer.remaining,running:activeTimer.running,label:activeTimer.label,deadline:activeTimer.deadline}));else localStorage.removeItem('pp-active-timer-v3'); } catch {}
   if (activeTimer.remaining <= 0 && !activeTimer.running) {
     widget.hidden = true;
     return;
@@ -1881,12 +1959,13 @@ function startKitchenTimer(seconds, label) {
   clearInterval(activeTimer.interval);
   activeTimer.remaining = Math.max(1, Math.round(seconds));
   activeTimer.running = true;
+  activeTimer.deadline=Date.now()+activeTimer.remaining*1000;
   activeTimer.label = label || 'Таймер шага';
   updateTimerUI();
 
   activeTimer.interval = setInterval(() => {
     if (!activeTimer.running) return;
-    activeTimer.remaining -= 1;
+    activeTimer.remaining = Math.max(0,Math.ceil((activeTimer.deadline-Date.now())/1000));
     if (activeTimer.remaining <= 0) {
       activeTimer.remaining = 0;
       activeTimer.running = false;
@@ -1904,10 +1983,12 @@ function startKitchenTimer(seconds, label) {
     toggleBtn._bound = true;
     toggleBtn.addEventListener('click', () => {
       activeTimer.running = !activeTimer.running;
+      if(activeTimer.running)activeTimer.deadline=Date.now()+activeTimer.remaining*1000;
       updateTimerUI();
     });
     plusBtn.addEventListener('click', () => {
       activeTimer.remaining += 60;
+      activeTimer.deadline=Date.now()+activeTimer.remaining*1000;
       activeTimer.running = true;
       updateTimerUI();
     });
@@ -2214,25 +2295,26 @@ async function downloadRecipeCardPng(r, variant, ratio, servingsLabel, shareUrl)
    6. CATALOG VIEW
    ========================================================================== */
 
-const card = (r, i) => {
+const card = (r, i, fridge = new Set()) => {
   const v = r.variants.find(x => x.id === r.defaultVariant) || r.variants[0];
   const m = v.per100;
   const split = calcMacroSplit(m);
+  const missing = fridge.size ? v.ingredients.filter(x=>!x.group&&!/соль|перец|вода|специ/i.test(x.name)&&![...fridge].some(item=>x.name.toLowerCase().includes(item.toLowerCase().slice(0,-1)))) : [];
   const favs = getFavs();
   const isFav = favs.has(r.slug);
   return `<a class="recipe-card ${i === 0 ? 'featured' : ''}" reveal href="${esc(r.slug)}">
     <div class="card-photo">
-      <img src="${esc(r.image)}" alt="${esc(r.shortTitle)}" loading="lazy" width="600" height="450">
+      <img ${imageAttrs(r.image)} alt="${esc(r.shortTitle)}" loading="lazy" decoding="async" width="600" height="450" style="view-transition-name:food-${esc(r.slug.replace(/[^a-z0-9]/gi,''))}">
       <span class="category-label">${esc(r.category)}</span>
       <button type="button" class="card-fav-btn ${isFav ? 'active' : ''}" data-fav="${esc(r.slug)}" aria-label="${isFav ? 'Убрать из избранного' : 'В избранное'}" title="В избранное">
         ${icon('heart')}
       </button>
-      ${split.pPct >= 30 ? `<span class="protein-pill" title="Доля калорий из белка">${icon('bolt')} ${split.pPct}% белка</span>` : ''}
+      ${split.pPct >= 30 ? `<span class="protein-pill" title="Доля калорий из белка">${icon('bolt')} ${fmt(macro(m, 'Белки'))} г белка / 100 г</span>` : ''}
     </div>
     <div class="card-body">
       <div class="card-topline">${icon('clock')}<span>${esc(r.time)}</span><span>${esc(r.difficulty)}</span></div>
       <h3>${esc(r.shortTitle)}</h3>
-      <p class="card-desc">${esc(r.description)}</p>
+      <p class="card-desc">${esc(r.description.split(/(?<=[.!?])\s/)[0])}</p>
       <div class="macro-mini-bar" aria-hidden="true" title="Баланс калорий: Белки ${split.pPct}% · Жиры ${split.fPct}% · Углеводы ${split.cPct}%">
         <span class="bar-p" style="width:${split.pPct}%"></span>
         <span class="bar-f" style="width:${split.fPct}%"></span>
@@ -2241,10 +2323,9 @@ const card = (r, i) => {
       <div class="card-nutrition">
         <span><strong>${fmt(m.kcal)}</strong> ккал</span>
         <span><strong>${fmt(macro(m, 'Белки'))}</strong> белки, г</span>
-        <span><strong>${fmt(macro(m, 'Жиры'))}</strong> жиры, г</span>
-        <span><strong>${fmt(macro(m, 'Углеводы'))}</strong> углев., г</span>
+
       </div>
-      <span class="card-unit">На 100 г · ${r.variants.length > 1 ? r.variants.length + ' вариации · показана базовая' : 'оригинальный рецепт'}</span>
+      <p class="card-missing" ${fridge.size?'':'hidden'}>${missing.length?'Докупить: '+esc(missing.slice(0,2).map(x=>x.name.split('(')[0].trim()).join(', '))+(missing.length>2?' и ещё '+(missing.length-2):''):'Основные продукты уже выбраны'}</p><span class="card-unit">На 100 г · ${r.variants.length > 1 ? r.variants.length + ' варианта' : 'оригинальный рецепт'}</span>
     </div>
   </a>`;
 };
@@ -2254,7 +2335,7 @@ const FRIDGE_ITEMS = ['Творог', 'Курица', 'Яйца', 'Протеи�
 function initCatalog() {
   const totalVariants = recipes.reduce((n, r) => n + r.variants.length, 0);
   const favCount = getFavs().size;
-  const heroIdx = recipes.length ? Math.floor(Math.random() * recipes.length) : 0;
+  const heroIdx = recipes.length ? Math.floor(Date.now() / 86400000) % recipes.length : 0;
   const heroRec = recipes[heroIdx] || { slug: "caramel-cheesecake.html", image: "caramel-cheesecake-hero.jpg", shortTitle: "Сливочный чизкейк", category: "Десерты" };
   const heroVar = heroRec.variants?.find(x => x.id === heroRec.defaultVariant) || heroRec.variants?.[0];
   const heroP100 = heroVar?.per100 || heroVar?.total;
@@ -2263,19 +2344,19 @@ function initCatalog() {
   app.innerHTML = `<div class="shell">${nav()}<main id="main">
     <section class="editorial-hero">
       <div class="hero-copy reveal">
-        <div class="eyebrow">Коллекция для осознанной кухни</div>
-        <h1>Есть вкусно.<br>Чувствовать<br><em>себя хорошо.</em></h1>
-        <p>Любимые блюда, продуманный состав и&nbsp;ничего лишнего. Рецепты, в&nbsp;которых удовольствие встречается с&nbsp;балансом.</p>
-        <div class="hero-cta-group"><a class="primary" href="#catalog">Найти свой рецепт ${icon('arrow')}</a><button type="button" class="secondary-hero-btn" data-open-guide="1">${icon('spark')} Что умеет сайт (Демо)</button></div>
+        <div class="eyebrow">Рецепты, которые подстраиваются под вас</div>
+        <h1>Ваши продукты.<br><em>Ваш рецепт.</em></h1>
+        <p>Подстройте любимое блюдо под свою пачку, порции и&nbsp;продукты. КБЖУ пересчитается, покупки соберутся — останется приготовить.</p>
+        <div class="hero-cta-group"><a class="primary" href="#catalog">Выбрать рецепт ${icon('arrow')}</a><a class="secondary-hero-btn" href="#live-recipe-demo">Попробовать пересчёт ${icon('scale')}</a></div>
         <div class="hero-foot">
           <span><strong>${recipes.length}</strong> рецептов</span>
-          <span><strong>${totalVariants}</strong> вариация</span>
+          <span><strong>${totalVariants}</strong> вариантов</span>
           <span>КБЖУ для каждого блюда</span>
         </div>
       </div>
       <a class="hero-cover reveal" href="${esc(heroRec.slug)}">
-        <img src="${esc(heroRec.image)}" alt="${esc(heroRec.shortTitle)}" width="600" height="600">
-        <span class="issue"><b>${String(heroIdx + 1).padStart(2, "0")}</b>${heroBadge}</span>
+        <img ${imageAttrs(heroRec.image)} alt="${esc(heroRec.shortTitle)}" width="600" height="600">
+        <span class="issue"><b>${fmt(heroP100?.kcal || 0)}</b>ккал / 100 г</span>
         <div class="cover-label">
           <div><small>Рецепт на обложке · ${esc(heroRec.category || "Вкус баланса")}</small><h2>${esc(heroRec.shortTitle)}</h2></div>
           <span class="round-arrow">${icon('arrow')}</span>
@@ -2296,11 +2377,11 @@ function initCatalog() {
         </div>
         <label class="search">${icon('search')}<input id="recipe-search" type="search" placeholder="Найти рецепт или ингредиент" aria-label="Поиск по рецептам и ингредиентам"></label>
       </div>
-      <div class="filters" aria-label="Фильтры рецептов">
+      <div class="filters" role="group" aria-label="Фильтры рецептов">
         ${['Все рецепты', 'Без сахара', 'Кето', 'Высокобелковое', 'До 20 мин'].map((t, i) => `<button class="filter" data-filter="${esc(t)}" aria-pressed="${i === 0}">${esc(t)}</button>`).join('')}
         <button class="filter filter-fav" data-filter="Избранное" aria-pressed="false" id="fav-filter-btn">${icon('heart')} Избранное <span id="fav-count-pill">${favCount ? `(${favCount})` : ''}</span></button>
       </div>
-      <div class="fridge-filter" aria-label="Подбор по продуктам">
+      <div class="fridge-filter" role="group" aria-label="Подбор по продуктам">
         <span class="fridge-label">Что есть дома:</span>
         <div class="fridge-chips" id="fridge-chips">
           ${FRIDGE_ITEMS.map(item => `<button type="button" class="fridge-chip" data-fridge="${esc(item)}" aria-pressed="false">${esc(item)}</button>`).join('')}
@@ -2423,7 +2504,7 @@ function initCatalog() {
       });
     }
 
-    document.getElementById('recipe-grid').innerHTML = chosen.map(card).join('');
+    document.getElementById('recipe-grid').innerHTML = chosen.map((r,i)=>card(r,i,activeFridge)).join('');
     document.getElementById('empty').hidden = !!chosen.length;
     document.querySelector('.results-count').textContent = `Найдено: ${chosen.length} из ${recipes.length}`;
     document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', b.dataset.filter === filter));
@@ -2457,7 +2538,7 @@ function initCatalog() {
 }
 
 /* ==========================================================================
-   7. RECIPE DETAIL VIEW (WITH REVERSE SCALING, FATSECRET BARCODE & VOICE)
+   7. RECIPE DETAIL VIEW (WITH REVERSE SCALING, FATSECRET BARCODE)
    ========================================================================== */
 
 function updateRecipeSchema(r, variant, ratio, servings) {
@@ -2480,12 +2561,13 @@ function updateRecipeSchema(r, variant, ratio, servings) {
     recipeYield: `${servings} порций`,
     nutrition: {
       '@type': 'NutritionInformation',
-      calories: `${fmt(variant.per100?.kcal || 0)} ккал на 100 г`,
+      servingSize: '100 g',
+      calories: `${variant.per100?.kcal || 0} kcal`,
       proteinContent: `${fmt(macro(variant.per100, 'Белки'))} г`,
       fatContent: `${fmt(macro(variant.per100, 'Жиры'))} г`,
       carbohydrateContent: `${fmt(macro(variant.per100, 'Углеводы'))} г`
     },
-    recipeIngredient: variant.ingredients.filter(x => !x.group && !x.removed).map(x => `${x.name} — ${scaleAmount(x.amount, ratio)}`),
+    recipeIngredient: variant.ingredients.filter(x => !x.group && !x.removed).map(x => `${scaleIngredientName(x.name,ratio)} — ${scaleAmount(x.amount, ratio)}`),
     recipeInstructions: variant.steps.map((s, idx) => ({
       '@type': 'HowToStep',
       position: idx + 1,
@@ -2513,8 +2595,7 @@ function initRecipe(r) {
   let wakeLock = null;
   let focusOrigin = null;
   let activeScaleIngIdx = null;
-  let speechRec = null;
-  let voiceActive = false;
+
 
   const storageKey = () => `pp-checklist-v1:${r.slug}:${variant.id}`;
   const readChecks = () => {
@@ -2550,12 +2631,12 @@ function initRecipe(r) {
     <section class="detail-hero reveal">
       <div>
         <div class="eyebrow">${esc(r.category)} · ${esc(r.difficulty)}</div>
-        <h1>${esc(r.title)}</h1>
-        <p>${esc(r.description)}</p>
+        <h1 id="recipe-heading">${esc(r.shortTitle)}</h1>
+        <p id="recipe-description">${esc(recipeIntro(r.description))}</p>${r.description.length>recipeIntro(r.description).length?`<details class="recipe-story" id="recipe-story"><summary>О рецепте подробнее</summary><p>${esc(r.description)}</p></details>`:''}<div id="version-status" aria-live="polite"></div>
         <div class="hero-actions-row">
           <a class="primary" href="#ingredients">Приготовим вместе ${icon('arrow')}</a>
         </div>
-        <div class="share-toolbar" aria-label="Поделиться рецептом и выбранной вариацией">
+        <details class="share-toolbar"><summary>${icon('share')} Поделиться и сохранить</summary>
           <span class="share-toolbar-label">${icon('share')} Поделиться и сохранить:</span>
           <div class="share-buttons">
             <button type="button" class="share-btn share-tg" id="share-tg" title="Отправить в Telegram">${icon('tg')} Telegram</button>
@@ -2565,10 +2646,11 @@ function initRecipe(r) {
             <button type="button" class="share-btn" id="download-card-png" title="Открыть карточку рецепта с QR и штрихкодом для FatSecret">${icon('download')} Карточка и штрихкод</button>
             <button type="button" class="share-btn" id="copy-share-link" title="Скопировать прямую ссылку на эту вариацию">Ссылка</button>
           </div>
-        </div>
+        </details>
+        <nav class="recipe-jumps" aria-label="Разделы рецепта"><a href="#ingredients">Ингредиенты</a><a href="#method">Шаги</a><a href="#nutrition">КБЖУ</a></nav>
       </div>
       <div class="detail-image">
-        <img id="detail-photo" src="${esc(r.image)}" alt="${esc(r.shortTitle)}" width="600" height="500">
+        <img id="detail-photo" ${imageAttrs(r.image)} alt="${esc(r.shortTitle)}" width="600" height="500" style="view-transition-name:food-${esc(r.slug.replace(/[^a-z0-9]/gi,''))}">
         <span class="detail-caption">${r.variants.length > 1 ? r.variants.length + ' вариаций рецепта' : 'Авторский рецепт'} · Вкус баланса</span>
       </div>
     </section>
@@ -2612,7 +2694,7 @@ function initRecipe(r) {
           <span id="custom-scale-text"></span>
           <button type="button" class="text-button" id="reset-custom-scale">Сбросить</button>
         </div>
-        <p class="ingredient-hint">Нажмите <strong>«✏️ Вес / Замена»</strong> напротив любого продукта, чтобы изменить его граммовку, заменить на свой продукт (без сбоя остальных ингредиентов!) или убрать из рецепта. Внизу списка можно <strong>добавить свой продукт</strong>.</p>
+        <p class="ingredient-hint">Измените количество или замените продукт. Остальные ингредиенты не изменятся. <button type="button" class="text-button" id="save-personal-version">Сохранить мою версию</button></p>
         <ul class="ingredient-list" id="ingredient-list"></ul>
         <div class="add-custom-ing-wrap">
           <button type="button" class="add-custom-ing-btn" id="open-add-ing-btn">➕ Добавить свой продукт в рецепт</button>
@@ -2649,14 +2731,14 @@ function initRecipe(r) {
         <button type="button" class="cart-add-btn" id="add-to-cart">${icon('bag')} + В список покупок</button>
       </aside>
       <div>
-        <section class="nutrition">
+        <section class="nutrition" id="nutrition">
           <div class="nutrition-title">
             <div>
               <h2>Пищевая ценность</h2>
               <small id="nutrition-label"></small>
             </div>
             <div class="nutrition-controls-right">
-              <div class="nutrition-mode-switch" role="tablist" aria-label="Режим расчёта КБЖУ">
+              <div class="nutrition-mode-switch" role="group" aria-label="Режим расчёта КБЖУ">
                 <button type="button" class="nutri-tab" data-nutri-mode="batch" aria-pressed="true">На объём</button>
                 <button type="button" class="nutri-tab" data-nutri-mode="single" aria-pressed="false">На 1 порцию</button>
                 <button type="button" class="nutri-tab" data-nutri-mode="per100" aria-pressed="false">На 100 г</button>
@@ -2681,7 +2763,7 @@ function initRecipe(r) {
             <h2>Шаг за шагом</h2>
             <button id="cooking-mode">${icon('focus')}Режим готовки</button>
           </div>
-          <p class="ingredient-hint">Граммовки в описании шагов относятся к исходному рецепту. Для выбранного объёма используйте пересчитанный список ингредиентов. Нажмите на кнопку таймера под шагом для запуска отсчёта.</p>
+          <p class="ingredient-hint" id="steps-adaptation-note">Количества связаны с вашим списком ингредиентов. Время и температура не масштабируются.</p>
           <ol class="steps" id="steps"></ol>
         </section>
       </div>
@@ -2704,15 +2786,17 @@ function initRecipe(r) {
         <div class="focus-status-pills">
           <small id="focus-count"></small>
           <span class="wakelock-pill" id="wakelock-pill" hidden>🔆 Экран не гаснет</span>
-          <button type="button" class="voice-pill" id="voice-control-btn" hidden>${icon('mic')} <span id="voice-control-label">Голос: Выкл</span></button>
+
         </div>
         <button class="icon-button" id="close-focus" aria-label="Закрыть режим готовки">${icon('close')}</button>
       </div>
       <div class="focus-progress"><span id="focus-bar"></span></div>
       <h2 id="focus-title"></h2>
-      <p class="focus-note">${esc(r.shortTitle)} · Вариация: <strong id="focus-variant-name"></strong> · Голосовые команды: «дальше», «назад», «таймер».</p>
+      <p class="focus-note">${esc(r.shortTitle)} · Вариация: <strong id="focus-variant-name"></strong></p>
+      <details class="focus-ingredients"><summary>Ваши ингредиенты</summary><div id="focus-ingredients"></div></details><div id="focus-changes-note"></div>
       <div class="focus-body" id="focus-body"></div>
       <div class="focus-timers" id="focus-timers"></div>
+      <div class="focus-timer-panel" id="focus-timer-panel" hidden><strong id="focus-timer-display" role="timer"></strong><button type="button" id="focus-timer-toggle">Пауза</button><button type="button" id="focus-timer-plus">+1 мин</button><button type="button" id="focus-timer-stop">Сбросить</button></div>
       <div class="focus-footer">
         <button id="prev-step">${icon('back')} Назад</button>
         <button id="next-step">Следующий шаг ${icon('arrow')}</button>
@@ -2742,10 +2826,11 @@ function initRecipe(r) {
     updateRecipeSchema(r, variant, currentRatio(), servings);
   }
 
-  function getShareUrl() {
+  function getShareUrl(includeCustom = true) {
     const base = location.origin + location.pathname;
     const rParam = customRatio !== null ? `&r=${Math.round(customRatio * 1000) / 1000}` : '';
-    return `${base}?v=${variant.id}&s=${servings}${rParam}#var${variant.id}`;
+    const c = includeCustom && (Object.keys(activeSwaps).length || customAddedIngredients.length) ? '&c=' + encodeURIComponent(JSON.stringify(window.PPRecipe.snapshot())) : '';
+    return `${base}?v=${variant.id}&s=${servings}${rParam}${c}#var${variant.id}`;
   }
 
   function getServingsLabel() {
@@ -2759,7 +2844,7 @@ function initRecipe(r) {
     const split = calcMacroSplit(p100);
     const varTitle = r.variants.length > 1 ? ` (Вариация: ${variant.name})` : '';
     const lines = [
-      `🍽 ${r.title}${varTitle}`,
+      `🍽 ${adaptedTitle(r.shortTitle,Object.keys(activeSwaps).length||customAddedIngredients.length||currentRatio()!==1)}${varTitle}`,
       `⚡ На 100 г: ${fmt(p100.kcal)} ккал | Б: ${fmt(macro(p100, 'Белки'))} г | Ж: ${fmt(macro(p100, 'Жиры'))} г | У: ${fmt(macro(p100, 'Углеводы'))} г (${split.pPct}% ккал из белка)`,
       `🥣 Расчёт (${getServingsLabel()}): ${fmt(variant.total.kcal * ratio)} ккал (${fmt(macro(variant.total, 'Белки') * ratio)} г белка)`
     ];
@@ -2768,8 +2853,10 @@ function initRecipe(r) {
       for (const ing of variant.ingredients) {
         if (ing.removed) continue;
         if (ing.group) lines.push(`\n${ing.group}:`);
-        else lines.push(`• ${ing.name} — ${scaleAmount(ing.amount, ratio)}`);
+        else lines.push(`• ${scaleIngredientName(ing.name,ratio)} — ${scaleAmount(ing.amount, ratio)}`);
       }
+      lines.push('\nШаги:');
+      variant.steps.forEach((step,i)=>lines.push(`${i+1}. ${step.title}: ${step.html.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}`));
     }
     return lines.join('\n');
   }
@@ -2826,7 +2913,7 @@ function initRecipe(r) {
   });
 
   document.getElementById('download-card-png').addEventListener('click', async () => {
-    await downloadRecipeCardPng(r, variant, currentRatio(), getServingsLabel(), getShareUrl());
+    await downloadRecipeCardPng({...r,shortTitle:adaptedTitle(r.shortTitle,Object.keys(activeSwaps).length||customAddedIngredients.length||currentRatio()!==1),title:adaptedTitle(r.title,Object.keys(activeSwaps).length||customAddedIngredients.length||currentRatio()!==1)}, variant, currentRatio(), getServingsLabel(), getShareUrl(false).replace(/#.*$/, ''));
   });
 
   document.getElementById('copy-share-link').addEventListener('click', async () => {
@@ -2921,7 +3008,11 @@ function initRecipe(r) {
     if (!compareWrap) return;
     const maxProt = Math.max(...r.variants.map(v => macro(v.per100, 'Белки')));
     const minKcal = Math.min(...r.variants.map(v => v.per100?.kcal || 9999));
-    compareWrap.innerHTML = `
+    const ref = baseVariant.per100;
+    compareWrap.innerHTML = `<div class="variant-insights">${r.variants.map(v => {
+      const dk=v.per100.kcal-ref.kcal, dp=macro(v.per100,'Белки')-macro(ref,'Белки');
+      return `<button type="button" class="variant-insight" data-select-version="${v.id}"><strong>${esc(v.name)}</strong><span>${dk>0?'+':''}${fmt(dk)} ккал · ${dp>0?'+':''}${fmt(dp)} г белка</span><small>на 100 г относительно выбранного оригинала</small></button>`;
+    }).join('')}</div>
       <table class="compare-table">
         <thead>
           <tr>
@@ -2951,6 +3042,7 @@ function initRecipe(r) {
         </tbody>
       </table>
     `;
+    compareWrap.querySelectorAll('[data-select-version]').forEach(btn => btn.addEventListener('click', () => document.querySelector(`[data-variant="${btn.dataset.selectVersion}"]`).click()));
     compareWrap.querySelectorAll('[data-pick-variant]').forEach(row => {
       row.addEventListener('click', () => {
         const id = Number(row.dataset.pickVariant);
@@ -2977,8 +3069,8 @@ function initRecipe(r) {
     const body = document.getElementById('fatsecret-body');
     const ean13 = generateRecipeEan13(r.slug, variant.id);
     const p100 = variant.per100 || variant.total;
-    const shareUrl = getShareUrl();
-    const productName = `${r.shortTitle} (${variant.name})`;
+    const shareUrl = getShareUrl(false).replace(/#.*$/, '');
+    const productName = `${adaptedTitle(r.shortTitle,Object.keys(activeSwaps).length||customAddedIngredients.length)} (${variant.name})`;
     const fsCopySummary = [
       `Марка: ПП · рецепты`,
       `Название продукта: ${productName}`,
@@ -3001,10 +3093,11 @@ function initRecipe(r) {
         <div class="fs-code-box">
           <small>QR-КОД ПРЯМОЙ ССЫЛКИ НА ВАРИАЦИЮ</small>
           <div class="fs-svg-wrap">${renderQrSvg(shareUrl, 124)}</div>
-          <p class="ingredient-hint">Отсканируйте камерой телефона, чтобы открыть эту вариацию и выбранные порции.</p>
+          <p class="ingredient-hint">Открывает исходный вариант и выбранные порции. Личные замены передавайте кнопкой «Ссылка».</p>
         </div>
       </div>
       <div class="fs-card-data">
+        ${Object.keys(activeSwaps).length||customAddedIngredients.length?'<p class="ingredient-hint"><strong>Ваш состав изменён.</strong> Штрихкод остался кодом исходного варианта. Проверьте КБЖУ записи в FatSecret перед использованием.</p>':''}
         <div class="fs-card-head">
           <strong>Данные на 100 г для привязки в FatSecret</strong>
           <button type="button" class="share-chip" id="copy-fs-data">${icon('copy')} Скопировать карточку БЖУ</button>
@@ -3052,6 +3145,8 @@ function initRecipe(r) {
 
   function updateNumbers() {
     const ratio = currentRatio();
+    variant = { ...variant, steps: baseVariant.steps.map(step => ({...step, html: adaptStepHtml(step.html, baseVariant, variant, ratio)})) };
+    renderSteps();
     const root = document.getElementById('serving-enhancement');
     root.dataset.servings = servings;
     if (document.getElementById('servings')) {
@@ -3078,12 +3173,20 @@ function initRecipe(r) {
           parts.push(`+${addIt.name} (${fmt(addIt.grams)} г)`);
         }
         const scalePart = customRatio !== null ? ` · ${customScaleNote || `Масштаб ×${fmt(customRatio)}`}` : '';
-        document.getElementById('custom-scale-text').textContent = `🔄 Свой состав: ${parts.join(', ')} (КБЖУ пересчитано)${scalePart}`;
+        document.getElementById('custom-scale-text').textContent = `🔄 Ваша версия: ${parts.join(', ')} (КБЖУ пересчитано)${scalePart}`;
       } else {
         document.getElementById('custom-scale-text').textContent = customScaleNote || `Активен точный коэффициент ×${fmt(customRatio || 1)}`;
       }
     }
 
+    const custom = hasSwaps || ratio !== 1;
+    document.getElementById('extras').innerHTML = custom && r.extraHtml ? `<details class="original-notes"><summary>Примечания к исходному рецепту</summary><p>Это данные оригинала, до ваших замен. Актуальные КБЖУ и количества находятся выше.</p>${r.extraHtml}</details>` : (r.extraHtml || '');
+    document.getElementById('recipe-heading').textContent = adaptedTitle(r.shortTitle,custom);
+    document.getElementById('version-status').innerHTML = custom ? '<span class="version-pill">Ваша версия · КБЖУ пересчитано</span>' : '';
+    document.getElementById('recipe-description').textContent = custom ? 'Рецепт адаптирован под ваши продукты и объём. Актуальные количества — в списке и шагах ниже. Расчётные КБЖУ могут отличаться от фактических.' : recipeIntro(r.description);
+    const story=document.getElementById('recipe-story');if(story)story.hidden=custom;
+    document.getElementById('steps-adaptation-note').textContent = custom ? 'Связанные количества обновлены. Если связь неоднозначна, шаг отсылает к списку ингредиентов. При замене продукта проверяйте консистенцию; время и температура остаются исходными.' : 'Количества связаны с вашим списком ингредиентов. Время и температура не масштабируются.';
+    document.querySelectorAll('[data-ing-title]').forEach(el => { el.textContent = scaleIngredientName(variant.ingredients[Number(el.dataset.ingTitle)].name, ratio); });
     window.dispatchEvent(new CustomEvent('recipe:servings-update', { detail: servings }));
     document.querySelectorAll('[data-amount]').forEach(el => {
       const idx = Number(el.dataset.amount);
@@ -3114,7 +3217,7 @@ function initRecipe(r) {
       sourceBlock = total;
     } else if (nutritionMode === 'per100') {
       factor = 1;
-      modeLabel = 'На 100 г готового блюда (эталон)';
+      modeLabel = 'На 100 г готового блюда (расчёт)';
       sourceBlock = per100 || total;
     }
 
@@ -3150,10 +3253,11 @@ function initRecipe(r) {
 
     document.getElementById('nutrition-foot').textContent =
       (variant.per100 ? `На 100 г: ${fmt(variant.per100.kcal)} ккал · Б ${fmt(macro(variant.per100, 'Белки'))} · Ж ${fmt(macro(variant.per100, 'Жиры'))} · У ${fmt(macro(variant.per100, 'Углеводы'))} г. ` : '') +
-      'На одну порцию: ' + fmt(total.kcal / variant.baseServings) + ' ккал. Данные из исходного рецепта, возможны округления. Время приготовления не масштабируется; при изменении объёма учитывайте размер формы и готовность блюда.';
+      'На одну порцию: ' + fmt(total.kcal / variant.baseServings) + ' ккал. КБЖУ рассчитаны по исходным данным и этикеткам. Для продуктов без этикетки используется приблизительная оценка. Готовый вес после замен — оценочный; возможны округления. Время приготовления не масштабируется; при изменении объёма учитывайте размер формы и готовность блюда.';
 
     updatePlateCalc();
     syncUrlState();
+    window.dispatchEvent(new CustomEvent('pp:recipe-updated'));
   }
 
   document.querySelectorAll('[data-nutri-mode]').forEach(btn => {
@@ -3165,8 +3269,9 @@ function initRecipe(r) {
   });
 
   function updateProgress() {
-    const total = variant.ingredients.filter(x => !x.group).length;
-    document.getElementById('check-progress').textContent = `Готово ${checks.size} из ${total}`;
+    const total = variant.ingredients.filter(x => !x.group && !x.removed).length;
+    const done = [...checks].filter(i=>variant.ingredients[i]&&!variant.ingredients[i].group&&!variant.ingredients[i].removed).length;
+    document.getElementById('check-progress').textContent = `Готово ${done} из ${total}`;
     try { localStorage.setItem(storageKey(), JSON.stringify([...checks])); } catch {}
   }
 
@@ -3364,7 +3469,7 @@ function initRecipe(r) {
       const curVal = effectiveBaseGrams > 0
         ? Math.round(effectiveBaseGrams * currentRatio() * 100) / 100
         : (primary ? Math.round(primary.value * currentRatio() * 100) / 100 : 50);
-      const baseMacro = swapCfg ? swapCfg.baseMacro : inferBaselineNutrition(baseIng.name);
+      const baseMacro = ingredientNutrition(baseIng);
       const shortBaseTitle = baseIng.name.split('(')[0].trim();
       const unitLabel = primary?.unit === 'мл' ? 'мл' : 'г';
 
@@ -3393,7 +3498,7 @@ function initRecipe(r) {
 
           <div class="ing-custom-macros" id="ing-custom-macros-${i}">
             <div class="ing-custom-head">
-              <strong class="ing-box-title">Изменить вес или заменить «${esc(shortBaseTitle)}» (остальной рецепт не меняется):</strong>
+              <strong class="ing-box-title">Количество «${esc(shortBaseTitle)}»</strong>
               <small class="ing-base-macro-hint" id="ing-macro-hint-${i}">По рецепту: ${baseGrams > 0 ? `${fmt(baseGrams)} ${unitLabel} · ` : ''}на 100 г ~${fmt(baseMacro.kcal)} ккал · Б ${fmt(baseMacro.p)} · Ж ${fmt(baseMacro.f)} · У ${fmt(baseMacro.c)}</small>
             </div>
 
@@ -3405,8 +3510,8 @@ function initRecipe(r) {
                   <span class="ing-scale-unit">${unitLabel}</span>
                 </div>
               </label>
-              <label class="ing-edit-field">
-                <small>Название (если заменяете продукт):</small>
+              </div><details class="product-replacement" ${activeSwap?.isCustomName ? 'open' : ''}><summary>Заменить продукт или указать КБЖУ с этикетки</summary><div class="replacement-fields"><label class="ing-edit-field">
+                <small>Название моего продукта:</small>
                 <input type="text" class="ing-custom-name-input" id="ing-custom-name-${i}" data-ing-name-idx="${i}" placeholder="${esc(shortBaseTitle)} (или впишите свой, напр. Голубика)" value="${esc(activeSwap?.isCustomName ? activeSwap.shortName : '')}">
               </label>
             </div>
@@ -3418,8 +3523,9 @@ function initRecipe(r) {
               <label><small>Углеводы, г</small><input type="number" id="ing-custom-c-${i}" placeholder="${baseMacro.c}" value="${activeSwap ? activeSwap.c : ''}" min="0" step="any"></label>
             </div>
 
+            <button type="button" class="text-button" data-pick-pantry="${i}">Выбрать из моих продуктов</button></details>
             <div class="ing-swap-actions">
-              <button type="button" class="share-chip ing-btn-scale" data-apply-item-change="${i}">✓ Применить к этому продукту (остальной рецепт не менять)</button>
+              <button type="button" class="share-chip ing-btn-scale" data-apply-item-change="${i}">Применить к продукту</button>
               <div class="ing-secondary-actions">
                 <button type="button" class="share-chip ing-btn-remove" data-remove-ing="${i}">🗑 Убрать продукт из рецепта</button>
                 ${baseGrams > 0 ? `<button type="button" class="share-chip ing-btn-swap-only" data-apply-scale-all="${i}" title="Масштабировать все остальные продукты рецепта пропорционально введённому весу">⚖ Масштабировать весь рецепт под этот вес</button>` : ''}
@@ -3435,13 +3541,13 @@ function initRecipe(r) {
           <label for="ing-${i}">
             <span class="checkbox-ui" aria-hidden="true"></span>
             <span class="ingredient-copy">
-              <span class="ing-name">${esc(x.name)}</span>
+              <span class="ing-name" data-ing-title="${i}">${esc(x.name)}</span>
               <span class="ing-amount" data-amount="${i}"></span>
             </span>
           </label>
           <div class="ing-row-btns">
-            <button type="button" class="ing-scale-trigger ${isSwapped ? 'swapped' : ''}" data-scale-ing="${i}" title="Изменить вес этого продукта или заменить на свой">${btnLabel}</button>
-            <button type="button" class="ing-remove-quick-btn" data-remove-ing="${i}" title="Убрать этот продукт из рецепта">✕</button>
+            <button type="button" class="ing-scale-trigger ${isSwapped ? 'swapped' : ''}" data-scale-ing="${i}" title="Изменить вес этого продукта или заменить на свой" aria-expanded="${activeScaleIngIdx === i}">${btnLabel}</button>
+            <button type="button" class="ing-remove-quick-btn" data-remove-ing="${i}" title="Убрать этот продукт из рецепта" aria-label="Убрать этот продукт из рецепта">${icon('close')}</button>
           </div>
         </div>
         <div class="ing-scale-popover ing-swap-popover" id="ing-pop-${i}" ${activeScaleIngIdx === i ? '' : 'hidden'}>
@@ -3488,6 +3594,7 @@ function initRecipe(r) {
           pop.hidden = pop.id !== `ing-pop-${activeScaleIngIdx}`;
         });
         if (activeScaleIngIdx !== null) {
+          document.getElementById(`ing-pop-${activeScaleIngIdx}`).scrollIntoView?.({block:'nearest',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
           const inp = document.getElementById(`ing-input-${activeScaleIngIdx}`);
           if (inp && !window.matchMedia?.('(max-width: 760px)').matches) {
             inp.focus();
@@ -3536,9 +3643,14 @@ function initRecipe(r) {
       const baseIng = baseVariant.ingredients[idx];
       if (!baseIng) return;
       const baseGrams = getIngredientGrams(baseIng.amount);
-      const baseMacro = baseGrams > 0 ? inferBaselineNutrition(baseIng.name) : { kcal: 0, p: 0, f: 0, c: 0 };
+      const baseMacro = baseGrams > 0 ? ingredientNutrition(baseIng) : { kcal: 0, p: 0, f: 0, c: 0 };
       const rawWeight = document.getElementById(`ing-input-${idx}`)?.value?.trim() ?? '';
       const parsedW = rawWeight !== '' ? Number(rawWeight.replace(',', '.')) : baseGrams;
+      if (!Number.isFinite(parsedW) || parsedW < 0 || parsedW > 100000) { showToast('Укажите вес от 0 до 100 000 г'); return; }
+      for (const key of ['kcal','p','f','c']) {
+        const el=document.getElementById(`ing-custom-${key}-${idx}`), raw=el?.value?.trim();
+        if(raw && (!Number.isFinite(Number(raw)) || Number(raw)<0 || Number(raw)>(key==='kcal'?1000:100))) { showToast('Проверьте КБЖУ на 100 г: ккал до 1000, БЖУ до 100 г'); return; }
+      }
       if (parsedW === 0) {
         activeSwaps[idx] = { id: 'removed', removed: true, name: baseIng.name, shortName: baseIng.name, grams: 0, kcal: 0, p: 0, f: 0, c: 0 };
         variant = applyIngredientSwapsToVariant(baseVariant, activeSwaps, customAddedIngredients);
@@ -3571,7 +3683,8 @@ function initRecipe(r) {
         showToast('Введите положительное число');
         return;
       }
-      const baseRef = baseGrams > 0 ? baseGrams : primary.value;
+      const baseRef = activeSwaps[idx]?.grams > 0 ? activeSwaps[idx].grams : (baseGrams > 0 ? baseGrams : primary.value);
+      if (userVal / baseRef > 10) { showToast('Максимальный масштаб рецепта — ×10'); return; }
       customRatio = userVal / baseRef;
       const displayName = activeSwaps[idx]?.shortName || baseIng?.name || '';
       customScaleNote = `⚖ Пропорции всего рецепта от «${displayName.split('(')[0].trim()}»: ${fmt(userVal)} г (×${fmt(customRatio)})`;
@@ -3594,24 +3707,31 @@ function initRecipe(r) {
       });
     });
 
+    const photoSrc = variant.image || (r.slug === 'egg-white-scramble.html' && variant.id == 2 ? 'egg-scramble-yolks.png' : r.image);
+    const photoMap=window.PPImages?.[photoSrc], photo=document.getElementById('detail-photo');
+    photo.src=photoMap?.[1]?.src||photoSrc;
+    if(photoMap)photo.setAttribute('srcset',[...new Map(photoMap.map(x=>[x.width,x])).values()].map(x=>`${x.src} ${x.width}w`).join(', '));
+    else photo.removeAttribute?.('srcset');
+    updateNumbers();
+    updateProgress();
+  }
+
+  function renderSteps() {
     document.getElementById('steps').innerHTML = variant.steps.map((s, i) => {
       const timers = extractStepTimers(s.html, s.title);
       const timerHtml = timers.length
         ? `<div class="step-timers">${timers.map(t => `<button type="button" class="step-timer-chip" data-timer-sec="${t.sec}" data-timer-label="${esc(s.title)} (${esc(t.text)})">${icon('timer')} Таймер: ${esc(t.text)}</button>`).join('')}</div>`
         : '';
-      return `<li class="step"><span class="step-number" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span><div class="step-main"><h3>${esc(s.title)}</h3>${s.html}${timerHtml}</div></li>`;
+      return `<li class="step"><span class="step-number" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span><div class="step-main"><h3>${esc(s.title)}</h3>${optimizeImageMarkup(s.html)}${timerHtml}</div></li>`;
     }).join('');
     bindTimerButtons(document.getElementById('steps'));
 
-    document.getElementById('detail-photo').src = variant.image || (r.slug === 'egg-white-scramble.html' && variant.id == 2 ? 'egg-scramble-yolks.png' : r.image);
-    updateNumbers();
-    updateProgress();
   }
 
   function setServings(n) {
     customRatio = null;
     customScaleNote = '';
-    servings = Math.max(1, Math.min(20, n));
+    servings = Math.max(1, Math.min(20, Math.round(Number(n)||1)));
     updateNumbers();
   }
   document.getElementById('decrease').addEventListener('click', () => setServings(servings - 1));
@@ -3650,64 +3770,18 @@ function initRecipe(r) {
     updateProgress();
   });
 
-  /* Cooking Mode & Voice Control */
+  /* Cooking mode: touch, keyboard and timers, no microphone. */
   const dialog = document.getElementById('cooking-dialog');
-  const voiceBtn = document.getElementById('voice-control-btn');
-  const voiceLabel = document.getElementById('voice-control-label');
-  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (SpeechRec && voiceBtn) {
-    voiceBtn.hidden = false;
-    voiceBtn.addEventListener('click', () => {
-      if (voiceActive) {
-        voiceActive = false;
-        try { speechRec?.stop(); } catch {}
-        voiceBtn.classList.remove('active');
-        voiceLabel.textContent = 'Голос: Выкл';
-        showToast('Голосовое управление выключено');
-      } else {
-        try {
-          speechRec = new SpeechRec();
-          speechRec.lang = 'ru-RU';
-          speechRec.continuous = true;
-          speechRec.interimResults = false;
-          speechRec.onresult = (ev) => {
-            const transcript = ev.results[ev.results.length - 1][0].transcript.toLocaleLowerCase('ru');
-            if (/дальше|следующ|вперед/.test(transcript)) {
-              if (focusIndex < variant.steps.length - 1) { focusIndex++; focusStep(); showToast('🎙 Шаг вперёд'); }
-            } else if (/назад|предыдущ/.test(transcript)) {
-              if (focusIndex > 0) { focusIndex--; focusStep(); showToast('🎙 Шаг назад'); }
-            } else if (/таймер|время|запусти/.test(transcript)) {
-              const firstTimer = document.querySelector('#focus-timers [data-timer-sec]');
-              if (firstTimer) firstTimer.click();
-            } else if (/пауза|стоп/.test(transcript)) {
-              activeTimer.running = false;
-              updateTimerUI();
-              showToast('🎙 Таймер на паузе');
-            }
-          };
-          speechRec.onend = () => {
-            if (voiceActive && dialog.open) {
-              try { speechRec.start(); } catch {}
-            }
-          };
-          speechRec.start();
-          voiceActive = true;
-          voiceBtn.classList.add('active');
-          voiceLabel.textContent = 'Голос: Слушаю…';
-          showToast('🎙 Скажите «Дальше», «Назад» или «Таймер»');
-        } catch {
-          showToast('Не удалось запустить распознавание речи');
-        }
-      }
-    });
-  }
 
   function focusStep() {
     const step = variant.steps[focusIndex];
     document.getElementById('focus-count').textContent = `ШАГ ${focusIndex + 1} ИЗ ${variant.steps.length}`;
     document.getElementById('focus-title').textContent = step.title;
     document.getElementById('focus-variant-name').textContent = variant.name;
-    document.getElementById('focus-body').innerHTML = step.html;
+    document.getElementById('focus-body').innerHTML = optimizeImageMarkup(step.html);
+    document.getElementById('focus-ingredients').innerHTML = variant.ingredients.filter(x=>!x.group&&!x.removed).map(x=>`<p>${esc(scaleIngredientName(x.name,currentRatio()))} — <b>${esc(scaleAmount(x.amount,currentRatio()))}</b></p>`).join('');
+    document.getElementById('focus-changes-note').textContent = Object.keys(activeSwaps).length || customAddedIngredients.length ? 'Ваш состав изменён. Используйте продукты из раскрывающегося списка выше; способ и время готовки остаются исходными.' : '';
+    try { localStorage.setItem(`pp-cooking:${r.slug}:${variant.id}`, JSON.stringify({index:focusIndex,updated:Date.now(),done:false})); } catch {}
     const timers = extractStepTimers(step.html, step.title);
     const focusTimersEl = document.getElementById('focus-timers');
     focusTimersEl.innerHTML = timers.map(t => `<button type="button" class="step-timer-chip" data-timer-sec="${t.sec}" data-timer-label="${esc(step.title)} (${esc(t.text)})">${icon('timer')} Запустить таймер: ${esc(t.text)}</button>`).join('');
@@ -3716,11 +3790,13 @@ function initRecipe(r) {
     document.getElementById('prev-step').disabled = focusIndex === 0;
     document.getElementById('next-step').innerHTML = focusIndex === variant.steps.length - 1 ? 'Готово ' + icon('check') : 'Следующий шаг ' + icon('arrow');
     dialog.scrollTop = 0;
+    updateTimerUI();
   }
+  for(const [inside,outside] of [['focus-timer-toggle','timer-toggle-btn'],['focus-timer-plus','timer-plus-btn'],['focus-timer-stop','timer-close-btn']])document.getElementById(inside).addEventListener('click',()=>document.getElementById(outside).click());
   function closeFocus() { dialog.close(); }
   document.getElementById('cooking-mode').addEventListener('click', async () => {
     focusOrigin = document.activeElement;
-    focusIndex = 0;
+    try { const saved=JSON.parse(localStorage.getItem(`pp-cooking:${r.slug}:${variant.id}`)||'null'); focusIndex=saved&&!saved.done?Math.min(saved.index,variant.steps.length-1):0; } catch { focusIndex=0; }
     focusStep();
     dialog.showModal();
     document.body.style.overflow = 'hidden';
@@ -3729,18 +3805,13 @@ function initRecipe(r) {
       if (navigator.wakeLock) {
         wakeLock = await navigator.wakeLock.request('screen');
         document.getElementById('wakelock-pill').hidden = false;
+        wakeLock.addEventListener?.('release',()=>{document.getElementById('wakelock-pill').hidden=true;});
       }
     } catch {}
   });
   dialog.addEventListener('close', () => {
     document.body.style.overflow = '';
     document.getElementById('wakelock-pill').hidden = true;
-    if (voiceActive) {
-      voiceActive = false;
-      try { speechRec?.stop(); } catch {}
-      if (voiceBtn) voiceBtn.classList.remove('active');
-      if (voiceLabel) voiceLabel.textContent = 'Голос: Выкл';
-    }
     if (wakeLock) {
       wakeLock.release().catch(() => {});
       wakeLock = null;
@@ -3749,7 +3820,7 @@ function initRecipe(r) {
   });
   document.getElementById('close-focus').addEventListener('click', closeFocus);
   document.getElementById('prev-step').addEventListener('click', () => { if (focusIndex > 0) { focusIndex--; focusStep(); } });
-  document.getElementById('next-step').addEventListener('click', () => { if (focusIndex < variant.steps.length - 1) { focusIndex++; focusStep(); } else closeFocus(); });
+  document.getElementById('next-step').addEventListener('click', () => { if (focusIndex < variant.steps.length - 1) { focusIndex++; focusStep(); } else { try {localStorage.setItem(`pp-cooking:${r.slug}:${variant.id}`, JSON.stringify({index:0,done:true}));}catch{} closeFocus(); } });
   dialog.addEventListener('click', e => {
     if (e.target === dialog) {
       const rect = dialog.getBoundingClientRect();
@@ -3761,6 +3832,17 @@ function initRecipe(r) {
     if (e.key === 'ArrowLeft' && focusIndex > 0) { focusIndex--; focusStep(); }
   });
   document.getElementById('extras').innerHTML = r.extraHtml || '';
+  window.PPRecipe = {
+    recipe:r,
+    snapshot:()=>({slug:r.slug,variantId:baseVariant.id,servings,customRatio,activeSwaps:JSON.parse(JSON.stringify(activeSwaps)),customAddedIngredients:JSON.parse(JSON.stringify(customAddedIngredients))}),
+    apply:state=>{
+      baseVariant=r.variants.find(v=>v.id===state.variantId)||baseVariant;
+      activeSwaps=state.activeSwaps||{}; customAddedIngredients=state.customAddedIngredients||[];
+      servings=Math.max(1,Math.min(20,Number(state.servings)||baseVariant.baseServings));
+      customRatio=state.customRatio>0&&state.customRatio<=10?state.customRatio:null;
+      variant=applyIngredientSwapsToVariant(baseVariant,activeSwaps,customAddedIngredients); checks=new Set(readChecks()); renderVariant();
+    }
+  };
   renderVariant();
 }
 
@@ -3768,4 +3850,12 @@ const slug = decodeURIComponent(location.pathname.split('/').pop()) || 'index.ht
 const recipe = recipes.find(r => r.slug === slug);
 if (recipe) initRecipe(recipe);
 else initCatalog();
+try {
+  const saved=JSON.parse(localStorage.getItem('pp-active-timer-v3')||'null');
+  if(saved&&Number.isFinite(saved.remaining)&&saved.remaining>0&&saved.remaining<=86400){
+    const left=saved.running?Math.ceil((saved.deadline-Date.now())/1000):saved.remaining;
+    if(left>0){startKitchenTimer(left,String(saved.label||'Таймер').slice(0,180));if(!saved.running){activeTimer.running=false;updateTimerUI();}}
+    else {localStorage.removeItem('pp-active-timer-v3');showToast('Ранее запущенный таймер завершился, пока страница была закрыта.');}
+  }
+}catch{}
 })();
