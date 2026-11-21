@@ -730,6 +730,23 @@
       "height": 896
     }
   ],
+  "potato-chicken-cheese-nuggets-hero.jpg": [
+    {
+      "src": "assets\\images\\potato-chicken-cheese-nuggets-hero-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets\\images\\potato-chicken-cheese-nuggets-hero-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets\\images\\potato-chicken-cheese-nuggets-hero-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
   "pp-khachapuri-hero.jpg": [
     {
       "src": "assets\\images\\pp-khachapuri-hero-480.webp",
