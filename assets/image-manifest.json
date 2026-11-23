@@ -33,6 +33,23 @@
       "height": 686
     }
   ],
+  "baked-pollock-foil-boats-hero.jpg": [
+    {
+      "src": "assets\\images\\baked-pollock-foil-boats-hero-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets\\images\\baked-pollock-foil-boats-hero-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets\\images\\baked-pollock-foil-boats-hero-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
   "banana-souffle.png": [
     {
       "src": "assets\\images\\banana-souffle-480.webp",

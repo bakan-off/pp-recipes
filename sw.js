@@ -1,5 +1,5 @@
 /* Generated from content hash; network-first documents and code, cached images. */
-const CACHE='pp-recipes-7e5c5d80395b';
+const CACHE='pp-recipes-a650d8e850b4';
 const CORE=['./index.html','./assets/app.js','./assets/styles.css','./assets/personal.js','./assets/recipes-data.js','./assets/image-map.js','./assets/fonts/editorial.woff','./assets/fonts/sans.woff','./assets/icons/icon-192.png','./assets/icons/icon-512.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE))));
 self.addEventListener('message',e=>{if(e.data==='SKIP_WAITING')self.skipWaiting();});
