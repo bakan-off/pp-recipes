@@ -849,6 +849,23 @@
       "height": 1075
     }
   ],
+  "protein-cottage-cheese-banana-brownie-hero.jpg": [
+    {
+      "src": "assets\\images\\protein-cottage-cheese-banana-brownie-hero-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets\\images\\protein-cottage-cheese-banana-brownie-hero-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets\\images\\protein-cottage-cheese-banana-brownie-hero-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
   "protein-cottage-cheese-oladi-hero.jpg": [
     {
       "src": "assets\\images\\protein-cottage-cheese-oladi-hero-480.webp",
