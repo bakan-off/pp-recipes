@@ -951,6 +951,23 @@
       "height": 896
     }
   ],
+  "stuffed-peppers-chicken-cheese-hero.jpg": [
+    {
+      "src": "assets\\images\\stuffed-peppers-chicken-cheese-hero-480.webp",
+      "width": 480,
+      "height": 358
+    },
+    {
+      "src": "assets\\images\\stuffed-peppers-chicken-cheese-hero-960.webp",
+      "width": 960,
+      "height": 717
+    },
+    {
+      "src": "assets\\images\\stuffed-peppers-chicken-cheese-hero-1440.webp",
+      "width": 1200,
+      "height": 896
+    }
+  ],
   "stuffed-peppers-step-baked.jpg": [
     {
       "src": "assets\\images\\stuffed-peppers-step-baked-480.webp",
